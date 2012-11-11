@@ -1,4 +1,4 @@
 {
-    "name": "Basic CouchApp",
-    "description": "CouchApp with changes feed and form support."
+    "name": "Acralyzer",
+    "description": "CouchDB backend for ACRA crash reports."
 }

@@ -17,7 +17,7 @@ $(function() {
         return o;
     };
 
-    var path = unescape(document.location.pathname).split('/'),
+/*    var path = unescape(document.location.pathname).split('/'),
         design = path[3],
         db = $.couch.db(path[1]);
     function drawItems() {
@@ -43,7 +43,7 @@ $(function() {
             changeHandler.onChange(drawItems);
         }
     }
-    $.couchProfile.templates.profileReady = $("#new-message").html();
+*/    $.couchProfile.templates.profileReady = $("#new-message").html();
     $("#account").couchLogin({
         loggedIn : function(r) {
             $("#profile").couchProfile(r, {
