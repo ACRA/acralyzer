@@ -63,7 +63,7 @@ function buildGraph($scope) {
         .attr("height", height);
     var dataDate = function(d) {
     	var result = new Date();
-    	result.setFullYear(d[0][0],d[0][1],d[0][2]);
+    	result.setUTCFullYear(d[0][0],d[0][1],d[0][2]);
         return result;
    	};
     var dataValue = function(d) {
@@ -95,6 +95,7 @@ function buildGraph($scope) {
         
     // draw y axis with labels and move in from the size by the amount of padding
     vis.append("g")
+        .attr("class", "yaxis")   // give it a class so it can be used to select only xaxis labels  below
         .attr("transform", "translate("+padding+",0)")
         .call(yAxis);
 

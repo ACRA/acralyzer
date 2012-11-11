@@ -43,7 +43,8 @@ $(function() {
             changeHandler.onChange(drawItems);
         }
     }
-*/    $.couchProfile.templates.profileReady = $("#new-message").html();
+*/  
+    $.couchProfile.templates.profileReady = $("#new-message").html();
     $("#account").couchLogin({
         loggedIn : function(r) {
             $("#profile").couchProfile(r, {
