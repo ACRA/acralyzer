@@ -1,8 +1,7 @@
 function getViewUrl(view,options) {
 	var path = unescape(document.location.pathname).split('/'),
-		dbname = path[1],
-        design = path[3],
-        db = $.couch.db(path[1]);
+		dbname = "acra-storage",
+        design = path[3];
         var result = "/" + dbname + "/_design/" + design + "/_view/" + view;
         if (options) {
         	result += "?" + options;
@@ -43,11 +42,18 @@ function CrashReportsCtrl($scope, $http) {
 */}
 
 function ReportsPerDayCtrl($scope, $http) {
-	console.log($scope);
-	$http.get(getViewUrl("reports-per-day","group=true")).success(function(data){
-    	$scope.reportsPerDay = getBidimensionalArray(data.rows);
-    	buildGraph($scope);
-    });
+    $.couch.session({
+        success: function(session) {
+            console.log(session);
+            if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
+                console.log("You are authorized as a reader!");
+                $http.get(getViewUrl("reports-per-day","group=true")).success(function(data){
+                    $scope.reportsPerDay = getBidimensionalArray(data.rows);
+                    buildGraph($scope);
+                });
+            }
+        }
+    })
 }
 
 function buildGraph($scope) {
@@ -133,4 +139,46 @@ function getBidimensionalArray(rows) {
 		}
 	}
 	return result;
+}
+
+function getXYArray(rows) {
+    var result = new Array(rows.length);
+    for(var i=0; i < rows.length; i++) {
+        var row = rows[i];
+        var reportDate = new Date();
+        reportDate.setUTCFullYear(row.key[0],row.key[1],row.key[2]);
+        result[i] = { x: reportDate.getTime(), y:row.value};
+    }
+    return result;
+}
+
+function RickshawCtrl($scope, $http) {
+    $.couch.session({
+        success: function(session) {
+            console.log(session);
+            if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
+                console.log("You are authorized as a reader!");
+                $http.get(getViewUrl("reports-per-day","group=true")).success(function(data){
+                    $scope.reportsPerDay = getXYArray(data.rows);
+                    buildRickshaw($scope);
+                });
+            }
+        }
+    })
+}
+
+function buildRickshaw($scope) {
+    console.log($scope);
+    var graph = new Rickshaw.Graph( {
+        element: document.querySelector("#rickshaw-container"),
+        width: 700,
+        height: 200,
+        renderer: 'bar',
+        series: [ {
+            data: $scope.reportsPerDay,
+            color: 'steelblue'
+        } ]
+    } );
+    var axes = new Rickshaw.Graph.Axis.Time( { graph: graph } );
+    graph.render();
 }

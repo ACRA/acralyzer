@@ -2,12 +2,14 @@
 <html ng-app>
   <head>
     <title>Example CouchApp</title>
+    <link rel="stylesheet" href="vendor/d3/rickshaw.min.css" type="text/css">
     <link rel="stylesheet" href="style/main.css" type="text/css">
     <link rel="stylesheet" href="style/graph.css" type="text/css">
     <script src="/_utils/script/sha1.js"></script>
     <script src="/_utils/script/json2.js"></script>
     <script src="/_utils/script/jquery.js"></script>
     <script src="/_utils/script/jquery.couch.js"></script>
+    <script src="vendor/couchapp/jquery.mustache.js"></script>
     <script src="vendor/couchapp/jquery.couchLogin.js"></script>
     <script src="vendor/couchapp/jquery.couchProfile.js"></script>
     <script src="vendor/couchapp/md5.js"></script>
@@ -15,6 +17,8 @@
     <script src="script/app.js"></script>
     <script src="script/controllers.js"></script>
     <script src="vendor/d3/d3.v2.js"></script>
+    <script src="vendor/d3/d3.layout.min.js"></script>
+    <script src="vendor/d3/rickshaw.min.js"></script>
   </head>
   <body>
     <div id="account"></div>
@@ -35,6 +39,8 @@
     <div id="graph-container" ng-controller="ReportsPerDayCtrl">
     </div>
 
+    <div id="rickshaw-container" ng-controller="RickshawCtrl">
+    </div>
 
     <div id="sidebar">
       <p>Edit welcome message.</p>
