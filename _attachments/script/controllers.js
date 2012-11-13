@@ -69,7 +69,12 @@ function buildGraph($scope) {
         .attr("height", height);
     var dataDate = function(d) {
     	var result = new Date();
-    	result.setUTCFullYear(d[0][0],d[0][1],d[0][2]);
+        result.setFullYear(d[0][0],d[0][1],d[0][2]);
+        result.setHours(0);
+        result.setMinutes(0);
+        result.setSeconds(0);
+        result.setMilliseconds(0);
+        console.log(result);
         return result;
    	};
     var dataValue = function(d) {
