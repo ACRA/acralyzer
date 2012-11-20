@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="Acralyzer">
   <head>
-    <title>Example CouchApp</title>
+    <title>Acralyzer</title>
     <link rel="stylesheet" href="vendor/d3/rickshaw.min.css" type="text/css">
     <link rel="stylesheet" href="style/main.css" type="text/css">
     <link rel="stylesheet" href="style/graph.css" type="text/css">
@@ -14,32 +14,29 @@
     <script src="vendor/couchapp/jquery.couchProfile.js"></script>
     <script src="vendor/couchapp/md5.js"></script>
     <script src="vendor/angular/angular.min.js"></script>
+    <script src="vendor/angular/angular-resource.min.js"></script>
     <script src="script/app.js"></script>
+    <script src="script/acra-storage.js"></script>
     <script src="script/controllers.js"></script>
     <script src="vendor/d3/d3.v2.js"></script>
-    <script src="vendor/d3/d3.layout.min.js"></script>
-    <script src="vendor/d3/rickshaw.min.js"></script>
   </head>
   <body>
     <div id="account"></div>
 
-    <h1>Example CouchApp</h1>
+    <h1>Acralyzer</h1>
 
     <div id="profile">
     </div>
     <div id="content" ng-controller="CrashReportsCtrl">
       <span ng-bind-template="{{reports.length}} reports:"></span>
       <ul>
-        <li ng-repeat="report in reports" ng-bind-template="{{report.value.user_crash_date}} : {{report.value.android_version}} - {{report.value.stack_trace.split('\n')[0];}}">
+        <li ng-repeat="report in reports" ng-bind-template="{{report.value.user_crash_date}} : {{report.value.android_version}} - <a href='{{report.link}}'>{{report.value.stack_trace.split('\n')[0];}}</a>">
           Loading reports...
         </li>
       </ul>
     </div>
 
     <div id="graph-container" ng-controller="ReportsPerDayCtrl">
-    </div>
-
-    <div id="rickshaw-container" ng-controller="RickshawCtrl">
     </div>
 
     <div id="sidebar">

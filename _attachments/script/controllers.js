@@ -1,59 +1,57 @@
-function getViewUrl(view,options) {
-	var path = unescape(document.location.pathname).split('/'),
-		dbname = "acra-storage",
-        design = path[3];
-        var result = "/" + dbname + "/_design/" + design + "/_view/" + view;
+angular.module('Acralyzer', ['acra-storage']);
+
+
+(function(acra, $, undefined ) {
+    //Private Property
+    var isHot = true;
+ 
+    //Public Property
+    acra.dbname = "acra-storage";
+    acra.design = acra.dbname; 
+    
+    //Public Method
+    acra.getViewUrl = function(view, options) {
+        var result = "/" + acra.dbname + "/_design/" + acra.design + "/_view/" + view;
         if (options) {
-        	result += "?" + options;
+            result += "?" + options;
         }
         return result;
+    }
+
+    acra.getDocUrl = function(docId) {
+        var result = "/" + acra.dbname + "/" + docId;
+    }
+     
+}( window.acra = window.acra || {}, jQuery ));
+ 
+
+function CrashReportsCtrl($scope, ReportsStore) {
+    console.log(ReportsStore);
+    ReportsStore.recentReports(function(data) {
+        $scope.reports = data.rows;
+        for(row in $scope.reports) {
+            console.log(row);
+            row.link = acra.getDocUrl(row._id);
+        }
+    });
+
+
 }
 
 
-function CrashReportsCtrl($scope, $http) {
-//	console.log($scope);
-	/*var path = unescape(document.location.pathname).split('/'),
-		dbname = path[1],
-        design = path[3],
-        db = $.couch.db(path[1]);
-    db.view(design + "/recent-items", {
-        descending : "true",
-        limit : 50,
-        update_seq : true,
-        success : function(data) {
-        	console.log($scope);
-        	console.log(data);
-			$scope.reports = data.rows.map(function(r) {return r.value;}).makeArray();
-			console.log($scope.reports);
-        }
-    });*/
-
-    $http.get(getViewUrl("recent-items")).success(function(data){
-    	$scope.reports = data.rows;
-    });
-
-/*    $scope.reports = [
-    	{
-    		android_version: 4.1,
-			stack_trace: "java.lang.Exception: This is a silent report!↵	at org.acra.sampleapp.CrashTestLauncher$2.onClick(CrashTestLauncher.java:44)↵	at android.view.View.performClick(View.java:4084)↵	at android.view.View$PerformClick.run(View.java:16966)↵	at android.os.Handler.handleCallback(Handler.java:615)↵	at android.os.Handler.dispatchMessage(Handler.java:92)↵	at android.os.Looper.loop(Looper.java:137)↵	at android.app.ActivityThread.main(ActivityThread.java:4745)↵	at java.lang.reflect.Method.invokeNative(Native Method)↵	at java.lang.reflect.Method.invoke(Method.java:511)↵	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:786)↵	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:553)↵	at dalvik.system.NativeStart.main(Native Method)↵",
-			user_crash_date: "2012-11-02T00:05:05.000+00:00"
-		}
-    ];
-*/}
-
-function ReportsPerDayCtrl($scope, $http) {
+function ReportsPerDayCtrl($scope, ReportsStore) {
     $.couch.session({
         success: function(session) {
             console.log(session);
             if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
                 console.log("You are authorized as a reader!");
-                $http.get(getViewUrl("reports-per-day","group=true")).success(function(data){
-                    $scope.reportsPerDay = getBidimensionalArray(data.rows);
+                ReportsStore.reportsPerDay(3, function(data) {
+                    $scope.reportsPerDay= getBidimensionalArray(data.rows);
                     buildGraph($scope);
                 });
             }
         }
-    })
+    });
 }
 
 function buildGraph($scope) {
@@ -69,12 +67,42 @@ function buildGraph($scope) {
         .attr("height", height);
     var dataDate = function(d) {
     	var result = new Date();
-        result.setFullYear(d[0][0],d[0][1],d[0][2]);
-        result.setHours(0);
-        result.setMinutes(0);
-        result.setSeconds(0);
-        result.setMilliseconds(0);
-        console.log(result);
+        var dateArray = d[0];
+        if(dateArray[0]) {
+            result.setFullYear(dateArray[0]);
+        } else {
+            result.setFullYear(0);
+        }
+        if(dateArray[1]) {
+            result.setMonth(dateArray[1]);
+        } else {
+            result.setMonth(0);
+        }
+        if(dateArray[2]) {
+            result.setDate(dateArray[2]);
+        } else {
+            result.setDate(0);
+        }
+        if(dateArray[3]) {
+            result.setHours(dateArray[3]);
+        } else {
+            result.setHours(0);
+        }
+        if(dateArray[4]) {
+            result.setMinutes(dateArray[4]);
+        } else {
+            result.setMinutes(0);
+        }
+        if(dateArray[5]) {
+            result.setSeconds(dateArray[5]);
+        } else {
+            result.setSeconds(0);
+        }
+        if(dateArray[6]) {
+            result.setMilliseconds(dateArray[6]);
+        } else {
+            result.setMilliseconds(0);
+        }
         return result;
    	};
     var dataValue = function(d) {
@@ -83,7 +111,7 @@ function buildGraph($scope) {
  
 
    var xScale = d3.time.scale()
-        .domain([d3.min($scope.reportsPerDay, dataDate), d3.max($scope.reportsPerDay, dataDate)])
+        .domain([d3.min($scope.reportsPerDay, dataDate), new Date()])
 		.range([padding, width - padding * 2]);   // map these the the chart width = total width minus padding at both sides
 	    
 
@@ -146,44 +174,4 @@ function getBidimensionalArray(rows) {
 	return result;
 }
 
-function getXYArray(rows) {
-    var result = new Array(rows.length);
-    for(var i=0; i < rows.length; i++) {
-        var row = rows[i];
-        var reportDate = new Date();
-        reportDate.setUTCFullYear(row.key[0],row.key[1],row.key[2]);
-        result[i] = { x: reportDate.getTime(), y:row.value};
-    }
-    return result;
-}
 
-function RickshawCtrl($scope, $http) {
-    $.couch.session({
-        success: function(session) {
-            console.log(session);
-            if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
-                console.log("You are authorized as a reader!");
-                $http.get(getViewUrl("reports-per-day","group=true")).success(function(data){
-                    $scope.reportsPerDay = getXYArray(data.rows);
-                    buildRickshaw($scope);
-                });
-            }
-        }
-    })
-}
-
-function buildRickshaw($scope) {
-    console.log($scope);
-    var graph = new Rickshaw.Graph( {
-        element: document.querySelector("#rickshaw-container"),
-        width: 700,
-        height: 200,
-        renderer: 'bar',
-        series: [ {
-            data: $scope.reportsPerDay,
-            color: 'steelblue'
-        } ]
-    } );
-    var axes = new Rickshaw.Graph.Axis.Time( { graph: graph } );
-    graph.render();
-}
