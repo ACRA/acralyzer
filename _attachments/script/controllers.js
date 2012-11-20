@@ -27,31 +27,35 @@ angular.module('Acralyzer', ['acra-storage']);
 
 function CrashReportsCtrl($scope, ReportsStore) {
     console.log(ReportsStore);
-    ReportsStore.recentReports(function(data) {
-        $scope.reports = data.rows;
-        for(row in $scope.reports) {
-            console.log(row);
-            row.link = acra.getDocUrl(row._id);
-        }
-    });
 
+    $scope.getData = function() {
+        ReportsStore.recentReports(function(data) {
+            $scope.reports = data.rows;
+            for(row in $scope.reports) {
+                console.log(row);
+                row.link = acra.getDocUrl(row._id);
+            }
+        });
+    }
 
 }
 
 
 function ReportsPerDayCtrl($scope, ReportsStore) {
-    $.couch.session({
-        success: function(session) {
-            console.log(session);
-            if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
-                console.log("You are authorized as a reader!");
-                ReportsStore.reportsPerDay(3, function(data) {
-                    $scope.reportsPerDay= getBidimensionalArray(data.rows);
-                    buildGraph($scope);
-                });
+    $scope.getData = function() {
+        $.couch.session({
+            success: function(session) {
+                console.log(session);
+                if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
+                    console.log("You are authorized as a reader!");
+                    ReportsStore.reportsPerDay(3, function(data) {
+                        $scope.reportsPerDay= getBidimensionalArray(data.rows);
+                        buildGraph($scope);
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 function buildGraph($scope) {

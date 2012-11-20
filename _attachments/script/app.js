@@ -60,6 +60,18 @@ $(function() {
                     }).find("input").focus();
                 }
             });
+            e = document.getElementById('content');
+            scope = angular.element(e).scope();
+            scope.$apply(function() {
+               scope.getData();
+            });
+            e = document.getElementById('graph-container');
+            scope = angular.element(e).scope();
+            scope.$apply(function() {
+               scope.getData();
+            });
+
+            
         },
         loggedOut : function() {
             $("#profile").html('<p>Please log in to see your profile.</p>');
