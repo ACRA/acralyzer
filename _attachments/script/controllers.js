@@ -141,9 +141,14 @@ function updateGraph($scope) {
     var bars = $scope.vis.selectAll("rect")
      .data($scope.reportsPerDay);
     bars.attr("class", "update")
-      .transition().duration(750)
-      .attr("y", function(d){return $scope.yScale($scope.dataValue(d))})
-      .attr("height", function(d) { return $scope.metrics.height - $scope.metrics.padding - $scope.yScale($scope.dataValue(d)) });
+      .transition().duration(375)
+       .attr("height", 0)
+       .attr("y", function(d){return $scope.yScale(0)})
+      .transition().delay(375).duration(1)
+       .attr("x", function(d){return $scope.xScale($scope.dataDate(d))})
+      .transition().delay(376).duration(374)
+       .attr("y", function(d){return $scope.yScale($scope.dataValue(d))})
+       .attr("height", function(d) { return $scope.metrics.height - $scope.metrics.padding - $scope.yScale($scope.dataValue(d)) });
 
     bars.enter().append("rect")
       .attr("class","enter")
@@ -151,6 +156,7 @@ function updateGraph($scope) {
       .attr("y", function(d){return $scope.yScale(0)})
       .attr("height", 0)
       .transition().duration(750)
+      .attr("x", function(d){return $scope.xScale($scope.dataDate(d))})
       .attr("y", function(d){return $scope.yScale($scope.dataValue(d))})
       .attr("width", 1)
       .attr("height", function(d) { return $scope.metrics.height - $scope.metrics.padding - $scope.yScale($scope.dataValue(d)) });
