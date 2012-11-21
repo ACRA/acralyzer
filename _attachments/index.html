@@ -27,6 +27,13 @@
 
     <div id="profile">
     </div>
+
+    <div id="graph-container" ng-controller="ReportsPerDayCtrl">
+      <select ng-model="period" ng-change="getData()" ng-options="p.name for p in periods">
+      </select>
+    </div>
+
+
     <div id="content" ng-controller="CrashReportsCtrl">
       <span ng-bind-template="{{reports.length}} reports:"></span>
       <ul>
@@ -36,8 +43,6 @@
       </ul>
     </div>
 
-    <div id="graph-container" ng-controller="ReportsPerDayCtrl">
-    </div>
 
     <div id="sidebar">
       <p>Edit welcome message.</p>

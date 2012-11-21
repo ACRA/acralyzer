@@ -16,3 +16,13 @@
     font-family: sans-serif;
     font-size: 11px;
 }
+
+/*#graph-container rect.enter {
+	stroke:green;
+	fill:green;
+}
+#graph-container rect.exit {
+	stroke:red;
+	fill:red;
+}
+*/

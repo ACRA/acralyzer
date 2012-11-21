@@ -24,7 +24,8 @@ h1 {
   background:#eef;
   padding:8px;
   width:60%;
-  float:left;
+  /*float:left;*/
+  display: block;
 }
 
 #sidebar {
@@ -71,4 +72,8 @@ div.avatar img {
 
 ul {
   list-style: none;
+}
+
+#graph-container {
+  display: block;
 }
