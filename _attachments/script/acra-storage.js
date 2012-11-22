@@ -1,6 +1,5 @@
 angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function($resource) {
-      console.log("coucou acra-storage");
       var ReportsStore = $resource('/acra-storage/_design/acra-storage/_view/:view');
 
       ReportsStore.reportsPerDay = function(grouplvl, cb) {

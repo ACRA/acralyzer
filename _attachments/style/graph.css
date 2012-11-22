@@ -26,3 +26,14 @@
 	fill:red;
 }
 */
+
+#graph-container svg {
+	background: #f6f6f6;
+	border-radius: 0.5em;
+	border: solid 1px #aaa;
+	display: block;
+}
+
+#graph-container text {
+	font-size: 0.8em;
+}
