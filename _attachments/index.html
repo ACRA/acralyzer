@@ -2,44 +2,56 @@
 <html ng-app="Acralyzer">
   <head>
     <title>Acralyzer</title>
-    <link rel="stylesheet" href="vendor/d3/rickshaw.min.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-responsive.min.css" type="text/css">
     <link rel="stylesheet" href="style/main.css" type="text/css">
     <link rel="stylesheet" href="style/graph.css" type="text/css">
     <script src="/_utils/script/sha1.js"></script>
     <script src="/_utils/script/json2.js"></script>
     <script src="/_utils/script/jquery.js"></script>
     <script src="/_utils/script/jquery.couch.js"></script>
+    <script src="vendor/couchapp/jquery.couch.app.util.js"></script>
     <script src="vendor/couchapp/jquery.mustache.js"></script>
     <script src="vendor/couchapp/jquery.couchLogin.js"></script>
     <script src="vendor/couchapp/jquery.couchProfile.js"></script>
     <script src="vendor/couchapp/md5.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="vendor/angular/angular.min.js"></script>
     <script src="vendor/angular/angular-resource.min.js"></script>
     <script src="vendor/d3/d3.v2.js"></script>
+    <script src="vendor/timrwood/moment.min.js"></script>
   </head>
   <body>
     <div id="account"></div>
 
     <h1>Acralyzer</h1>
 
-    <div id="profile">
-    </div>
+    <!--div id="profile">
+    </div-->
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div id="graph-container" ng-controller="ReportsPerDayCtrl" class="span9">
+          Number of reports per
+          <select class="input-small" ng-model="period" ng-change="getData()" ng-options="p.name for p in periods">
+          </select>
+        </div>
+        <div class="span3">
+          Here comes another graph.
+        </div>
+      </div>
 
-    <div id="graph-container" ng-controller="ReportsPerDayCtrl">
-      <select ng-model="period" ng-change="getData()" ng-options="p.name for p in periods">
-      </select>
+      <div class="row-fluid">
+        <div id="content" ng-controller="CrashReportsCtrl" class="span12">
+          <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
+          <ul>
+            <li ng-repeat="report in reports" ng-cloak>
+              {{report.displayDate}} : {{report.value.android_version}} - {{report.value.stack_trace[0].split('\n')[0];}}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-
-
-    <div id="content" ng-controller="CrashReportsCtrl">
-      <span ng-bind-template="{{reports.length}} reports:"></span>
-      <ul>
-        <li ng-repeat="report in reports" ng-bind-template="{{report.value.user_crash_date}} : {{report.value.android_version}} - <a href='{{report.link}}'>{{report.value.stack_trace.split('\n')[0];}}</a>">
-          Loading reports...
-        </li>
-      </ul>
-    </div>
-    
     <script src="script/app.js"></script>
     <script src="script/acra-storage.js"></script>
     <script src="script/controllers.js"></script>

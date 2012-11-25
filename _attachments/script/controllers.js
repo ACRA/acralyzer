@@ -26,8 +26,10 @@ function CrashReportsCtrl($scope, ReportsStore) {
     $scope.getData = function() {
         ReportsStore.recentReports(function(data) {
             $scope.reports = data.rows;
+            $scope.totalReports = data.total_rows;
+            console.log($scope);
             for(row in $scope.reports) {
-                row.link = acra.getDocUrl(row._id);
+                $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
             }
         });
     }
@@ -117,17 +119,21 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
     /*        width : parseInt(container.style.width),
             height : parseInt(container.style.height),
     */        width : 900,
-            height : 400,
-            padding : 50
+            height : 300,
+            padding : 40
         };
                 
         // create an svg container
         if(!$scope.vis) {
             $scope.vis =  d3.select("#graph-container")
                 .append("svg:svg")
-                .attr("width", $scope.metrics.width)
+                .attr("width", "100%")
+                .attr("height", "80%")
+                .attr("viewBox", "0 0 " + $scope.metrics.width + " " + $scope.metrics.height)
+                .attr("preserveAspectRatio", "xMidYMid meet");
+/*                .attr("width", $scope.metrics.width)
                 .attr("height", $scope.metrics.height);
-        }
+*/        }
      
 
         $scope.xScale = d3.time.scale()

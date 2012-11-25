@@ -19,15 +19,6 @@ h1 {
   margin-bottom:8px;
 }
 
-#content {
-  border:4px solid #dde;
-  background:#eef;
-  padding:8px;
-  width:60%;
-  /*float:left;*/
-  display: block;
-}
-
 #sidebar {
   border:4px solid #dfd;
   padding:8px;
@@ -75,7 +66,12 @@ ul {
 }
 
 #graph-container {
+  height: 400px;
+}
+
+#graph-container svg {
+  background: #f6f6f6;
+  border-radius: 0.5em;
+  border: solid 1px #aaa;
   display: block;
-  width: 100%;
-  height: 500px;
 }

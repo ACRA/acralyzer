@@ -9,6 +9,7 @@
 #graph-container .yaxis line {
     fill: none;
     stroke: black;
+    stroke-width:2;
     shape-rendering: crispEdges;
 }
 
@@ -28,10 +29,8 @@
 */
 
 #graph-container svg {
-	background: #f6f6f6;
-	border-radius: 0.5em;
-	border: solid 1px #aaa;
-	display: block;
+	width: 100%;
+	margin: 0 auto;
 }
 
 #graph-container text {

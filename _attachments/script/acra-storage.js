@@ -7,7 +7,7 @@ angular.module('acra-storage', ['ngResource']).
       };
 
       ReportsStore.recentReports = function(cb) {
-        return ReportsStore.get({view: 'recent-items'}, cb);
+        return ReportsStore.get({view: 'recent-items', limit: 10, descending: true}, cb);
       };
       return ReportsStore;
     });
