@@ -1,6 +1,4 @@
-angular.module('Acralyzer', ['acra-storage'])
-
-
+angular.module('Acralyzer', ['acra-storage']);
 
 
 

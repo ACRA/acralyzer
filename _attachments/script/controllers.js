@@ -19,6 +19,17 @@
         var result = "/" + acra.dbname + "/" + docId;
     }
      
+    acra.addEvent = function(elem, type, eventHandle) {
+        if (elem == null || elem == undefined) return;
+        if ( elem.addEventListener ) {
+            elem.addEventListener( type, eventHandle, false );
+        } else if ( elem.attachEvent ) {
+            elem.attachEvent( "on" + type, eventHandle );
+        } else {
+            elem["on"+type]=eventHandle;
+        }
+    };
+
 }( window.acra = window.acra || {}, jQuery ));
  
 
@@ -27,13 +38,15 @@ function CrashReportsCtrl($scope, ReportsStore) {
         ReportsStore.recentReports(function(data) {
             $scope.reports = data.rows;
             $scope.totalReports = data.total_rows;
-            console.log($scope);
             for(row in $scope.reports) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
             }
         });
     }
 
+    $scope.loadReport = function(report) {
+        $scope.selectedReport = ReportsStore.reportDetails(report.id);
+    }
 }
 
 
@@ -112,15 +125,13 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
 
 
     $scope.buildGraph = function () {
-        var container = document.getElementById("graph-container");
-        console.log(container);
-        console.log(container.style.width + " x " + container.style.height);
+        var container = $("#graph-container");
         $scope.metrics = {
     /*        width : parseInt(container.style.width),
             height : parseInt(container.style.height),
-    */        width : 900,
-            height : 300,
-            padding : 40
+    */        width : container.width(),
+            height : container.height() * 0.8,
+            padding : container.height() * 0.15
         };
                 
         // create an svg container
@@ -226,7 +237,6 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
     }
 
     $scope.buildGraph();
-
 }
 
 
@@ -243,3 +253,6 @@ function getBidimensionalArray(rows) {
 }
 
 
+function CrashReportDetailCtrl ($scope, ReportsStore) {
+    $scope.report = { someKey: "Some value", otherKey: "Other value"};
+}

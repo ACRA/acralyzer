@@ -46,9 +46,18 @@
           <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
           <ul>
             <li ng-repeat="report in reports" ng-cloak>
-              {{report.displayDate}} : {{report.value.android_version}} - {{report.value.stack_trace[0].split('\n')[0];}}
+              <a ng-click="loadReport(report)">{{report.id}} - {{report.displayDate}} : {{report.value.android_version}} - {{report.value.stack_trace[0].split('\n')[0];}}</a>
             </li>
           </ul>
+          <table ng-show="selectedReport">
+            <tbody>
+              <tr ng-repeat="(key, value) in selectedReport">
+                <th>{{key}}</th>
+                <td>{{value}}</td>
+              </tr>
+            </tbody>
+          </table>
+
         </div>
       </div>
     </div>
