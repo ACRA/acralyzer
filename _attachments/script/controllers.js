@@ -46,6 +46,7 @@ function CrashReportsCtrl($scope, ReportsStore) {
 
     $scope.loadReport = function(report) {
         $scope.selectedReport = ReportsStore.reportDetails(report.id);
+        console.log($scope.selectedReport);
     }
 }
 
@@ -250,9 +251,4 @@ function getBidimensionalArray(rows) {
 		}
 	}
 	return result;
-}
-
-
-function CrashReportDetailCtrl ($scope, ReportsStore) {
-    $scope.report = { someKey: "Some value", otherKey: "Other value"};
 }

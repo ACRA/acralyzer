@@ -75,3 +75,7 @@ ul {
   border: solid 1px #aaa;
   display: block;
 }
+
+.prettyprint thead {
+  display: none;
+}
