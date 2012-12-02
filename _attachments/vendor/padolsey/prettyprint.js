@@ -52,18 +52,31 @@ var prettyPrint = (function(){
 			/*Copy to single object */
 			attrs = util.merge({}, attrs);
 			
-			/* Add attributes to el */
-			if (attrs && attrs.style) {
-				var styles = attrs.style;
-				util.applyCSS( el, attrs.style );
-				delete attrs.style;
-			}
-			for (attr in attrs) {
-				if (attrs.hasOwnProperty(attr)) {
-					el[attr] = attrs[attr];
-				}
-			}
-			
+
+            /* Add classes if provided */
+            if (attrs && attrs.classes) {
+                var classNames = attrs.classes;
+                for(classNameId in classNames) {
+                    el.className = el.className + " "  + classNames[classNameId];
+                }
+
+                delete attrs.classes;
+            } else if (attrs && attrs.style) {
+                /* Else apply inline style */
+                var styles = attrs.style;
+                util.applyCSS( el, attrs.style );
+                delete attrs.style;
+            }
+
+
+            for (attr in attrs) {
+                if (attrs.hasOwnProperty(attr)) {
+                    el[attr] = attrs[attr];
+                }
+            }
+
+
+
 			return el;
 		
 		},
@@ -123,7 +136,7 @@ var prettyPrint = (function(){
 					td.appendChild(cell);
 				} else {
 					/* IsString */
-					td.innerHTML = util.shorten(cell.toString());
+					td.innerHTML = cell.toString();
 				}
 				
 				tr.appendChild(td);
@@ -150,12 +163,13 @@ var prettyPrint = (function(){
 						style:util.getStyles('tbody',type)
 					},
 					table: {
-						style:util.getStyles('table',type)
+						style:util.getStyles('table',type),
+                        classes: util.getClasses('table',type)
 					}
-				},
-				tbl = util.el('table', attrs.table),
-				thead = util.el('thead', attrs.thead),
-				tbody = util.el('tbody', attrs.tbody);
+				};
+            tbl = util.el('table', attrs.table),
+            thead = util.el('thead', attrs.thead),
+            tbody = util.el('tbody', attrs.tbody);
 				
 			if (headings.length) {
 				tbl.appendChild(thead);
@@ -180,7 +194,7 @@ var prettyPrint = (function(){
 		},
 		
 		shorten: function(str) {
-			var max = 40;
+			var max = 100;
 			str = str.replace(/^\s\s*|\s\s*$|\n/g,'');
 			return str.length > max ? (str.substring(0, max-1) + '...') : str;
 		},
@@ -331,7 +345,18 @@ var prettyPrint = (function(){
 				{}, prettyPrintThis.settings.styles['default'][el], type[el]
 			);
 		},
-		
+
+        getClasses: function(el, type) {
+            var result = Array();
+            if(prettyPrintThis.settings.classes[type]) {
+                result.push(prettyPrintThis.settings.classes[type]);
+            }
+            if(prettyPrintThis.settings.classes['default'][el]) {
+                result.push(prettyPrintThis.settings.classes['default'][el]);
+            }
+            return result;
+        },
+
 		expander: function(text, title, clickFn) {
 			return util.el('a', {
 				innerHTML:  util.shorten(text) + ' <b style="visibility:hidden;">[+]</b>',
@@ -382,7 +407,7 @@ var prettyPrint = (function(){
 			if (type === 'regexp') {
 				return '/' + obj.source + '/';
 			}
-			if (type === 'string') {
+			if (prettyPrintThis.settings.stringsWithDoubleQuotes && type === 'string') {
 				return '"' + obj.replace(/"/g,'\\"') + '"';
 			}
 			return obj.toString();
@@ -434,7 +459,11 @@ var prettyPrint = (function(){
 		
 		var typeDealer = {
 			string : function(item){
-				return util.txt('"' + util.shorten(item.replace(/"/g,'\\"')) + '"');
+                if(prettyPrintThis.settings.stringsWithDoubleQuotes) {
+				    return util.txt('"' + util.shorten(item.replace(/"/g,'\\"')) + '"');
+                } else {
+                    return util.txt(util.shorten(item.replace(/"/g,'\\"')));
+                }
 			},
 			number : function(item) {
 				return util.txt(item);
@@ -519,9 +548,22 @@ var prettyPrint = (function(){
 				
 				var table = util.table(['Object', null],'object'),
 					isEmpty = true;
-				
-				for (var i in obj) {
-					if (!obj.hasOwnProperty || obj.hasOwnProperty(i)) {
+
+                var keys = [];
+                for (var i in obj) {
+                    if (obj.hasOwnProperty(i)) {
+                        keys.push(i);
+                    }
+                }
+                if (settings.sortKeys) {
+                    keys.sort();
+                }
+
+                var len = keys.length;
+
+                for (var j = 0; j < len; j++) {
+                    i = keys[j];
+                    if (!obj.hasOwnProperty || obj.hasOwnProperty(i)) {
 						var item = obj[i],
 							type = util.type(item);
 						isEmpty = false;
@@ -580,7 +622,7 @@ var prettyPrint = (function(){
 				}
 
 				util.forEach(arr, function(item,i){
-                    if (settings.maxArray > 0 && ++count > settings.maxArray) {
+                    if (settings.maxArray >= 0 && ++count > settings.maxArray) {
                         table.addRow([
                             i + '..' + (arr.length-1),
                             typeDealer[ util.type(item) ]('...', depth+1, i)
@@ -680,10 +722,16 @@ var prettyPrint = (function(){
 		
 		/* Try setting this to false to save space */
 		expanded: true,
-		
-		forceObject: false,
+        sortKeys: false,  // if true, will sort object keys
+        forceObject: false,
 		maxDepth: 3,
 		maxArray: -1,  // default is unlimited
+        stringsWithDoubleQuotes: true,
+        classes: {
+            'default': {
+                /* table: "table table-condensed span10" */ // Example for all tables
+            }
+        },
 		styles: {
 			array: {
 				th: {
@@ -737,17 +785,17 @@ var prettyPrint = (function(){
 			},
 			'default': {
 				table: {
-					borderCollapse: 'collapse',
-					width: '100%'
+//					borderCollapse: 'collapse',
+//					width: '100%'
 				},
 				td: {
-					padding: '5px',
+//					padding: '5px',
 					fontSize: '12px',
-					backgroundColor: '#FFF',
-					color: '#222',
-					border: '1px solid #000',
-					verticalAlign: 'top',
-					fontFamily: '"Consolas","Lucida Console",Courier,mono',
+//					backgroundColor: '#FFF',
+//					color: '#222',
+//					border: '1px solid #000',
+//					verticalAlign: 'top',
+//					fontFamily: '"Consolas","Lucida Console",Courier,mono',
 					whiteSpace: 'nowrap'
 				},
 				td_hover: {
