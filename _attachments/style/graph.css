@@ -39,8 +39,9 @@
 
 
 .slice {
-    font-size: 12pt;
-    font-family: Verdana;
+    font-size: 10pt;
+    font-family: sans-serif;
     fill: white; /*svg specific - instead of color*/
-font-weight: bold;
+    font-weight: bold;
 }
+

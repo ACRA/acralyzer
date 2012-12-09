@@ -289,6 +289,38 @@ function PieChartsCtrl($scope, ReportsStore) {
         });
     }
 
+    $scope.mouseover = function() {
+        console.log("mouseover");
+        console.log(this);
+        d3.select(this).select("path").transition()
+            .duration(750)
+            //.attr("stroke","red")
+            //.attr("stroke-width", 1.5)
+            .attr("d", $scope.arcFinal3)
+        ;
+    }
+
+    $scope.mouseout = function() {
+        console.log("mouseout");
+        console.log(this);
+        d3.select(this).select("path").transition()
+            .duration(750)
+            //.attr("stroke","blue")
+            //.attr("stroke-width", 1.5)
+            .attr("d", $scope.arcFinal)
+        ;
+    }
+
+    $scope.up = function(d, i) {
+        console.log("up");
+        console.log(this);
+
+        /* update bar chart when user selects piece of the pie chart */
+        //updateBarChart(dataset[i].category);
+//            updateBarChart(d.data.category, color(i));
+//            updateLineChart(d.data.category, color(i));
+
+    }
 
     $scope.buildGraph = function () {
         var container = $("#pie-charts");
@@ -346,7 +378,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             .attr("fill", function(d, i) { return $scope.metrics.color(i); } ) //set the color for each slice to be chosen from the color function defined above
             .attr("d", $scope.arc)     //this creates the actual SVG path using the associated data (pie) with the arc drawing function
             .append("svg:title") //mouseover title showing the figures
-            .text(function(d) { return formatAsPercentage(d.value); });
+            .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value) + " (" + d.data[1] + " reports)"; });
 
         d3.selectAll("g.slice").selectAll("path").transition()
             .duration(750)
@@ -364,11 +396,12 @@ function PieChartsCtrl($scope, ReportsStore) {
         // source: http://bl.ocks.org/1305337#index.html
         arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
             .append("svg:text")
+            .attr("class", "label")
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
             .attr("transform", function(d) { return "translate(" + $scope.arcFinal.centroid(d) + ")rotate(" + $scope.angle(d) + ")"; })
             //.text(function(d) { return formatAsPercentage(d.value); })
-            .text(function(d) { return d[0]; })
+            .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value); })
         ;
 
 
@@ -381,32 +414,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             .attr("class","title")
         ;
 
-         $scope.mouseover = function() {
-            d3.select(this).select("path").transition()
-                .duration(750)
-                //.attr("stroke","red")
-                //.attr("stroke-width", 1.5)
-                .attr("d", $scope.arcFinal3)
-            ;
-        }
 
-        $scope.mouseout = function() {
-            d3.select(this).select("path").transition()
-                .duration(750)
-                //.attr("stroke","blue")
-                //.attr("stroke-width", 1.5)
-                .attr("d", $scope.arcFinal)
-            ;
-        }
-
-        $scope.up = function(d, i) {
-
-            /* update bar chart when user selects piece of the pie chart */
-            //updateBarChart(dataset[i].category);
-//            updateBarChart(d.data.category, color(i));
-//            updateLineChart(d.data.category, color(i));
-
-        }
 
     }
 }
