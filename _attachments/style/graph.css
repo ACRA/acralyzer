@@ -36,3 +36,11 @@
 #graph-container text {
 	font-size: 0.8em;
 }
+
+
+.slice {
+    font-size: 12pt;
+    font-family: Verdana;
+    fill: white; /*svg specific - instead of color*/
+font-weight: bold;
+}

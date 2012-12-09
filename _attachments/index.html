@@ -32,13 +32,15 @@
     </div-->
     <div class="container-fluid">
       <div class="row-fluid">
-        <div id="graph-container" ng-controller="ReportsPerDayCtrl" class="span9">
+        <div id="graph-container" ng-controller="ReportsPerDayCtrl" class="span8">
           Number of reports per
           <select class="input-small" ng-model="period" ng-change="getData()" ng-options="p.name for p in periods">
           </select>
         </div>
-        <div class="span3">
-          Here comes another graph.
+        <div id="pie-charts" ng-controller="PieChartsCtrl" class="span4">
+            Number of reports per
+            <select ng-model="fieldName" ng-change="getData()" ng-options="f.label for f in fieldNames">
+            </select>
         </div>
       </div>
 
@@ -51,15 +53,6 @@
             </li>
           </ul>
           <div class="prettyprint" prettyprint="selectedReport" />
-<!--           <table ng-show="selectedReport" class="table table-striped">
-            <tbody>
-              <tr ng-repeat="(key, value) in selectedReport">
-                <th>{{key}}</th>
-                <td>{{value}}</td>
-              </tr>
-            </tbody>
-          </table>
- -->
         </div>
       </div>
     </div>

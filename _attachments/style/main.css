@@ -65,7 +65,7 @@ ul {
   list-style: none;
 }
 
-#graph-container {
+#graph-container, #pie-charts {
   height: 400px;
 }
 
