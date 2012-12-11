@@ -282,7 +282,7 @@ function PieChartsCtrl($scope, ReportsStore) {
                             $scope.reportsPerFieldName[i][2] = $scope.reportsPerFieldName[i][1] / totalReports;
                         }
                         console.log($scope.reportsPerFieldName);
-                        $scope.buildGraph();
+                        $scope.updateGraph();
                     });
                 }
             }
@@ -290,8 +290,6 @@ function PieChartsCtrl($scope, ReportsStore) {
     }
 
     $scope.mouseover = function() {
-        console.log("mouseover");
-        console.log(this);
         d3.select(this).select("path").transition()
             .duration(750)
             //.attr("stroke","red")
@@ -301,8 +299,6 @@ function PieChartsCtrl($scope, ReportsStore) {
     }
 
     $scope.mouseout = function() {
-        console.log("mouseout");
-        console.log(this);
         d3.select(this).select("path").transition()
             .duration(750)
             //.attr("stroke","blue")
@@ -312,9 +308,6 @@ function PieChartsCtrl($scope, ReportsStore) {
     }
 
     $scope.up = function(d, i) {
-        console.log("up");
-        console.log(this);
-
         /* update bar chart when user selects piece of the pie chart */
         //updateBarChart(dataset[i].category);
 //            updateBarChart(d.data.category, color(i));
@@ -340,16 +333,17 @@ function PieChartsCtrl($scope, ReportsStore) {
         };
 
         // create an svg container
-        if(!$scope.vis) {
-            $scope.vis =  d3.select("#pie-charts")
-                .append("svg:svg")              //create the SVG element inside the <body>
-                .data([$scope.reportsPerFieldName])                   //associate our data with the document
-                .attr("width", $scope.metrics.width)           //set the width and height of our visualization (these will be attributes of the <svg> tag
-                .attr("height", $scope.metrics.height)
-                .append("svg:g")                //make a group to hold our pie chart
-                .attr("transform", "translate(" + $scope.metrics.outerRadius + "," + $scope.metrics.outerRadius + ")")    //move the center of the pie chart from 0, 0 to radius, radius
-            ;
-        }
+        $scope.vis =  d3.select("#pie-charts")
+            .append("svg:svg")              //create the SVG element inside the <body>
+            .data([$scope.reportsPerFieldName])                   //associate our data with the document
+            .attr("width", "100%")
+            .attr("height", "80%")
+            .attr("viewBox", "0 0 " + $scope.metrics.width + " " + $scope.metrics.height)
+            .attr("preserveAspectRatio", "xMidYMid meet")
+            .append("svg:g")                //make a group to hold our pie chart
+            .attr("transform", "translate(" + $scope.metrics.outerRadius + "," + $scope.metrics.outerRadius + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+        ;
+
         $scope.arc = d3.svg.arc()              //this will create <path> elements for us using arc data
             .outerRadius($scope.metrics.outerRadius).innerRadius($scope.metrics.innerRadius);
 
@@ -361,30 +355,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             .value(function(d) {
                 console.log("Pie data: " + d);
                 return d[2];
-            });    //we must tell it out to access the value of each element in our data array
-
-
-        var arcs = $scope.vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
-                .data($scope.pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
-                .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
-                .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
-                .attr("class", "slice")    //allow us to style things in the slices (like text)
-                .on("mouseover", $scope.mouseover)
-                .on("mouseout", $scope.mouseout)
-                .on("click", $scope.up)
-            ;
-
-        arcs.append("svg:path")
-            .attr("fill", function(d, i) { return $scope.metrics.color(i); } ) //set the color for each slice to be chosen from the color function defined above
-            .attr("d", $scope.arc)     //this creates the actual SVG path using the associated data (pie) with the arc drawing function
-            .append("svg:title") //mouseover title showing the figures
-            .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value) + " (" + d.data[1] + " reports)"; });
-
-        d3.selectAll("g.slice").selectAll("path").transition()
-            .duration(750)
-            .delay(10)
-            .attr("d", $scope.arcFinal )
-        ;
+            });    //we must tell it how to access the value of each element in our data array
 
         // Computes the label angle of an arc, converting from radians to degrees.
         $scope.angle = function(d) {
@@ -392,31 +363,62 @@ function PieChartsCtrl($scope, ReportsStore) {
             return a > 90 ? a - 180 : a;
         }
 
-        // Add a label to the larger arcs, translated to the arc centroid and rotated.
-        // source: http://bl.ocks.org/1305337#index.html
-        arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
-            .append("svg:text")
-            .attr("class", "label")
-            .attr("dy", ".35em")
-            .attr("text-anchor", "middle")
-            .attr("transform", function(d) { return "translate(" + $scope.arcFinal.centroid(d) + ")rotate(" + $scope.angle(d) + ")"; })
-            //.text(function(d) { return formatAsPercentage(d.value); })
-            .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value); })
-        ;
-
-
-
         // Pie chart title
-        $scope.vis.append("svg:text")
+        $scope.chartTitle = $scope.vis.append("svg:text")
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
             .text($scope.fieldName.label)
             .attr("class","title")
         ;
 
-
-
     }
+
+    $scope.updateGraph = function () {
+        $scope.vis.data([$scope.reportsPerFieldName]);
+        $scope.chartTitle.text($scope.fieldName.label);
+
+        var arcs = $scope.vis.selectAll("g.slice").data($scope.pie);
+
+        // update
+        arcs.select("path").attr("d", $scope.arcFinal);
+        arcs.select(".label")
+              .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value); });
+
+        arcs.exit().remove();
+
+        var newarcs = arcs.enter()
+            .append("svg:g")
+            .attr("class", "slice")
+            .on("mouseover", $scope.mouseover)
+            .on("mouseout", $scope.mouseout)
+            .on("click", $scope.up);
+
+        newarcs.append("svg:path")
+              .attr("fill", function(d, i) { return $scope.metrics.color(i); } ) //set the color for each slice to be chosen from the color function defined above
+              .attr("d", $scope.arcFinal)     //this creates the actual SVG path using the associated data (pie) with the arc drawing function
+              .append("svg:title") //mouseover title showing the figures
+                .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value) + " (" + d.data[1] + " reports)"; })
+        ;
+
+        newarcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
+            .append("svg:text")
+              .attr("class", "label")
+              .attr("dy", ".35em")
+              .attr("text-anchor", "middle")
+              .attr("transform", function(d) { return "translate(" + $scope.arcFinal.centroid(d) + ")rotate(" + $scope.angle(d) + ")"; })
+              .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value); })
+        ;
+
+
+/*        d3.selectAll("g.slice").selectAll("path").transition()
+            .duration(750)
+            .delay(10)
+            .attr("d", $scope.arcFinal )
+        ;
+*/
+    }
+
+    $scope.buildGraph();
 }
 
 var 	formatAsPercentage = d3.format("%"),
