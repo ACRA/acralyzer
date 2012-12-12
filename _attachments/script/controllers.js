@@ -342,7 +342,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             .attr("viewBox", "0 0 " + $scope.metrics.width + " " + $scope.metrics.height)
             .attr("preserveAspectRatio", "xMidYMid meet")
             .append("svg:g")                //make a group to hold our pie chart
-            .attr("transform", "translate(" + $scope.metrics.outerRadius + "," + $scope.metrics.outerRadius + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+            .attr("transform", "translate(" + $scope.metrics.width / 2 + "," + $scope.metrics.height / 2 + ")")    //move the center of the pie chart from 0, 0 to radius, radius
         ;
 
         $scope.arc = d3.svg.arc()              //this will create <path> elements for us using arc data
@@ -354,7 +354,6 @@ function PieChartsCtrl($scope, ReportsStore) {
 
         $scope.pie = d3.layout.pie()            //this will create arc data for us given a list of values
             .value(function(d) {
-                console.log("Pie data: " + d);
                 return d[2];
             });    //we must tell it how to access the value of each element in our data array
 
