@@ -327,7 +327,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             outerRadius : outerRad,
             innerRadius : innerRad,
             // for animation
-            innerRadiusFinal : outerRad * .5,
+            innerRadiusFinal : outerRad * .2,
             innerRadiusFinal3 : outerRad * .45,
             color : d3.scale.category20()    //builtin range of colors
         };
@@ -336,8 +336,8 @@ function PieChartsCtrl($scope, ReportsStore) {
         $scope.vis =  d3.select("#pie-charts")
             .append("svg:svg")              //create the SVG element inside the <body>
             .data([$scope.reportsPerFieldName])                   //associate our data with the document
-            .attr("width", "100%")
-            .attr("height", "80%")
+            .attr("width", "95%")
+            .attr("height", "95%")
             .attr("viewBox", "0 0 " + $scope.metrics.width + " " + $scope.metrics.height)
             .attr("preserveAspectRatio", "xMidYMid meet")
             .append("svg:g")                //make a group to hold our pie chart
@@ -364,33 +364,41 @@ function PieChartsCtrl($scope, ReportsStore) {
         }
 
         // Pie chart title
-        $scope.chartTitle = $scope.vis.append("svg:text")
+/*        $scope.chartTitle = $scope.vis.append("svg:text")
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
             .text($scope.fieldName.label)
             .attr("class","title")
-        ;
+*/        ;
 
     }
 
     $scope.updateGraph = function () {
         $scope.vis.data([$scope.reportsPerFieldName]);
-        $scope.chartTitle.text($scope.fieldName.label);
+//        $scope.chartTitle.text($scope.fieldName.label);
 
         var arcs = $scope.vis.selectAll("g.slice").data($scope.pie);
 
         // update
         arcs.select("path").attr("d", $scope.arcFinal);
-        arcs.select(".label")
-              .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value); });
+
+        arcs.select(".pie-label").filter(function(d) { return d.endAngle - d.startAngle <= .2; })
+            .remove();
+
+        arcs.select(".pie-label")
+              .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value); })
+              .attr("transform", function(d) { return "translate(" + $scope.arcFinal.centroid(d) + ")rotate(" + $scope.angle(d) + ")"; });
+
+        arcs.select("title")
+            .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value) + " (" + d.data[1] + " reports)"; })
 
         arcs.exit().remove();
 
         var newarcs = arcs.enter()
             .append("svg:g")
             .attr("class", "slice")
-            .on("mouseover", $scope.mouseover)
-            .on("mouseout", $scope.mouseout)
+//            .on("mouseover", $scope.mouseover)
+//            .on("mouseout", $scope.mouseout)
             .on("click", $scope.up);
 
         newarcs.append("svg:path")
@@ -402,7 +410,7 @@ function PieChartsCtrl($scope, ReportsStore) {
 
         newarcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
             .append("svg:text")
-              .attr("class", "label")
+              .attr("class", "pie-label")
               .attr("dy", ".35em")
               .attr("text-anchor", "middle")
               .attr("transform", function(d) { return "translate(" + $scope.arcFinal.centroid(d) + ")rotate(" + $scope.angle(d) + ")"; })

@@ -39,7 +39,7 @@
 
 
 .slice {
-    font-size: 10pt;
+    font-size: 1em;
     font-family: sans-serif;
     fill: white; /*svg specific - instead of color*/
     font-weight: bold;

@@ -69,13 +69,23 @@ ul {
   height: 400px;
 }
 
-#graph-container svg {
-  background: #f6f6f6;
+#graph-container, #pie-charts {
   border-radius: 0.5em;
   border: solid 1px #aaa;
   display: block;
+  text-align: center;
 }
 
-.prettyprint thead {
+#pie-charts svg {
+    margin: 1em auto;
+}
+
+#content {
+    border-radius: 0.5em;
+    border: solid 1px #aaa;
+    margin-top: 1.5em;
+}
+
+.report-details thead {
   display: none;
 }
