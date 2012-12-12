@@ -34,6 +34,7 @@
  
 
 function CrashReportsCtrl($scope, ReportsStore) {
+    $scope.selectedReport = "";
     $scope.getData = function() {
         ReportsStore.recentReports(function(data) {
             $scope.reports = data.rows;
@@ -337,7 +338,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             .append("svg:svg")              //create the SVG element inside the <body>
             .data([$scope.reportsPerFieldName])                   //associate our data with the document
             .attr("width", "95%")
-            .attr("height", "95%")
+            .attr("height", "85%")
             .attr("viewBox", "0 0 " + $scope.metrics.width + " " + $scope.metrics.height)
             .attr("preserveAspectRatio", "xMidYMid meet")
             .append("svg:g")                //make a group to hold our pie chart
