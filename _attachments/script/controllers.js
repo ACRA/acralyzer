@@ -382,12 +382,16 @@ function PieChartsCtrl($scope, ReportsStore) {
         // update
         arcs.select("path").attr("d", $scope.arcFinal);
 
-        arcs.select(".pie-label").filter(function(d) { return d.endAngle - d.startAngle <= .2; })
-            .remove();
+        arcs.select(".pie-label").remove();
 
-        arcs.select(".pie-label")
-              .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value); })
-              .attr("transform", function(d) { return "translate(" + $scope.arcFinal.centroid(d) + ")rotate(" + $scope.angle(d) + ")"; });
+        arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
+            .append("svg:text")
+            .attr("class", "pie-label")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) { return "translate(" + $scope.arcFinal.centroid(d) + ")rotate(" + $scope.angle(d) + ")"; })
+            .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value); })
+        ;
 
         arcs.select("title")
             .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value) + " (" + d.data[1] + " reports)"; })
