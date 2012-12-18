@@ -33,14 +33,16 @@
     <div class="container-fluid">
       <div id="charts" class="row-fluid">
         <div id="graph-container" ng-controller="ReportsPerDayCtrl" class="span8">
-          Reports per
+          <div class="chooser">Reports per
           <select class="input-small" ng-model="period" ng-change="getData()" ng-options="p.name for p in periods">
           </select>
+          </div>
         </div>
         <div id="pie-charts" ng-controller="PieChartsCtrl" class="span4">
-            Reports per
+          <div class="chooser">Reports per
             <select ng-model="fieldName" ng-change="getData()" ng-options="f.label for f in fieldNames">
             </select>
+          </div>
         </div>
       </div>
 

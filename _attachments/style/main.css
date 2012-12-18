@@ -76,10 +76,6 @@ ul {
   text-align: center;
 }
 
-#pie-charts svg {
-    margin: 1em auto;
-}
-
 #content {
     border-radius: 0.5em;
     border: solid 1px #aaa;
