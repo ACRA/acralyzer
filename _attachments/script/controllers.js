@@ -292,7 +292,7 @@ function PieChartsCtrl($scope, ReportsStore) {
 
     $scope.mouseover = function() {
         d3.select(this).select("path").transition()
-            .duration(750)
+            .duration(350)
             //.attr("stroke","red")
             //.attr("stroke-width", 1.5)
             .attr("d", $scope.arcFinal3)
@@ -301,7 +301,7 @@ function PieChartsCtrl($scope, ReportsStore) {
 
     $scope.mouseout = function() {
         d3.select(this).select("path").transition()
-            .duration(750)
+            .duration(350)
             //.attr("stroke","blue")
             //.attr("stroke-width", 1.5)
             .attr("d", $scope.arcFinal)
@@ -326,10 +326,11 @@ function PieChartsCtrl($scope, ReportsStore) {
             height : container.height(),
             padding : container.height() * 0.15,
             outerRadius : outerRad,
+            outerRadiusSelected : outerRad * 1.05,
             innerRadius : innerRad,
             // for animation
             innerRadiusFinal : outerRad * .2,
-            innerRadiusFinal3 : outerRad * .45,
+            innerRadiusFinal3 : outerRad * .25,
             color : d3.scale.category20()    //builtin range of colors
         };
 
@@ -350,7 +351,7 @@ function PieChartsCtrl($scope, ReportsStore) {
 
         // for animation
         $scope.arcFinal = d3.svg.arc().innerRadius($scope.metrics.innerRadiusFinal).outerRadius($scope.metrics.outerRadius);
-        $scope.arcFinal3 = d3.svg.arc().innerRadius($scope.metrics.innerRadiusFinal3).outerRadius($scope.metrics.outerRadius);
+        $scope.arcFinal3 = d3.svg.arc().innerRadius($scope.metrics.innerRadiusFinal3).outerRadius($scope.metrics.outerRadiusSelected);
 
         $scope.pie = d3.layout.pie()            //this will create arc data for us given a list of values
             .value(function(d) {
@@ -401,8 +402,8 @@ function PieChartsCtrl($scope, ReportsStore) {
         var newarcs = arcs.enter()
             .append("svg:g")
             .attr("class", "slice")
-//            .on("mouseover", $scope.mouseover)
-//            .on("mouseout", $scope.mouseout)
+            .on("mouseover", $scope.mouseover)
+            .on("mouseout", $scope.mouseout)
             .on("click", $scope.up);
 
         newarcs.append("svg:path")
