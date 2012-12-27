@@ -19,7 +19,8 @@
             <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
             <ul>
                 <li ng-repeat="report in reports" ng-cloak>
-                    <a ng-click="loadReport(report)"><report-summary report="report"></report-summary></a>
+                    <a ng-click="loadReport(report)" class="btn btn-mini"><i class="icon-search" ng-hide="report.id == selectedReport._id"></i><i class="icon-asterisk" ng-show="report.id == selectedReport._id"></i></a>
+                    <report-summary report="report"></report-summary>
                 </li>
             </ul>
             <div class="report-details" prettyprint="selectedReport" />

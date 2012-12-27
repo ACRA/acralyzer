@@ -35,6 +35,29 @@
 
 function CrashReportsCtrl($scope, ReportsStore) {
     $scope.selectedReport = "";
+
+    var getReportSignature = function(report) {
+        var result = { full: "", digest: ""};
+        var stack = report.value.stack_trace;
+        if(stack.length > 1) {
+            var exceptionName =  stack[0];
+            var faultyLine = stack[1];
+            var applicationPackage = report.value.application_package;
+            for(var line in stack) {
+                if(stack[line].indexOf(applicationPackage) >= 0) {
+                    faultyLine = stack[line];
+                    break;
+                }
+            }
+            result.full = exceptionName + " : " + faultyLine;
+
+            var captureRegEx = /\((.*)\)/g;
+            var faultyLineDigest =  captureRegEx.exec(faultyLine)[1];
+            result.digest = exceptionName + " : " + faultyLineDigest;
+            return result;
+        }
+    }
+
     $scope.getData = function() {
         ReportsStore.recentReports(function(data) {
             console.log("Refresh data for latest reports");
@@ -42,9 +65,10 @@ function CrashReportsCtrl($scope, ReportsStore) {
             $scope.totalReports = data.total_rows;
             for(row in $scope.reports) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
+                $scope.reports[row].signature = getReportSignature($scope.reports[row]);
             }
         },
-        function(response, getResonseHeaders){
+        function(response, getResponseHeaders){
             $scope.reports=[];
             $scope.totalReports="";
         });
