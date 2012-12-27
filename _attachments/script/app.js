@@ -1,4 +1,10 @@
 angular.module('Acralyzer', ['acra-storage'])
+    .config(['$routeProvider', function($routeProvider) {
+    $routeProvider.
+        when('/dashboard', {templateUrl: 'partials/dashboard.html',   controller: DashboardCtrl}).
+        when('/reports-browser', {templateUrl: 'partials/reports-browser.html', controller: ReportsBrowserCtrl}).
+        otherwise({redirectTo: '/dashboard'});
+    }])
     .directive('prettyprint',function(){
         return {
             restrict: 'A',
@@ -33,7 +39,7 @@ angular.module('Acralyzer', ['acra-storage'])
                                 'default': {
                                     table: "table table-condensed span10"
                                 }
-                            },
+                            }
                         }));
                     }
                 });
@@ -77,25 +83,36 @@ $(function() {
                     }).find("input").focus();
                 }
             });
-            e = document.getElementById('content');
-            scope = angular.element(e).scope();
-            scope.$apply(function() {
-               scope.getData();
-            });
-            e = document.getElementById('graph-container');
-            scope = angular.element(e).scope();
-            scope.$apply(function() {
-               scope.getData();
-            });
 
-            e = document.getElementById('pie-charts');
-            scope = angular.element(e).scope();
-            scope.$apply(function() {
-                scope.getData();
+            scope = angular.element(document).scope();
+            scope.$apply(function($rootScope){
+                $rootScope.$broadcast("refresh");
             });
+ /*           e = document.getElementById('content');
+            scope = angular.element(e).scope();
+            if(scope) {
+                scope.$apply(function() {
+                   scope.getData();
+                });
+                e = document.getElementById('graph-container');
+                scope = angular.element(e).scope();
+                scope.$apply(function() {
+                   scope.getData();
+                });
 
+                e = document.getElementById('pie-charts');
+                scope = angular.element(e).scope();
+                scope.$apply(function() {
+                    scope.getData();
+                });
+            }
+  */
         },
         loggedOut : function() {
+            scope = angular.element(document).scope();
+            scope.$apply(function($rootScope){
+                $rootScope.$broadcast("refresh");
+            });
             $("#profile").html('<p>Please log in to see your profile.</p>');
         }
     });

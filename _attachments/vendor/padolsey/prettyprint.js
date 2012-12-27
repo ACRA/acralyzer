@@ -462,7 +462,8 @@ var prettyPrint = (function(){
                 if(prettyPrintThis.settings.stringsWithDoubleQuotes) {
 				    return util.txt('"' + util.shorten(item.replace(/"/g,'\\"')) + '"');
                 } else {
-                    return util.txt(util.shorten(item.replace(/"/g,'\\"')));
+                    return util.txt(item.replace(/"/g,'\\"'));
+                    //return util.txt(util.shorten(item.replace(/"/g,'\\"')));
                 }
 			},
 			number : function(item) {

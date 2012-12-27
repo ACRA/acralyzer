@@ -37,11 +37,16 @@ function CrashReportsCtrl($scope, ReportsStore) {
     $scope.selectedReport = "";
     $scope.getData = function() {
         ReportsStore.recentReports(function(data) {
+            console.log("Refresh data for latest reports");
             $scope.reports = data.rows;
             $scope.totalReports = data.total_rows;
             for(row in $scope.reports) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
             }
+        },
+        function(response, getResonseHeaders){
+            $scope.reports=[];
+            $scope.totalReports="";
         });
     }
 
@@ -49,6 +54,9 @@ function CrashReportsCtrl($scope, ReportsStore) {
         $scope.selectedReport = ReportsStore.reportDetails(report.id);
         console.log($scope.selectedReport);
     }
+
+    $scope.getData();
+    $scope.$on("refresh", $scope.getData);
 }
 
 
@@ -118,6 +126,10 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
                     console.log("You are authorized as a reader!");
                     ReportsStore.reportsPerDay($scope.period.value, function(data) {
                         $scope.reportsPerDay= getBidimensionalArray(data.rows);
+                        $scope.updateGraph();
+                    },
+                    function(response, getResonseHeaders){
+                        $scope.reportsPerDay=[[]];
                         $scope.updateGraph();
                     });
                 }
@@ -239,6 +251,9 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
     }
 
     $scope.buildGraph();
+    $scope.getData();
+
+    $scope.$on("refresh", $scope.getData);
 }
 
 
@@ -283,6 +298,10 @@ function PieChartsCtrl($scope, ReportsStore) {
                             $scope.reportsPerFieldName[i][2] = $scope.reportsPerFieldName[i][1] / totalReports;
                         }
                         console.log($scope.reportsPerFieldName);
+                        $scope.updateGraph();
+                    },
+                    function(response, getResonseHeaders){
+                        $scope.reportsPerFieldName=[[]];
                         $scope.updateGraph();
                     });
                 }
@@ -432,9 +451,12 @@ function PieChartsCtrl($scope, ReportsStore) {
     }
 
     $scope.buildGraph();
+    $scope.getData();
+
+    $scope.$on("refresh", $scope.getData);
 }
 
-var 	formatAsPercentage = d3.format("%"),
+var formatAsPercentage = d3.format("%"),
     formatAsPercentage1Dec = d3.format(".1%"),
     formatAsInteger = d3.format(","),
     fsec = d3.time.format("%S s"),
@@ -444,3 +466,12 @@ var 	formatAsPercentage = d3.format("%"),
     fdat = d3.time.format("%d d"),
     fmon = d3.time.format("%b")
     ;
+
+
+
+function DashboardCtrl($scope) {
+}
+
+function ReportsBrowserCtrl($scope) {
+    console.log("hmmmmkay !");
+}
