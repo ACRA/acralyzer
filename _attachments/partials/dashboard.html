@@ -19,7 +19,7 @@
             <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
             <ul>
                 <li ng-repeat="report in reports" ng-cloak>
-                    <a ng-click="loadReport(report)">{{report.id}} - {{report.displayDate}} : {{report.value.android_version}} - {{report.value.stack_trace[0].split('\n')[0];}}</a>
+                    <a ng-click="loadReport(report)"><report-summary report="report"></report-summary></a>
                 </li>
             </ul>
             <div class="report-details" prettyprint="selectedReport" />

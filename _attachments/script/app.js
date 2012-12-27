@@ -1,11 +1,13 @@
-angular.module('Acralyzer', ['acra-storage'])
-    .config(['$routeProvider', function($routeProvider) {
+var acralyzer = angular.module('Acralyzer', ['acra-storage']);
+
+acralyzer.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/dashboard', {templateUrl: 'partials/dashboard.html',   controller: DashboardCtrl}).
         when('/reports-browser', {templateUrl: 'partials/reports-browser.html', controller: ReportsBrowserCtrl}).
         otherwise({redirectTo: '/dashboard'});
-    }])
-    .directive('prettyprint',function(){
+    }]);
+
+acralyzer.directive('prettyprint',function(){
         return {
             restrict: 'A',
             link:function($scope,$element,$attr){
@@ -47,6 +49,15 @@ angular.module('Acralyzer', ['acra-storage'])
         };
     });
 
+acralyzer.directive('reportSummary', function() {
+    return {
+        restrict: 'E',
+        scope: {
+            report: '='
+        },
+        templateUrl: 'partials/report-summary.html'
+    };
+});
 
 ///////////////////////////////////
 // Apache 2.0 J Chris Anderson 2011
