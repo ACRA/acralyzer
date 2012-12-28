@@ -32,7 +32,6 @@
 
     // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
     acra.getReportSignature = function(report) {
-        console.log(report);
         if(report.value.signature) {
             return report.value.signature;
         } else {
@@ -87,7 +86,6 @@ function CrashReportsCtrl($scope, ReportsStore) {
 
     $scope.loadReport = function(report) {
         $scope.selectedReport = ReportsStore.reportDetails(report.id);
-        console.log($scope.selectedReport);
     }
 
     $scope.getData();
@@ -156,7 +154,6 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
     $scope.getData = function() {
         $.couch.session({
             success: function(session) {
-                console.log(session);
                 if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
                     console.log("You are authorized as a reader!");
                     ReportsStore.reportsPerDay($scope.period.value, function(data) {
@@ -319,7 +316,6 @@ function PieChartsCtrl($scope, ReportsStore) {
     $scope.getData = function() {
         $.couch.session({
             success: function(session) {
-                console.log(session);
                 if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
                     console.log("You are authorized as a reader!");
                     ReportsStore.reportsPerFieldName($scope.fieldName.name, function(data) {
@@ -332,7 +328,6 @@ function PieChartsCtrl($scope, ReportsStore) {
                         for(var i = 0; i < $scope.reportsPerFieldName.length; i++) {
                             $scope.reportsPerFieldName[i][2] = $scope.reportsPerFieldName[i][1] / totalReports;
                         }
-                        console.log($scope.reportsPerFieldName);
                         $scope.updateGraph();
                     },
                     function(response, getResonseHeaders){
@@ -507,6 +502,3 @@ var formatAsPercentage = d3.format("%"),
 function DashboardCtrl($scope) {
 }
 
-function ReportsBrowserCtrl($scope) {
-    console.log("hmmmmkay !");
-}
