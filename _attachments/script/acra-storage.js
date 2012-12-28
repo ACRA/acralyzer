@@ -13,6 +13,10 @@ angular.module('acra-storage', ['ngResource']).
             return ReportsStore.views.get({view: 'recent-items', limit: 10, descending: true}, cb, errorHandler);
         };
 
+        ReportsStore.reportsList = function(cb, errorHandler) {
+            return ReportsStore.views.get({view: 'recent-items', descending: true}, cb, errorHandler);
+        };
+
         ReportsStore.reportDetails = function(id, cb) {
             return ReportsStore.details.get({reportid: id}, cb);
         }

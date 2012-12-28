@@ -30,14 +30,8 @@
         }
     };
 
-}( window.acra = window.acra || {}, jQuery ));
- 
-
-function CrashReportsCtrl($scope, ReportsStore) {
-    $scope.selectedReport = "";
-
     // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
-    var getReportSignature = function(report) {
+    acra.getReportSignature = function(report) {
         console.log(report);
         if(report.value.signature) {
             return report.value.signature;
@@ -57,12 +51,22 @@ function CrashReportsCtrl($scope, ReportsStore) {
                 result.full = exceptionName + " : " + faultyLine;
 
                 var captureRegEx = /\((.*)\)/g;
-                var faultyLineDigest =  captureRegEx.exec(faultyLine)[1];
+                var regexResult =  captureRegEx.exec(faultyLine);
+                var faultyLineDigest = faultyLine;
+                if(regexResult && regexResult.length >= 2) {
+                    faultyLineDigest = regexResult[1];
+                }
                 result.digest = exceptionName + " : " + faultyLineDigest;
                 return result;
             }
         }
     }
+
+}( window.acra = window.acra || {}, jQuery ));
+ 
+
+function CrashReportsCtrl($scope, ReportsStore) {
+    $scope.selectedReport = "";
 
     $scope.getData = function() {
         ReportsStore.recentReports(function(data) {
@@ -72,7 +76,7 @@ function CrashReportsCtrl($scope, ReportsStore) {
             for(row in $scope.reports) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
                 // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
-                $scope.reports[row].value.signature = getReportSignature($scope.reports[row]);
+                $scope.reports[row].value.signature = acra.getReportSignature($scope.reports[row]);
             }
         },
         function(response, getResponseHeaders){

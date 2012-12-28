@@ -24,16 +24,25 @@
     <script src="vendor/padolsey/prettyprint.js"></script>
   </head>
   <body>
-    <div id="account"></div>
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <a class="brand" href="#">Acralyzer</a>
+            <ul class="nav">
+                <li><a href="#/dashboard">Dashboard</a></li>
+                <li><a href="#/reports-browser">Reports browser</a></li>
+            </ul>
+            <div id="account"></div>
 
-    <h1>Acralyzer</h1>
-    <a href="#/dashboard">Dashboard</a> - <a href="#/reports-browser">Reports browser</a>
+        </div>
+    </div>
+
     <!--div id="profile">
     </div-->
     <div ng-view></div>
     <script src="script/app.js"></script>
     <script src="script/acra-storage.js"></script>
-    <script src="script/controllers.js"></script>
+    <script src="script/DashboardControllers.js"></script>
+    <script src="script/ReportsBrowserControllers.js"></script>
   </body>
 
 <!-- templates used by app.js -->
