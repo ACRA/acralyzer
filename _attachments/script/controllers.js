@@ -36,25 +36,31 @@
 function CrashReportsCtrl($scope, ReportsStore) {
     $scope.selectedReport = "";
 
+    // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
     var getReportSignature = function(report) {
-        var result = { full: "", digest: ""};
-        var stack = report.value.stack_trace;
-        if(stack.length > 1) {
-            var exceptionName =  stack[0];
-            var faultyLine = stack[1];
-            var applicationPackage = report.value.application_package;
-            for(var line in stack) {
-                if(stack[line].indexOf(applicationPackage) >= 0) {
-                    faultyLine = stack[line];
-                    break;
+        console.log(report);
+        if(report.value.signature) {
+            return report.value.signature;
+        } else {
+            var result = { full: "", digest: ""};
+            var stack = report.value.stack_trace;
+            if(stack.length > 1) {
+                var exceptionName =  stack[0];
+                var faultyLine = stack[1];
+                var applicationPackage = report.value.application_package;
+                for(var line in stack) {
+                    if(stack[line].indexOf(applicationPackage) >= 0) {
+                        faultyLine = stack[line];
+                        break;
+                    }
                 }
-            }
-            result.full = exceptionName + " : " + faultyLine;
+                result.full = exceptionName + " : " + faultyLine;
 
-            var captureRegEx = /\((.*)\)/g;
-            var faultyLineDigest =  captureRegEx.exec(faultyLine)[1];
-            result.digest = exceptionName + " : " + faultyLineDigest;
-            return result;
+                var captureRegEx = /\((.*)\)/g;
+                var faultyLineDigest =  captureRegEx.exec(faultyLine)[1];
+                result.digest = exceptionName + " : " + faultyLineDigest;
+                return result;
+            }
         }
     }
 
@@ -65,7 +71,8 @@ function CrashReportsCtrl($scope, ReportsStore) {
             $scope.totalReports = data.total_rows;
             for(row in $scope.reports) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
-                $scope.reports[row].signature = getReportSignature($scope.reports[row]);
+                // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
+                $scope.reports[row].value.signature = getReportSignature($scope.reports[row]);
             }
         },
         function(response, getResponseHeaders){
