@@ -26,7 +26,7 @@
         <input type="text" class="search-query" placeholder="Search">
     </div>
     <div id="reports-list" class="row-fluid">
-        <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
+        <span ng-bind-template="reports {{startNumber}} to {{endNumber}} (out of {{totalReports}}):">Loading...</span>
         <ul>
             <li ng-repeat="report in reports" ng-cloak>
                 <a ng-click="loadReport(report)" class="btn btn-mini"><i class="icon-search" ng-hide="report.id == selectedReport._id"></i><i class="icon-asterisk" ng-show="report.id == selectedReport._id"></i></a>

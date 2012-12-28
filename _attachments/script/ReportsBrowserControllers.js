@@ -5,6 +5,8 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
     $scope.selectedReport = "";
     $scope.startKey = null;
     $scope.nextKey = null;
+    $scope.startNumber = 1;
+    $scope.endNumber = reportsCount;
 
     $scope.getNextPage = function() {
         $scope.previousStartKeys.push($scope.startKey);
@@ -33,7 +35,8 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
 
                 // If there are more rows, here is the key to the next page
                 $scope.nextKey =data.next_row ? data.next_row.key : null;
-
+                $scope.startNumber = ($scope.previousStartKeys.length * reportsCount) + 1;
+                $scope.endNumber = $scope.startNumber + $scope.reports.length - 1;
                 console.log($scope);
             },
             function(response, getResponseHeaders){
