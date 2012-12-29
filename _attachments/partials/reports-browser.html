@@ -1,34 +1,45 @@
 <div class="container-fluid">
     <div id="filters" class="row-fluid">
-        <div class="btn-group">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                Application version
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a ng-click="">1.2a</a></li>
-                <li><a ng-click="">1.3</a></li>
-                <li><a ng-click="">2.0</a></li>
-            </ul>
-        </div>
-        <div class="btn-group">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                Android version
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a ng-click="">1.6</a></li>
-                <li><a ng-click="">2.3.7</a></li>
-                <li><a ng-click="">4.0</a></li>
-                <li><a ng-click="">4.1</a></li>
-            </ul>
-        </div>
-        <input type="text" class="search-query" placeholder="Search">
+        <form ng-submit="getData()" class="form-inline">
+            <div class="input-append">
+                <input ng-model="reportsCount" type="number" alt="Number of reports per page" class="input-mini"/>
+                <button class="btn" type="submit">OK</button>
+            </div>
+            <div class="btn-group">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    Application version
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a ng-click="">Any</a></li>
+                    <li><a ng-click="">1.2a</a></li>
+                    <li><a ng-click="">1.3</a></li>
+                    <li><a ng-click="">2.0</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    Android version
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a ng-click="">Any</a></li>
+                    <li><a ng-click="">1.6</a></li>
+                    <li><a ng-click="">2.3.7</a></li>
+                    <li><a ng-click="">4.0</a></li>
+                    <li><a ng-click="">4.1</a></li>
+                </ul>
+            </div>
+            <input type="text" class="search-query" placeholder="Filter page" ng-model="search">
+            <label class="checkbox">
+                <input type="checkbox" ng-model="fullSearch" ng-change="getData()"> All report attributes
+            </label>
+        </form>
     </div>
     <div id="reports-list" class="row-fluid">
         <span ng-bind-template="reports {{startNumber}} to {{endNumber}} (out of {{totalReports}}):">Loading...</span>
         <ul>
-            <li ng-repeat="report in reports" ng-cloak>
+            <li ng-repeat="report in reports | filter:search" ng-cloak>
                 <a ng-click="loadReport(report)" class="btn btn-mini"><i class="icon-search" ng-hide="report.id == selectedReport._id"></i><i class="icon-asterisk" ng-show="report.id == selectedReport._id"></i></a>
                 <report-summary report="report"></report-summary>
             </li>

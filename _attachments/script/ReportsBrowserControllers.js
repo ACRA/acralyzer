@@ -1,12 +1,13 @@
 function ReportsBrowserCtrl($scope, ReportsStore) {
     console.log("Init ReportsBrowserCtrl");
-    var reportsCount = 15;
+    $scope.reportsCount = 15;
     $scope.previousStartKeys = [];
     $scope.selectedReport = "";
     $scope.startKey = null;
     $scope.nextKey = null;
     $scope.startNumber = 1;
-    $scope.endNumber = reportsCount;
+    $scope.endNumber = $scope.reportsCount;
+    $scope.fullSearch = false;
 
     $scope.getNextPage = function() {
         $scope.previousStartKeys.push($scope.startKey);
@@ -21,7 +22,7 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
     }
 
     $scope.getData = function() {
-        ReportsStore.reportsList($scope.startKey, reportsCount, function(data) {
+        ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, function(data) {
                 // Success Handler
                 console.log("Refresh data for latest reports");
                 console.log(data);
@@ -35,7 +36,7 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
 
                 // If there are more rows, here is the key to the next page
                 $scope.nextKey =data.next_row ? data.next_row.key : null;
-                $scope.startNumber = ($scope.previousStartKeys.length * reportsCount) + 1;
+                $scope.startNumber = ($scope.previousStartKeys.length * $scope.reportsCount) + 1;
                 $scope.endNumber = $scope.startNumber + $scope.reports.length - 1;
                 console.log($scope);
             },

@@ -13,15 +13,17 @@ angular.module('acra-storage', ['ngResource']).
             return ReportsStore.views.get({view: 'recent-items', limit: 10, descending: true}, cb, errorHandler);
         };
 
-        ReportsStore.reportsList = function(startKey, reportsCount, cb, errorHandler) {
+        ReportsStore.reportsList = function(startKey, reportsCount, includeDocs, cb, errorHandler) {
             var viewParams = {
                 view: 'recent-items',
                 descending: true,
-                limit: reportsCount + 1
+                limit: reportsCount + 1,
+                include_docs: includeDocs
             };
             if(startKey != null) {
                 viewParams.startkey = '"' + startKey + '"';
             }
+
             var additionalCallback = function(data) {
                 if(data.rows && (data.rows.length > reportsCount)) {
                     data.next_row = data.rows.splice(reportsCount,1)[0];
