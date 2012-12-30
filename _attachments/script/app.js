@@ -35,7 +35,7 @@ acralyzer.directive('prettyprint',function(){
 //                            maxArray: 20, // Set max for array display (default: infinity)
                             expanded: false, // Expanded view (boolean) (default: true),
                             maxDepth: 5, // Max member depth (when displaying objects) (default: 3)
-                            sortKeys: false,
+                            sortKeys: true,
                             stringsWithDoubleQuotes: false,
                             classes: {
                                 'default': {
@@ -59,6 +59,15 @@ acralyzer.directive('reportSummary', function() {
     };
 });
 
+acralyzer.directive('reportDetails', function() {
+    return {
+        restrict: 'E',
+        scope: {
+            report: '='
+        },
+        templateUrl: 'partials/report-details.html'
+    };
+});
 
 (function(acra, $, undefined ) {
     //Private Property
@@ -122,6 +131,12 @@ acralyzer.directive('reportSummary', function() {
             }
         }
     }
+
+    acra.reportDetailsHeaderKeyNames = [
+        "STACK_TRACE",
+        "USER_EMAIL",
+        "USER_COMMENT"
+    ];
 
 }( window.acra = window.acra || {}, jQuery ));
 
