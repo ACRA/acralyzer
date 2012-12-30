@@ -35,7 +35,7 @@ acralyzer.directive('prettyprint',function(){
 //                            maxArray: 20, // Set max for array display (default: infinity)
                             expanded: false, // Expanded view (boolean) (default: true),
                             maxDepth: 5, // Max member depth (when displaying objects) (default: 3)
-                            sortKeys: true,
+                            sortKeys: false,
                             stringsWithDoubleQuotes: false,
                             classes: {
                                 'default': {
@@ -58,6 +58,75 @@ acralyzer.directive('reportSummary', function() {
         templateUrl: 'partials/report-summary.html'
     };
 });
+
+
+(function(acra, $, undefined ) {
+    //Private Property
+    var isHot = true;
+
+    //Public Property
+    acra.dbname = "acra-storage";
+    acra.design = acra.dbname;
+
+    //Public Method
+    acra.getViewUrl = function(view, options) {
+        var result = "/" + acra.dbname + "/_design/" + acra.design + "/_view/" + view;
+        if (options) {
+            result += "?" + options;
+        }
+        return result;
+    }
+
+    acra.getDocUrl = function(docId) {
+        var result = "/" + acra.dbname + "/" + docId;
+    }
+
+    acra.addEvent = function(elem, type, eventHandle) {
+        if (elem == null || elem == undefined) return;
+        if ( elem.addEventListener ) {
+            elem.addEventListener( type, eventHandle, false );
+        } else if ( elem.attachEvent ) {
+            elem.attachEvent( "on" + type, eventHandle );
+        } else {
+            elem["on"+type]=eventHandle;
+        }
+    };
+
+    // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
+    acra.getReportSignature = function(report) {
+        if(report.value.signature) {
+            return report.value.signature;
+        } else {
+            var result = { full: "", digest: ""};
+            var stack = report.value.stack_trace;
+            if(stack.length > 1) {
+                var exceptionName =  stack[0];
+                var faultyLine = stack[1];
+                var applicationPackage = report.value.application_package;
+                for(var line in stack) {
+                    if(stack[line].indexOf(applicationPackage) >= 0) {
+                        faultyLine = stack[line];
+                        break;
+                    }
+                }
+                result.full = exceptionName + " : " + faultyLine;
+
+                var captureRegEx = /\((.*)\)/g;
+                var regexResult =  captureRegEx.exec(faultyLine);
+                var faultyLineDigest = faultyLine;
+                if(regexResult && regexResult.length >= 2) {
+                    faultyLineDigest = regexResult[1];
+                }
+                result.digest = exceptionName + " : " + faultyLineDigest;
+                return result;
+            }
+        }
+    }
+
+}( window.acra = window.acra || {}, jQuery ));
+
+
+
 
 ///////////////////////////////////
 // Apache 2.0 J Chris Anderson 2011
@@ -99,25 +168,6 @@ $(function() {
             scope.$apply(function($rootScope){
                 $rootScope.$broadcast("refresh");
             });
- /*           e = document.getElementById('content');
-            scope = angular.element(e).scope();
-            if(scope) {
-                scope.$apply(function() {
-                   scope.getData();
-                });
-                e = document.getElementById('graph-container');
-                scope = angular.element(e).scope();
-                scope.$apply(function() {
-                   scope.getData();
-                });
-
-                e = document.getElementById('pie-charts');
-                scope = angular.element(e).scope();
-                scope.$apply(function() {
-                    scope.getData();
-                });
-            }
-  */
         },
         loggedOut : function() {
             scope = angular.element(document).scope();

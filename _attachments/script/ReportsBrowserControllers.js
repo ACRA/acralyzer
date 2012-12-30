@@ -25,7 +25,6 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
         ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, function(data) {
                 // Success Handler
                 console.log("Refresh data for latest reports");
-                console.log(data);
                 $scope.reports = data.rows;
                 $scope.totalReports = data.total_rows;
                 for(row in $scope.reports) {
