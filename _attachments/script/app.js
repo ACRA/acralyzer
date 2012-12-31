@@ -39,7 +39,8 @@ acralyzer.directive('prettyprint',function(){
                             stringsWithDoubleQuotes: false,
                             classes: {
                                 'default': {
-                                    table: "table table-condensed span10"
+                                    table: "table table-condensed",
+                                    th: "none"
                                 }
                             }
                         }));
@@ -133,7 +134,14 @@ acralyzer.directive('reportDetails', function() {
     }
 
     acra.reportDetailsHeaderKeyNames = [
+        "timestamp",
+        "USER_APP_START_DATE",
+        "USER_CRASH_DATE",
+        "APP_VERSION_CODE",
+        "APP_VERSION_NAME",
+        "INSTALLATION_ID",
         "STACK_TRACE",
+        "CUSTOM_DATA",
         "USER_EMAIL",
         "USER_COMMENT"
     ];

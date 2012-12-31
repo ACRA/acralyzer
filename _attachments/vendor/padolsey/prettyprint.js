@@ -108,7 +108,7 @@ var prettyPrint = (function(){
 				tr = util.el('tr'), td,
 				attrs = {
 					style: util.getStyles(cellType, type),
-					colSpan: colSpan,
+                    colSpan: colSpan,
 					onmouseover: function() {
 						var tds = this.parentNode.childNodes;
 						util.forEach(tds, function(cell){
@@ -124,7 +124,11 @@ var prettyPrint = (function(){
 						});
 					}
 				};
-				
+            var elClasses = util.getClasses(cellType, type);
+            if(elClasses) {
+                attrs.classes = elClasses;
+            }
+
 			util.forEach(cells, function(cell){
 				
 				if (cell === null) { return; }
@@ -157,10 +161,12 @@ var prettyPrint = (function(){
 			/* Creates new table: */
 			var attrs = {
 					thead: {
-						style:util.getStyles('thead',type)
+						style:util.getStyles('thead',type),
+                        classes: util.getClasses('thead',type)
 					},
 					tbody: {
-						style:util.getStyles('tbody',type)
+						style:util.getStyles('tbody',type),
+                        classes: util.getClasses('tbody',type)
 					},
 					table: {
 						style:util.getStyles('table',type),
@@ -354,7 +360,9 @@ var prettyPrint = (function(){
             if(prettyPrintThis.settings.classes['default'][el]) {
                 result.push(prettyPrintThis.settings.classes['default'][el]);
             }
-            return result;
+            if(result.length > 0) {
+                return result;
+            }
         },
 
 		expander: function(text, title, clickFn) {

@@ -77,6 +77,15 @@ ul {
     margin-top: 1.5em;
 }
 
-.report-details thead {
-  display: none;
+.report-details table {
+    width: auto;
 }
+
+.report-details thead>tr:first-child {
+    display: none;
+}
+
+.report-details td {
+    overflow: auto;
+}
+
