@@ -13,7 +13,7 @@
             <tr>
                 <th><i class="icon-time"></i></th>
                 <th>Uptime</th>
-                <td>25 min</td>
+                <td ng-bind-html-unsafe="report.uptime"></td>
                 <th>Crashed</th>
                 <td>{{report.USER_CRASH_DATE}}</td>
                 <th>Reported</th>

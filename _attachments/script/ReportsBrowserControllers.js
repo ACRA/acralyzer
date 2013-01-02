@@ -47,9 +47,11 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
     }
 
     $scope.loadReport = function(report) {
-        $scope.selectedReport = ReportsStore.reportDetails(report.id);
-        console.log($scope.selectedReport);
+        $scope.selectedReport = ReportsStore.reportDetails(report.id, function(data) {
+            data.uptime = acra.readableTimeSpan(data.USER_APP_START_DATE, data.USER_CRASH_DATE);
+        });
     }
+
 
     $scope.getData();
     $scope.$on("refresh", $scope.getData);
