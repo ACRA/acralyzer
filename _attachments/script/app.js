@@ -133,30 +133,29 @@ acralyzer.directive('reportDetails', function() {
         }
     }
 
-    acra.readableTimeSpan = function(date1, date2){
+    acra.readableTimeSpan = function(seconds){
 
-        var seconds = (new Date(date2).getTime() - new Date(date1).getTime())  / 1000;
         var numyears = Math.floor(seconds / 31536000);
         if(numyears){
-            return numyears + '&nbsp;year' + ((numyears > 1) ? 's' : '');
+            return numyears + ' year' + ((numyears > 1) ? 's' : '');
         }
         var numdays = Math.floor((seconds % 31536000) / 86400);
         if(numdays){
-            return numdays + '&nbsp;day' + ((numdays > 1) ? 's' : '');
+            return numdays + ' day' + ((numdays > 1) ? 's' : '');
         }
         var numhours = Math.floor(((seconds % 31536000) % 86400) / 3600);
         if(numhours){
-            return numhours + '&nbsp;hour' + ((numhours > 1) ? 's' : '');
+            return numhours + ' hour' + ((numhours > 1) ? 's' : '');
         }
         var numminutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60);
         if(numminutes){
-            return numminutes + '&nbsp;minute' + ((numminutes > 1) ? 's' : '');
+            return numminutes + ' minute' + ((numminutes > 1) ? 's' : '');
         }
         var numseconds = (((seconds % 31536000) % 86400) % 3600) % 60;
         if(numseconds){
-            return numseconds + '&nbsp;second' + ((numseconds > 1) ? 's' : '');
+            return numseconds + ' second' + ((numseconds > 1) ? 's' : '');
         }
-        return '&lt; 1 second'; //'just now' //or other string you like;
+        return '< 1 second'; //'just now' //or other string you like;
     }
 
     acra.reportDetailsHeaderKeyNames = [
