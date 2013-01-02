@@ -2,8 +2,8 @@ var acralyzer = angular.module('Acralyzer', ['acra-storage']);
 
 acralyzer.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
-        when('/dashboard', {templateUrl: 'partials/dashboard.html',   controller: DashboardCtrl}).
-        when('/reports-browser', {templateUrl: 'partials/reports-browser.html', controller: ReportsBrowserCtrl}).
+        when('/dashboard', {templateUrl: 'partials/dashboard.html',   controller: DashboardCtrl, activetab: "dashboard"}).
+        when('/reports-browser', {templateUrl: 'partials/reports-browser.html', controller: ReportsBrowserCtrl, activetab: "reportsBrowser"}).
         otherwise({redirectTo: '/dashboard'});
     }]);
 
@@ -39,7 +39,7 @@ acralyzer.directive('prettyprint',function(){
                             stringsWithDoubleQuotes: false,
                             classes: {
                                 'default': {
-                                    table: "table table-condensed",
+                                    table: "none",
                                     th: "none"
                                 }
                             }
