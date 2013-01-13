@@ -20,7 +20,10 @@ function CrashReportsCtrl($scope, ReportsStore) {
 
     $scope.loadReport = function(report) {
         $scope.selectedReport = ReportsStore.reportDetails(report.id, function(data) {
-            data.uptime = acra.readableTimeSpan(data.USER_APP_START_DATE, data.USER_CRASH_DATE);
+            if(!data.uptime) {
+                data.uptime = (new Date(data.USER_CRASH_DATE).getTime() - new Date(data.USER_APP_START_DATE).getTime())  / 1000;
+            }
+            data.readableUptime = acra.readableTimeSpan(data.uptime);
         });
     }
 

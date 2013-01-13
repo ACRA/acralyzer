@@ -5,15 +5,17 @@
         <table>
             <tr>
                 <th><i class="icon-gift"></i></th>
+                <th>Package name</th>
+                <td>{{report.PACKAGE_NAME}}</td>
                 <th>Application version code</th>
                 <td>{{report.APP_VERSION_CODE}}</td>
                 <th>Application version name</th>
-                <td colspan="3">{{report.APP_VERSION_NAME}}</td>
+                <td>{{report.APP_VERSION_NAME}}</td>
             </tr>
             <tr>
                 <th><i class="icon-time"></i></th>
                 <th>Uptime</th>
-                <td ng-bind-html-unsafe="report.uptime"></td>
+                <td class="nobr">{{report.readableUptime}}</td>
                 <th>Crashed</th>
                 <td>{{report.USER_CRASH_DATE}}</td>
                 <th>Reported</th>
