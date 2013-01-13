@@ -67,17 +67,16 @@
     }
     var templates = {
         adminParty : '<p><strong>Admin party, everyone is admin!</strong> Fix this in <a href="/_utils/index.html">Futon</a> before proceeding.</p>',
-        loggedOut : '<a href="#signup">Signup</a> or <a href="#login">Login</a>',
-        loginForm : '<form class="login"><label for="name">Name</label> <input type="text" name="name" value="" autocapitalize="off" autocorrect="off"><label for="password">Password</label> <input type="password" name="password" value=""><input type="submit" value="Login"><a href="#signup">or Signup</a></form>',
-        signupForm : '<form class="signup"><label for="name">Name</label> <input type="text" name="name" value="" autocapitalize="off" autocorrect="off"><label for="password">Password</label> <input type="password" name="password" value=""><input type="submit" value="Signup"><a href="#login">or Login</a></form>'
+        loggedOut : '<ul class="nav pull-right"><li><a href="#login">Login</a></li></ul>',
+        loginForm : '<form class="login navbar-form pull-right"><input type="text" name="name" value="" autocapitalize="off" autocorrect="off" placeholder="Name" class="input-small"> <input type="password" name="password" value="" placeholder="Password" class="input-small"> <button type="submit" class="btn">Login</button></form>',
+        signupForm : ''
     };
     function loggedIn(r) {
         var auth_db = encodeURIComponent(r.info.authentication_db)
         , uri_name = encodeURIComponent(r.userCtx.name)
-        , span = $('<span>Welcome <a target="_new" href="/_utils/document.html?' 
+        , span = $('<ul class="nav pull-right"><li><a target="_new" href="/_utils/document.html?'
             + auth_db +'/org.couchdb.user%3A' + uri_name 
-            + '" class="name"></a>! <a href="#logout">Logout?</a></span>');
-        $('a.name', span).text(r.userCtx.name); // you can get the user name here
+            + '" class="name"><i class="icon-user"></i> ' + r.userCtx.name + '</a></li> <li><a href="#logout" title="Logout"><i class="icon-off" alt="logout"></i></a></li></ul>');
         return span;
     }
 })(jQuery);
