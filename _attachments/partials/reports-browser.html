@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
     <div id="filters" class="row-fluid">
         <form ng-submit="getData()" class="form-inline">
             <div class="input-append">
@@ -38,7 +38,8 @@
     </div>
     <div id="reports-list" class="row-fluid">
         <span ng-bind-template="reports {{startNumber}} to {{endNumber}} (out of {{totalReports}}):">Loading...</span>
-        <ul>
+        <div class="loader" ng-show="loading"><img  src="img/loader.gif"/></div>
+        <ul ng-hide="loading">
             <li ng-repeat="report in reports | filter:search" ng-cloak>
                 <a ng-click="loadReport(report)" class="btn btn-mini"><i class="icon-search" ng-hide="report.id == selectedReport._id"></i><i class="icon-asterisk" ng-show="report.id == selectedReport._id"></i></a>
                 <report-summary report="report"></report-summary>

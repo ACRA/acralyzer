@@ -8,6 +8,7 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
     $scope.startNumber = 1;
     $scope.endNumber = $scope.reportsCount;
     $scope.fullSearch = false;
+    $scope.loading = true;
 
     $scope.getNextPage = function() {
         $scope.previousStartKeys.push($scope.startKey);
@@ -22,6 +23,7 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
     }
 
     $scope.getData = function() {
+        $scope.loading = true;
         ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, function(data) {
                 // Success Handler
                 console.log("Refresh data for latest reports");
@@ -38,6 +40,7 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
                 $scope.startNumber = ($scope.previousStartKeys.length * $scope.reportsCount) + 1;
                 $scope.endNumber = $scope.startNumber + $scope.reports.length - 1;
                 console.log($scope);
+                $scope.loading = false;
             },
             function(response, getResponseHeaders){
                 // Error Handler
