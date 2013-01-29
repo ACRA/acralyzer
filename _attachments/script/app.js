@@ -133,31 +133,6 @@ acralyzer.directive('reportDetails', function() {
         }
     }
 
-    acra.readableTimeSpan = function(seconds){
-
-        var numyears = Math.floor(seconds / 31536000);
-        if(numyears){
-            return numyears + ' year' + ((numyears > 1) ? 's' : '');
-        }
-        var numdays = Math.floor((seconds % 31536000) / 86400);
-        if(numdays){
-            return numdays + ' day' + ((numdays > 1) ? 's' : '');
-        }
-        var numhours = Math.floor(((seconds % 31536000) % 86400) / 3600);
-        if(numhours){
-            return numhours + ' hour' + ((numhours > 1) ? 's' : '');
-        }
-        var numminutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60);
-        if(numminutes){
-            return numminutes + ' minute' + ((numminutes > 1) ? 's' : '');
-        }
-        var numseconds = (((seconds % 31536000) % 86400) % 3600) % 60;
-        if(numseconds){
-            return numseconds + ' second' + ((numseconds > 1) ? 's' : '');
-        }
-        return '< 1 second'; //'just now' //or other string you like;
-    }
-
     acra.reportDetailsHeaderKeyNames = [
         "timestamp",
         "USER_APP_START_DATE",

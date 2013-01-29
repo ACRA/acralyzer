@@ -17,17 +17,15 @@
                 <th>Uptime</th>
                 <td class="nobr">{{report.readableUptime}}</td>
                 <th>Crashed</th>
-                <td>{{report.USER_CRASH_DATE}}</td>
+                <td>{{report.formatedCrashDate}}</td>
                 <th>Reported</th>
-                <td>{{report.timestamp}}</td>
+                <td>{{report.formatedTimestamp}}</td>
             </tr>
             <tr>
                 <th><i class="icon-fire"></i></th>
                 <th>Stack Trace</th>
                 <td colspan="3" class="stacktrace">
-                    <ul>
-                        <li ng-repeat="stackline in report.STACK_TRACE">{{stackline}}</li>
-                    </ul>
+                    <div ng-repeat="stackline in report.STACK_TRACE" class="pre">{{stackline}}</div>
                 </td>
                 <th>Custom Data</th>
                 <td>

@@ -20,10 +20,13 @@ function CrashReportsCtrl($scope, ReportsStore) {
 
     $scope.loadReport = function(report) {
         $scope.selectedReport = ReportsStore.reportDetails(report.id, function(data) {
+            // TODO: discard this uptime computation as it is now done in the DB.
             if(!data.uptime) {
                 data.uptime = (new Date(data.USER_CRASH_DATE).getTime() - new Date(data.USER_APP_START_DATE).getTime())  / 1000;
             }
-            data.readableUptime = acra.readableTimeSpan(data.uptime);
+            data.readableUptime = moment.duration(data.uptime, 'seconds').humanize();
+            data.formatedCrashDate = moment(data.USER_CRASH_DATE).format('LLL');
+            data.formatedTimestamp = moment(data.timestamp).format('LLL');
         });
     }
 
@@ -246,7 +249,8 @@ function PieChartsCtrl($scope, ReportsStore) {
         {name: "android-version", label: "Android version"},
         {name: "android-sdk-version", label: "Android SDK version"},
         {name: "app-version-name", label: "Application version name"},
-        {name: "app-version-code", label: "Application version code"}
+        {name: "app-version-code", label: "Application version code"},
+        {name: "device", label: "Device"}
     ];
     $scope.fieldName = $scope.fieldNames[0];
 
