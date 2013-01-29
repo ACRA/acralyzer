@@ -171,22 +171,8 @@ $(function() {
         return o;
     };
 
-    $.couchProfile.templates.profileReady = $("#new-message").html();
     $("#account").couchLogin({
         loggedIn : function(r) {
-            $("#profile").couchProfile(r, {
-                profileReady : function(profile) {
-                    $("#create-message").submit(function(e){
-                        e.preventDefault();
-                        var form = this, doc = $(form).serializeObject();
-                        doc.created_at = new Date();
-                        doc.profile = profile;
-                        db.saveDoc(doc, {success : function() {form.reset();}});
-                        return false;
-                    }).find("input").focus();
-                }
-            });
-
             scope = angular.element(document).scope();
             scope.$apply(function($rootScope){
                 $rootScope.$broadcast("refresh");
@@ -197,7 +183,6 @@ $(function() {
             scope.$apply(function($rootScope){
                 $rootScope.$broadcast("refresh");
             });
-            $("#profile").html('<p>Please log in to see your profile.</p>');
         }
     });
  });

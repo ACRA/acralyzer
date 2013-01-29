@@ -139,3 +139,8 @@ table td {
 .nobr {
     white-space: nowrap;
 }
+
+.loader {
+    text-align: center;
+    margin: 10em auto;
+}
