@@ -12,9 +12,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a ng-click="">Any</a></li>
-                    <li><a ng-click="">1.2a</a></li>
-                    <li><a ng-click="">1.3</a></li>
-                    <li><a ng-click="">2.0</a></li>
+                    <li ng-repeat="appver in appVersions"><a ng-click="">{{appver}}</a></li>
                 </ul>
             </div>
             <div class="btn-group">
@@ -24,10 +22,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a ng-click="">Any</a></li>
-                    <li><a ng-click="">1.6</a></li>
-                    <li><a ng-click="">2.3.7</a></li>
-                    <li><a ng-click="">4.0</a></li>
-                    <li><a ng-click="">4.1</a></li>
+                    <li ng-repeat="andver in androidVersions"><a ng-click="">{{andver}}</a></li>
                 </ul>
             </div>
             <input type="text" class="search-query" placeholder="Filter page" ng-model="search">

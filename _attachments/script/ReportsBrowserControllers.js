@@ -10,6 +10,10 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
     $scope.fullSearch = false;
     $scope.loading = true;
 
+    $scope.appVersions = [];
+    $scope.androidVersions = [];
+
+
     $scope.getNextPage = function() {
         $scope.previousStartKeys.push($scope.startKey);
         $scope.startKey = $scope.nextKey;
@@ -24,6 +28,8 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
 
     $scope.getData = function() {
         $scope.loading = true;
+        $scope.updateAppVersions();
+        $scope.updateAndroidVersions();
         ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, function(data) {
                 // Success Handler
                 console.log("Refresh data for latest reports");
@@ -47,6 +53,28 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
                 $scope.reports=[];
                 $scope.totalReports="";
             });
+    }
+
+    $scope.updateAppVersions = function() {
+        ReportsStore.appVersionsList(function(data){
+           console.log("Update application versions");
+            $scope.appVersions.length = 0;
+            for(row in data.rows) {
+                $scope.appVersions.push(data.rows[row].key[0]);
+            }
+            $scope.appVersions.sort();
+        });
+    }
+
+    $scope.updateAndroidVersions = function() {
+        ReportsStore.androidVersionsList(function(data){
+            console.log("Update android versions");
+            $scope.androidVersions.length = 0;
+            for(row in data.rows) {
+                $scope.androidVersions.push(data.rows[row].key[0]);
+            }
+            $scope.androidVersions.sort();
+        });
     }
 
     $scope.loadReport = function(report) {

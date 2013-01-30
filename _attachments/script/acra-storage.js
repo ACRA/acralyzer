@@ -42,5 +42,13 @@ angular.module('acra-storage', ['ngResource']).
             return ReportsStore.views.get({view: 'reports-per-' + fieldName, group_level: 1}, cb, errorHandler);
         };
 
+        ReportsStore.appVersionsList = function(cb) {
+            return ReportsStore.views.get({view: 'recent-items-by-appver', group_level: 1}, cb);
+        }
+
+        ReportsStore.androidVersionsList = function(cb) {
+            return ReportsStore.views.get({view: 'recent-items-by-androidver', group_level: 1}, cb);
+        }
+
         return ReportsStore;
     });
