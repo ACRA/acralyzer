@@ -1,33 +1,24 @@
-## Generated CouchApp
+<a href='http://www.pledgie.com/campaigns/18789'><img alt='Click here to lend your support to: ACRA - Application Crash Reports for Android and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/18789.png?skin_name=chrome' border='0' /></a>
 
-This is meant to be an example CouchApp and to ship with most of the CouchApp goodies.
+ACRALYZER
+=========
 
-Clone with git:
+Acralyzer is a frontend web application enabling [ACRA](http://acra.ch) users to analyze reports sent by their applications.
 
-    git clone git://github.com/couchapp/example.git
-    cd example
-
-Install with 
-    
-    couchapp push . http://localhost:5984/example
-
-or (if you have security turned on)
-
-    couchapp push . http://adminname:adminpass@localhost:5984/example
-  
-You can also create this app by running
-
-    couchapp generate example && cd example
-    couchapp push . http://localhost:5984/example
-
-Deprecated: *couchapp generate proto && cd proto*
+Acralyzer is Copyright 2013 Kevin Gaudin (kevin.gaudin@gmail.com) and licensed under the terms of the [GNU General Public License version 3](COPYING).
 
 
-## Todo
+Components
+==========
 
-* factor CouchApp Commonjs to jquery.couch.require.js
-* use $.couch.app in app.js
+Acralyzer is the frontend analysis tools. It needs to be connected to a backend storage server.
 
-## License
+The default storage endpoint for Acralyzer is [acra-storage](http://github.com/ACRA/acra-storage).
 
-Apache 2.0
+Both Acralyzer and acra-storage are [CouchApps](http://couchapp.org).
+CouchApps are web applications made of HTML/Javascript files and served directly by a [CouchDB](http://couchdb.apache.org).
+
+Documentation
+=============
+
+Full setup instructions are available in [the Acralyzer Wiki on Github](https://github.com/ACRA/acralyzer/wiki).
