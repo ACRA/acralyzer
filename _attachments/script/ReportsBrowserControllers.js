@@ -36,42 +36,49 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
 
     $scope.getData = function() {
         $scope.loading = true;
-        ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, function(data) {
-                // Success Handler
-                console.log("Refresh data for latest reports");
-                $scope.reports = data.rows;
-                $scope.totalReports = data.total_rows;
-                for(row in $scope.reports) {
-                    $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
-                    // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
-                    $scope.reports[row].value.signature = acra.getReportSignature($scope.reports[row]);
-                }
+        var successHandler = function(data) {
+            // Success Handler
+            console.log("Refresh data for latest reports");
+            $scope.reports = data.rows;
+            $scope.totalReports = data.total_rows;
+            for(row in $scope.reports) {
+                $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
+                // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
+                $scope.reports[row].value.signature = acra.getReportSignature($scope.reports[row]);
+            }
 
-                // If there are more rows, here is the key to the next page
-                $scope.nextKey =data.next_row ? data.next_row.key : null;
-                $scope.startNumber = ($scope.previousStartKeys.length * $scope.reportsCount) + 1;
-                $scope.endNumber = $scope.startNumber + $scope.reports.length - 1;
-                console.log($scope);
-                $scope.loading = false;
-            },
-            function(response, getResponseHeaders){
+            // If there are more rows, here is the key to the next page
+            $scope.nextKey =data.next_row ? data.next_row.key : null;
+            $scope.startNumber = ($scope.previousStartKeys.length * $scope.reportsCount) + 1;
+            $scope.endNumber = $scope.startNumber + $scope.reports.length - 1;
+            console.log($scope);
+            $scope.loading = false;
+        };
+
+        var errorHandler = function(response, getResponseHeaders){
                 // Error Handler
                 $scope.reports=[];
                 $scope.totalReports="";
-            });
+        };
+
+        if($scope.filterName == $scope.noFilter || $scope.filterValue == $scope.noFilterValue) {
+            ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
+        } else {
+            ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
+        }
     }
 
     $scope.changeFilterValues = function() {
         console.log($scope);
-        var filterValuesGetter;
+        var getFilteredValues;
         if($scope.filterName.value == "androidver") {
-            filterValuesGetter = ReportsStore.androidVersionsList;
+            getFilteredValues = ReportsStore.androidVersionsList;
         } else if ($scope.filterName.value == "appver") {
-            filterValuesGetter = ReportsStore.appVersionsList;
+            getFilteredValues = ReportsStore.appVersionsList;
         }
 
-        if(filterValuesGetter) {
-            filterValuesGetter(function(data){
+        if(getFilteredValues) {
+            getFilteredValues(function(data){
                 console.log("Update filter values");
                 $scope.filterValues.length = 0;
                 $scope.filterValues.push($scope.noFilterValue);
@@ -81,6 +88,14 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
                 $scope.filterValues.sort();
             });
         }
+    };
+
+    $scope.filterValueSelected = function() {
+        // reset pagination
+        $scope.startKey = null;
+        $scope.nextKey = null;
+        $scope.previousStartKeys.length = 0;
+        $scope.getData();
     };
 
     $scope.loadReport = function(report) {
@@ -96,6 +111,5 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
     }
 
 
-    $scope.getData();
     $scope.$on("refresh", $scope.getData);
 }

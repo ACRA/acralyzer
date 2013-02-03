@@ -44,11 +44,12 @@ angular.module('acra-storage', ['ngResource']).
                 descending: true,
                 limit: reportsCount + 1,
                 include_docs: includeDocs,
-                startkey: "[" + filterValue + "]",
-                endkey: "[" + filterValue + ",{}]"
+                endkey: JSON.stringify([filterValue]),
+                startkey: JSON.stringify([filterValue,{}]),
+                reduce: false
             };
             if(pageStartKey != null) {
-                viewParams.startkey = pageStartKey;
+                viewParams.startkey = JSON.stringify(pageStartKey);
             }
 
             var additionalCallback = function(data) {

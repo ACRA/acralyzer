@@ -7,9 +7,9 @@
             </div>
             <select ng-model="filterName" ng-change="changeFilterValues()" ng-options="f.label for f in availableFilters">
             </select>
-            <select ng-model="filterValue" ng-disabled="filterName == noFilter"  ng-change="getData()" ng-options="v.label for v in filterValues">
+            <select ng-model="filterValue" ng-disabled="filterName == noFilter"  ng-change="filterValueSelected()" ng-options="v.label for v in filterValues">
             </select>
-            <input type="text" class="search-query" placeholder="Filter page" ng-model="search">
+            <input type="text" class="search-query" placeholder="Search in this page" ng-model="search">
             <label class="checkbox">
                 <input type="checkbox" ng-model="fullSearch" ng-change="getData()"> All report attributes
             </label>
