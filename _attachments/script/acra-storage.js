@@ -5,14 +5,17 @@ angular.module('acra-storage', ['ngResource']).
             details: $resource('/acra-storage/:reportid')
         };
 
+        // Key: date/time Value: quantity
         ReportsStore.reportsPerDay = function(grouplvl, cb, errorHandler) {
             return ReportsStore.views.get({view: 'reports-per-day', group_level: grouplvl}, cb, errorHandler);
         };
 
+        // 10 latest reports - Key: date/time Value: report digest
         ReportsStore.recentReports = function(cb, errorHandler) {
             return ReportsStore.views.get({view: 'recent-items', limit: 10, descending: true}, cb, errorHandler);
         };
 
+        // Key: report ID Value: report digest
         ReportsStore.reportsList = function(startKey, reportsCount, includeDocs, cb, errorHandler) {
             var viewParams = {
                 view: 'recent-items',
@@ -34,6 +37,31 @@ angular.module('acra-storage', ['ngResource']).
             return result;
         };
 
+        // Key: report ID Value: report digest
+        ReportsStore.filteredReportsList = function(filterName, filterValue, pageStartKey, reportsCount, includeDocs, cb, errorHandler) {
+            var viewParams = {
+                view: 'recent-items-by-' + filterName,
+                descending: true,
+                limit: reportsCount + 1,
+                include_docs: includeDocs,
+                startkey: "[" + filterValue + "]",
+                endkey: "[" + filterValue + ",{}]"
+            };
+            if(pageStartKey != null) {
+                viewParams.startkey = pageStartKey;
+            }
+
+            var additionalCallback = function(data) {
+                if(data.rows && (data.rows.length > reportsCount)) {
+                    data.next_row = data.rows.splice(reportsCount,1)[0];
+                }
+                cb(data);
+            };
+            var result = ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
+            return result;
+        };
+
+        // 1 full report
         ReportsStore.reportDetails = function(id, cb) {
             return ReportsStore.details.get({reportid: id}, cb);
         }

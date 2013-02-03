@@ -9,9 +9,17 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
     $scope.endNumber = $scope.reportsCount;
     $scope.fullSearch = false;
     $scope.loading = true;
+    $scope.noFilter = { value: "false", label: "No filter"};
+    $scope.noFilterValue = { value: "false", label: "All values"};
+    $scope.availableFilters = [
+        $scope.noFilter,
+        {value: "appver", label: "Application version"},
+        {value: "androidver", label: "Android version"}
+    ];
+    $scope.filterName = $scope.noFilter;
+    $scope.filterValue = $scope.noFilterValue;
 
-    $scope.appVersions = [];
-    $scope.androidVersions = [];
+    $scope.filterValues = [];
 
 
     $scope.getNextPage = function() {
@@ -28,8 +36,6 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
 
     $scope.getData = function() {
         $scope.loading = true;
-        $scope.updateAppVersions();
-        $scope.updateAndroidVersions();
         ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, function(data) {
                 // Success Handler
                 console.log("Refresh data for latest reports");
@@ -55,27 +61,27 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
             });
     }
 
-    $scope.updateAppVersions = function() {
-        ReportsStore.appVersionsList(function(data){
-           console.log("Update application versions");
-            $scope.appVersions.length = 0;
-            for(row in data.rows) {
-                $scope.appVersions.push(data.rows[row].key[0]);
-            }
-            $scope.appVersions.sort();
-        });
-    }
+    $scope.changeFilterValues = function() {
+        console.log($scope);
+        var filterValuesGetter;
+        if($scope.filterName.value == "androidver") {
+            filterValuesGetter = ReportsStore.androidVersionsList;
+        } else if ($scope.filterName.value == "appver") {
+            filterValuesGetter = ReportsStore.appVersionsList;
+        }
 
-    $scope.updateAndroidVersions = function() {
-        ReportsStore.androidVersionsList(function(data){
-            console.log("Update android versions");
-            $scope.androidVersions.length = 0;
-            for(row in data.rows) {
-                $scope.androidVersions.push(data.rows[row].key[0]);
-            }
-            $scope.androidVersions.sort();
-        });
-    }
+        if(filterValuesGetter) {
+            filterValuesGetter(function(data){
+                console.log("Update filter values");
+                $scope.filterValues.length = 0;
+                $scope.filterValues.push($scope.noFilterValue);
+                for(row in data.rows) {
+                    $scope.filterValues.push({value:data.rows[row].key[0], label:data.rows[row].key[0]});
+                }
+                $scope.filterValues.sort();
+            });
+        }
+    };
 
     $scope.loadReport = function(report) {
         $scope.selectedReport = ReportsStore.reportDetails(report.id, function(data) {
