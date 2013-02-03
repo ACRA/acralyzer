@@ -1,4 +1,21 @@
-/* add styles here */
+/*
+ Copyright 2013 Kevin Gaudin (kevin.gaudin@gmail.com)
+
+ This file is part of Acralyzer.
+
+ Acralyzer is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Acralyzer is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 body {
   font:1em Helvetica, sans-serif;
@@ -143,4 +160,30 @@ table td {
 .loader {
     text-align: center;
     margin: 10em auto;
+}
+
+/* Footer
+-------------------------------------------------- */
+
+.footer {
+    text-align: center;
+    font-size: 0.8em;
+    padding: 30px 0;
+    margin-top: 80px;
+    border-top: 1px solid #e5e5e5;
+    background-color: #f5f5f5;
+}
+.footer p {
+    margin-bottom: 0;
+    color: #777;
+}
+.footer-links {
+    margin: 10px 0;
+}
+.footer-links li {
+    display: inline;
+    padding: 0 2px;
+}
+.footer-links li:first-child {
+    padding-left: 0;
 }

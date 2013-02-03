@@ -18,6 +18,15 @@ The default storage endpoint for Acralyzer is [acra-storage](http://github.com/A
 Both Acralyzer and acra-storage are [CouchApps](http://couchapp.org).
 CouchApps are web applications made of HTML/Javascript files and served directly by a [CouchDB](http://couchdb.apache.org).
 
+Acralyzer uses other open source software:
+  * [CouchDB](http://couchdb.apache.org)
+  * [AngularJS](http://angularjs.org)
+  * [Twitter Bootstrap](http://twitter.github.com/bootstrap/)
+  * [d3.js](http://d3js.org)
+  * [JQuery](http://jquery.com/)
+  * [prettyprint.js](http://james.padolsey.com/javascript/prettyprint-for-javascript/),
+  * [moment.js](http://momentjs.com/)
+
 Documentation
 =============
 

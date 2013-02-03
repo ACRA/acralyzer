@@ -1,7 +1,26 @@
 <!DOCTYPE html>
 <html ng-app="Acralyzer">
   <head>
+    <!--
+    Copyright 2013 Kevin Gaudin (kevin.gaudin@gmail.com)
+
+    This file is part of Acralyzer.
+
+    Acralyzer is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Acralyzer is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
+    -->
     <title>Acralyzer</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-responsive.min.css" type="text/css">
@@ -36,48 +55,27 @@
         </div>
     </div>
 
-    <!--div id="profile">
-    </div-->
     <div ng-view></div>
+
     <script src="script/app.js"></script>
     <script src="script/acra-storage.js"></script>
     <script src="script/NavigationController.js"></script>
     <script src="script/DashboardControllers.js"></script>
     <script src="script/ReportsBrowserControllers.js"></script>
-  </body>
 
-<!-- templates used by app.js -->
-  <script id="new-message" type="text/x-mustache" charset="utf-8">
-      <div class="avatar">
-        {{#gravatar_url}}<img src="{{gravatar_url}}"/>{{/gravatar_url}}
-        <div class="name">
-          {{name}}
+    <footer class="footer">
+        <div class="container">
+            <p><a href="http://acra.ch/acralyzer">Acralyzer</a> is crafted by <a href="https://plus.google.com/105599514712357912650" target="_blank">Kevin Gaudin</a>.</p>
+            <p><a href="http://github.com/ACRA/acralyzer">Code</a> licensed under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public License v3</a>.</p>
+            <ul class="footer-links">
+                <li><a href="https://plus.google.com/118444843928759726538">Follow +ACRA on Google+</a></li>
+                <li class="muted">·</li>
+                <li><a href="https://github.com/ACRA/acralyzer/issues?state=open">Issues</a></li>
+                <li class="muted">·</li>
+                <li><a href="https://github.com/ACRA/acralyzer/wiki">Documentation</a></li>
+            </ul>
         </div>
-      </div>
-      <form id="create-message">
-        <label>New message from {{nickname}}: <input type="text" name="message" size=60 value=""></label>
-      </form>
-      <div style="clear:left;"></div>
-  </script>
-
-  <script id="recent-messages" type="text/x-mustache" charset="utf-8">
-        <h3>Recent Messages</h3>
-        <ul id="items">
-          {{#items}}
-            <li>
-              <div class="avatar">
-                {{#gravatar_url}}<img src="{{gravatar_url}}" alt="{{name}}"/>{{/gravatar_url}}
-                <div class="name">
-                  {{nickname}}
-                </div>
-              </div>
-              <p>{{message}}</p>
-              <div style="clear:left;"></div>
-            </li>
-          {{/items}}
-        </ul>
-        <p><em>Protip:</em> If you setup continuous replication between this database and a remote one, this list will reflect remote changes in near real-time.</p>
-        <p>This would be a good place to add pagination.</p>
-  </script>
-
+        <p>Acralyzer uses other open source software: <a href="http://couchdb.apache.org">CouchDB</a> · <a href="http://angularjs.org">AngularJS</a> · <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a> · <a href="http://d3js.org">d3.js</a> · <a href="http://jquery.com/">JQuery</a> · <a href="http://james.padolsey.com/javascript/prettyprint-for-javascript/">prettyprint.js</a> · <a href="http://momentjs.com/">moment.js</a></p>
+    </footer>
+  </body>
 </html>
