@@ -90,36 +90,9 @@ acralyzer.directive('reportDetails', function() {
 });
 
 (function(acra, $, undefined ) {
-    //Private Property
-    var isHot = true;
-
     //Public Property
     acra.dbname = "acra-storage";
-    acra.design = acra.dbname;
 
-    //Public Method
-    acra.getViewUrl = function(view, options) {
-        var result = "/" + acra.dbname + "/_design/" + acra.design + "/_view/" + view;
-        if (options) {
-            result += "?" + options;
-        }
-        return result;
-    }
-
-    acra.getDocUrl = function(docId) {
-        var result = "/" + acra.dbname + "/" + docId;
-    }
-
-    acra.addEvent = function(elem, type, eventHandle) {
-        if (elem == null || elem == undefined) return;
-        if ( elem.addEventListener ) {
-            elem.addEventListener( type, eventHandle, false );
-        } else if ( elem.attachEvent ) {
-            elem.attachEvent( "on" + type, eventHandle );
-        } else {
-            elem["on"+type]=eventHandle;
-        }
-    };
 
     // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
     acra.getReportSignature = function(report) {
@@ -151,19 +124,6 @@ acralyzer.directive('reportDetails', function() {
             }
         }
     }
-
-    acra.reportDetailsHeaderKeyNames = [
-        "timestamp",
-        "USER_APP_START_DATE",
-        "USER_CRASH_DATE",
-        "APP_VERSION_CODE",
-        "APP_VERSION_NAME",
-        "INSTALLATION_ID",
-        "STACK_TRACE",
-        "CUSTOM_DATA",
-        "USER_EMAIL",
-        "USER_COMMENT"
-    ];
 
 }( window.acra = window.acra || {}, jQuery ));
 

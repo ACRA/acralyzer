@@ -20,8 +20,8 @@
 angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function($resource) {
         var ReportsStore = {
-            views: $resource('/acra-storage/_design/acra-storage/_view/:view'),
-            details: $resource('/acra-storage/:reportid')
+            views: $resource('/' + acra.dbname + '/_design/acra-storage/_view/:view'),
+            details: $resource('/' + acra.dbname + '/:reportid')
         };
 
         // Key: date/time Value: quantity
