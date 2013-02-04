@@ -63,7 +63,7 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
             for(row in $scope.reports) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
                 // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
-                $scope.reports[row].value.signature = acra.getReportSignature($scope.reports[row]);
+                $scope.reports[row].value.signature = acralyzerConfig.getReportSignature($scope.reports[row]);
             }
 
             // If there are more rows, here is the key to the next page
