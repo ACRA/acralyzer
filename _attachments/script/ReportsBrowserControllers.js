@@ -88,24 +88,29 @@ function ReportsBrowserCtrl($scope, ReportsStore) {
     }
 
     $scope.changeFilterValues = function() {
-        console.log($scope);
-        var getFilteredValues;
-        if($scope.filterName.value == "androidver") {
-            getFilteredValues = ReportsStore.androidVersionsList;
-        } else if ($scope.filterName.value == "appver") {
-            getFilteredValues = ReportsStore.appVersionsList;
-        }
 
-        if(getFilteredValues) {
-            getFilteredValues(function(data){
-                console.log("Update filter values");
-                $scope.filterValues.length = 0;
-                $scope.filterValues.push($scope.noFilterValue);
-                for(row in data.rows) {
-                    $scope.filterValues.push({value:data.rows[row].key[0], label:data.rows[row].key[0]});
-                }
-                $scope.filterValues.sort();
-            });
+        if($scope.filterName == $scope.noFilter) {
+            $scope.filterValue = $scope.noFilterValue;
+            $scope.filterValueSelected();
+        } else {
+            var getFilteredValues;
+            if($scope.filterName.value == "androidver") {
+                getFilteredValues = ReportsStore.androidVersionsList;
+            } else if ($scope.filterName.value == "appver") {
+                getFilteredValues = ReportsStore.appVersionsList;
+            }
+
+            if(getFilteredValues) {
+                getFilteredValues(function(data){
+                    console.log("Update filter values");
+                    $scope.filterValues.length = 0;
+                    $scope.filterValues.push($scope.noFilterValue);
+                    for(row in data.rows) {
+                        $scope.filterValues.push({value:data.rows[row].key[0], label:data.rows[row].key[0]});
+                    }
+                    $scope.filterValues.sort();
+                });
+            }
         }
     };
 
