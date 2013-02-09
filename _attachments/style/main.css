@@ -187,3 +187,7 @@ table td {
 .footer-links li:first-child {
     padding-left: 0;
 }
+
+.rss {
+    float: right;
+}

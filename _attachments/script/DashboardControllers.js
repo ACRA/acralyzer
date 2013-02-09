@@ -19,6 +19,7 @@
 
 function CrashReportsCtrl($scope, ReportsStore) {
     $scope.selectedReport = "";
+    $scope.rsslink = "/acra-storage/_design/acra-storage/_list/rss/recent-items?descending=true";
 
     $scope.getData = function() {
         ReportsStore.recentReports(function(data) {
