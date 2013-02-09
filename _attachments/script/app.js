@@ -23,6 +23,7 @@ acralyzer.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/dashboard', {templateUrl: 'partials/dashboard.html',   controller: DashboardCtrl, activetab: "dashboard"}).
         when('/reports-browser', {templateUrl: 'partials/reports-browser.html', controller: ReportsBrowserCtrl, activetab: "reportsBrowser"}).
+        when('/report-details/:reportId', {templateUrl: 'partials/report-details.html', controller: ReportDetailsCtrl, activetab: "none"}).
         otherwise({redirectTo: '/dashboard'});
     }]);
 

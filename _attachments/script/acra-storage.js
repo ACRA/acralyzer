@@ -21,8 +21,22 @@ angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function($resource) {
         var ReportsStore = {
             views: $resource('/' + acralyzerConfig.dbname + '/_design/acra-storage/_view/:view'),
-            details: $resource('/' + acralyzerConfig.dbname + '/:reportid')
+            details: $resource('/' + acralyzerConfig.dbname + '/:reportid'),
+            reportsStores: $resource('/_all_dbs')
         };
+
+        ReportsStore.listACRAStores = function(cb, errorHandler) {
+            var filterDbsCallback = function(data) {
+                var finalData = [];
+                for(i in data) {
+                    if(data[i].indexOf('acra-') == 0) {
+                        finalData.push(data[i]);
+                    }
+                }
+                cb(finalData);
+            }
+            return ReportsStore.reportsStores.get({}, filterDbsCallback, errorHandler);
+        }
 
         // Key: date/time Value: quantity
         ReportsStore.reportsPerDay = function(grouplvl, cb, errorHandler) {
