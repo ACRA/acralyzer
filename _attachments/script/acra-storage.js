@@ -18,24 +18,34 @@
  */
 
 angular.module('acra-storage', ['ngResource']).
-    factory('ReportsStore', function($resource) {
-        var ReportsStore = {
-            views: $resource('/' + acralyzerConfig.dbname + '/_design/acra-storage/_view/:view'),
-            details: $resource('/' + acralyzerConfig.dbname + '/:reportid'),
-            reportsStores: $resource('/_all_dbs')
-        };
+    factory('ReportsStore', function($resource, $http) {
+        var appName = acralyzerConfig.defaultApp;
 
-        ReportsStore.listACRAStores = function(cb, errorHandler) {
+        // ReportsStore service instance
+        var ReportsStore = {};
+
+        ReportsStore.setApp = function(newAppName) {
+            appName = newAppName;
+            ReportsStore.views = $resource('/' + acralyzerConfig.appDBPrefix + appName + '/_design/acra-storage/_view/:view');
+            ReportsStore.details = $resource('/' + acralyzerConfig.appDBPrefix + appName + '/:reportid');
+        }
+        ReportsStore.setApp(appName);
+
+        ReportsStore.listApps = function(cb, errorHandler) {
+            console.log("get _all_dbs");
             var filterDbsCallback = function(data) {
+                console.log("_all_dbs retrieved");
+                console.log(data);
                 var finalData = [];
-                for(i in data) {
-                    if(data[i].indexOf('acra-') == 0) {
-                        finalData.push(data[i]);
+                for(var i in data) {
+                    if(data[i].indexOf(acralyzerConfig.appDBPrefix) == 0) {
+                        console.log("Found one acra storage: " + data[i]);
+                        finalData.push(data[i].substring(acralyzerConfig.appDBPrefix.length));
                     }
                 }
                 cb(finalData);
             }
-            return ReportsStore.reportsStores.get({}, filterDbsCallback, errorHandler);
+            $http.get('/_all_dbs').success(filterDbsCallback).error(errorHandler);
         }
 
         // Key: date/time Value: quantity

@@ -1,7 +1,7 @@
 (function(acralyzerConfig, $, undefined ) {
     //Public Property
-    acralyzerConfig.dbname = "acra-storage";
-
+    acralyzerConfig.defaultApp = "storage";
+    acralyzerConfig.appDBPrefix = "acra-";
 
     // Helper functions
     // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.

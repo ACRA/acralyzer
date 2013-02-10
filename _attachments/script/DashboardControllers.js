@@ -462,6 +462,13 @@ var formatAsPercentage = d3.format("%"),
 
 
 
-function DashboardCtrl($scope) {
+function DashboardCtrl($scope, $routeParams) {
+    if($routeParams.app) {
+        console.log("Dashboard: Direct access to app " + $routeParams.app);
+        $scope.acralyzer.setApp($routeParams.app)
+    } else {
+        console.log("Dashboard: Access to default app " + acralyzerConfig.defaultApp);
+        $scope.acralyzer.setApp(acralyzerConfig.defaultApp)
+    }
 }
 

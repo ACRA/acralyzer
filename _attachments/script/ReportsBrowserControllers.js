@@ -17,7 +17,15 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function ReportsBrowserCtrl($scope, ReportsStore) {
+function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
+    if($routeParams.app) {
+        console.log("ReportsBrowser: Direct access to app " + $routeParams.app);
+        $scope.acralyzer.setApp($routeParams.app)
+    } else {
+        console.log("ReportsBorwser: Access to default app " + acralyzerConfig.defaultApp);
+        $scope.acralyzer.setApp(acralyzerConfig.defaultApp)
+    }
+
     console.log("Init ReportsBrowserCtrl");
     $scope.reportsCount = 15;
     $scope.previousStartKeys = [];

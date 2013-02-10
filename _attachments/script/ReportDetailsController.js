@@ -18,6 +18,7 @@
  */
 
 function ReportDetailsCtrl($scope, $routeParams, ReportsStore) {
+    $scope.acralyzer.setApp($routeParams.app);
     $scope.reportId = $routeParams.reportId;
     $scope.loadReport = function(reportId) {
         $scope.report = ReportsStore.reportDetails(reportId, function(data) {

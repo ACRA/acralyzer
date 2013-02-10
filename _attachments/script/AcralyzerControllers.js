@@ -17,6 +17,24 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function AcralyzerCtrl($scope, $routeParams, ReportsStore) {
+function AcralyzerCtrl($scope, ReportsStore) {
+    $scope.acralyzer = {
+        apps: []
+    };
+    $scope.acralyzer.app = acralyzerConfig.defaultApp;
+
+    $scope.acralyzer.setApp = function(appName) {
+        $scope.acralyzer.app = appName;
+        ReportsStore.setApp($scope.acralyzer.app);
+    }
+
+    ReportsStore.listApps(function(data) {
+        console.log("Storage list retrieved.");
+        $scope.acralyzer.apps.length = 0;
+        $scope.acralyzer.apps = data;
+        console.log($scope.acralyzer.apps);
+    }, function() {
+
+    });
 
 }

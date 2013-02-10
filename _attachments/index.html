@@ -48,8 +48,17 @@
         <div class="navbar-inner">
             <a class="brand" href="#">Acralyzer</a>
             <ul class="nav">
-                <li ng-class="{active: $route.current.activetab == 'dashboard'}"><a href="#/dashboard">Dashboard</a></li>
-                <li ng-class="{active: $route.current.activetab == 'reportsBrowser'}"><a href="#/reports-browser">Reports browser</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        {{acralyzer.app}}
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="app in acralyzer.apps"><a href="#/{{$route.current.activetab}}/{{app}}">{{app}}</a></li>
+                    </ul>
+                </li>
+                <li ng-class="{active: $route.current.activetab == 'dashboard'}"><a href="#/dashboard/{{acralyzer.app}}">Dashboard</a></li>
+                <li ng-class="{active: $route.current.activetab == 'reports-browser'}"><a href="#/reports-browser/{{acralyzer.app}}">Reports browser</a></li>
             </ul>
             <div id="account"></div>
 
@@ -69,17 +78,17 @@
 
     <footer class="footer">
         <div class="container">
-            <p><a href="http://acra.ch/acralyzer">Acralyzer</a> is crafted by <a href="https://plus.google.com/105599514712357912650" target="_blank">Kevin Gaudin</a>.</p>
-            <p><a href="http://github.com/ACRA/acralyzer">Code</a> licensed under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public License v3</a>.</p>
+            <p><a href="http://acra.ch/acralyzer" target="_blank">Acralyzer</a> is crafted by <a href="https://plus.google.com/105599514712357912650" target="_blank">Kevin Gaudin</a>.</p>
+            <p><a href="http://github.com/ACRA/acralyzer" target="_blank">Code</a> licensed under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public License v3</a>.</p>
             <ul class="footer-links">
-                <li><a href="https://plus.google.com/118444843928759726538">Follow +ACRA on Google+</a></li>
+                <li><a href="https://plus.google.com/118444843928759726538" target="_blank">Follow +ACRA on Google+</a></li>
                 <li class="muted">·</li>
-                <li><a href="https://github.com/ACRA/acralyzer/issues?state=open">Issues</a></li>
+                <li><a href="https://github.com/ACRA/acralyzer/issues?state=open" target="_blank">Issues</a></li>
                 <li class="muted">·</li>
-                <li><a href="https://github.com/ACRA/acralyzer/wiki">Documentation</a></li>
+                <li><a href="https://github.com/ACRA/acralyzer/wiki" target="_blank">Documentation</a></li>
             </ul>
         </div>
-        <p>Acralyzer uses other open source software: <a href="http://couchdb.apache.org">CouchDB</a> · <a href="http://angularjs.org">AngularJS</a> · <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a> · <a href="http://d3js.org">d3.js</a> · <a href="http://jquery.com/">JQuery</a> · <a href="http://james.padolsey.com/javascript/prettyprint-for-javascript/">prettyprint.js</a> · <a href="http://momentjs.com/">moment.js</a></p>
+        <p>Acralyzer uses other open source software: <a href="http://couchdb.apache.org" target="_blank">CouchDB</a> · <a href="http://angularjs.org" target="_blank">AngularJS</a> · <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a> · <a href="http://d3js.org" target="_blank">d3.js</a> · <a href="http://jquery.com/" target="_blank">JQuery</a> · <a href="http://james.padolsey.com/javascript/prettyprint-for-javascript/" target="_blank">prettyprint.js</a> · <a href="http://momentjs.com/" target="_blank">moment.js</a></p>
     </footer>
   </body>
 </html>
