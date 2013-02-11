@@ -20,14 +20,17 @@
 angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function($resource, $http) {
         var appName = acralyzerConfig.defaultApp;
-
+        var dbName = acralyzerConfig.appDBPrefix + appName;
+        var lastseq = 0;
         // ReportsStore service instance
         var ReportsStore = {};
 
         ReportsStore.setApp = function(newAppName) {
             appName = newAppName;
-            ReportsStore.views = $resource('/' + acralyzerConfig.appDBPrefix + appName + '/_design/acra-storage/_view/:view');
-            ReportsStore.details = $resource('/' + acralyzerConfig.appDBPrefix + appName + '/:reportid');
+            ReportsStore.views = $resource('/' + dbName + '/_design/acra-storage/_view/:view');
+            ReportsStore.details = $resource('/' + dbName + '/:reportid');
+            ReportsStore.dbstate = $resource('/' + dbName + '/');
+            ReportsStore.changes = $resource('/' + dbName + '/_changes');
         }
         ReportsStore.setApp(appName);
 
@@ -120,6 +123,40 @@ angular.module('acra-storage', ['ngResource']).
 
         ReportsStore.androidVersionsList = function(cb) {
             return ReportsStore.views.get({view: 'recent-items-by-androidver', group_level: 1}, cb);
+        }
+
+        ReportsStore.pollChanges = function(cb) {
+            console.log("Polling changes since = " + lastseq);
+            ReportsStore.changes.get(
+                {feed:'longpoll', since: lastseq},
+                function(data){
+                    if(data.last_seq > lastseq) {
+                        console.log("New changes");
+                        cb();
+                        lastseq = data.last_seq;
+                    }
+                    ReportsStore.pollChanges(cb);
+                },
+                function() {
+                    console.log("Error wile polling changes");
+                    ReportsStore.pollChanges(cb);
+                }
+            );
+        }
+
+        ReportsStore.startPolling = function(cb) {
+            ReportsStore.dbstate.get(
+                {},
+                // Success
+                function(data) {
+                    lastseq = data.update_seq;
+                    console.log("DB status retrieved, last_seq = " + lastseq);
+                    ReportsStore.pollChanges(cb);
+                },
+                // Error
+                function() {
+                console.log("Polling failed");
+            });
         }
 
         return ReportsStore;

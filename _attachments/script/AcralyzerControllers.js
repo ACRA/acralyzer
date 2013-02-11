@@ -17,7 +17,7 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function AcralyzerCtrl($scope, ReportsStore) {
+function AcralyzerCtrl($scope, ReportsStore, $rootScope) {
     $scope.acralyzer = {
         apps: []
     };
@@ -37,4 +37,8 @@ function AcralyzerCtrl($scope, ReportsStore) {
 
     });
 
+
+    ReportsStore.startPolling(function(){
+        $rootScope.$broadcast("refresh");
+    });
 }
