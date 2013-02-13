@@ -19,7 +19,6 @@
 
 function CrashReportsCtrl($scope, ReportsStore) {
     $scope.selectedReport = "";
-    $scope.rsslink = "/acra-storage/_design/acra-storage/_list/rss/recent-items?descending=true";
 
     $scope.getData = function() {
         ReportsStore.recentReports(function(data) {
@@ -36,7 +35,7 @@ function CrashReportsCtrl($scope, ReportsStore) {
             $scope.reports=[];
             $scope.totalReports="";
         });
-    }
+    };
 
     $scope.loadReport = function(report) {
         $scope.selectedReport = ReportsStore.reportDetails(report.id, function(data) {
@@ -48,7 +47,7 @@ function CrashReportsCtrl($scope, ReportsStore) {
             data.formatedCrashDate = moment(data.USER_CRASH_DATE).format('LLL');
             data.formatedTimestamp = moment(data.timestamp).format('LLL');
         });
-    }
+    };
 
     $scope.getData();
     $scope.$on("refresh", $scope.getData);
