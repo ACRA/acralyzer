@@ -19,20 +19,18 @@
 
 angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function($resource, $http) {
-        var appName = acralyzerConfig.defaultApp;
-        var dbName = acralyzerConfig.appDBPrefix + appName;
         var lastseq = 0;
         // ReportsStore service instance
         var ReportsStore = {};
 
         ReportsStore.setApp = function(newAppName) {
-            appName = newAppName;
+            var dbName = acralyzerConfig.appDBPrefix + newAppName;
             ReportsStore.views = $resource('/' + dbName + '/_design/acra-storage/_view/:view');
             ReportsStore.details = $resource('/' + dbName + '/:reportid');
             ReportsStore.dbstate = $resource('/' + dbName + '/');
             ReportsStore.changes = $resource('/' + dbName + '/_changes');
         }
-        ReportsStore.setApp(appName);
+        ReportsStore.setApp(acralyzerConfig.defaultApp);
 
         ReportsStore.listApps = function(cb, errorHandler) {
             console.log("get _all_dbs");
