@@ -86,7 +86,8 @@ acralyzer.directive('reportDetails', function() {
     return {
         restrict: 'E',
         scope: {
-            report: '='
+            report: '=',
+            acralyzer: '='
         },
         templateUrl: 'partials/report-details.html'
     };

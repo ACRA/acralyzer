@@ -197,6 +197,6 @@ table td {
     padding-left: 0;
 }
 
-.rss {
+.rss, .direct-link {
     float: right;
 }
