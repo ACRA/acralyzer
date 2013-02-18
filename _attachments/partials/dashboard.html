@@ -18,10 +18,12 @@
         <div id="content" ng-controller="CrashReportsCtrl" class="span12">
             <div class="rss"><a href="/acra-{{acralyzer.app}}/_design/acra-storage/_list/rss/recent-items?descending=true"><img src="img/rss.png"></a></div>
             <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
-            <ul>
+            <ul id="reports-list">
                 <li ng-repeat="report in reports" ng-cloak>
+                    <div ng-class-odd="'odd'" ng-class-even="'even'">
                     <a ng-click="loadReport(report)" class="btn btn-mini"><i class="icon-search" ng-hide="report.id == selectedReport._id"></i><i class="icon-asterisk" ng-show="report.id == selectedReport._id"></i></a>
                     <report-summary report="report"></report-summary>
+                    </div>
                 </li>
             </ul>
             <report-details report="selectedReport"></report-details>

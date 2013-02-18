@@ -20,8 +20,10 @@
         <div class="loader" ng-show="loading"><img  src="img/loader.gif"/></div>
         <ul ng-hide="loading">
             <li ng-repeat="report in reports | filter:search" ng-cloak>
+                <div ng-class-odd="'odd'" ng-class-even="'even'">
                 <a ng-click="loadReport(report)" class="btn btn-mini"><i class="icon-search" ng-hide="report.id == selectedReport._id"></i><i class="icon-asterisk" ng-show="report.id == selectedReport._id"></i></a>
                 <report-summary report="report"></report-summary>
+                </div>
             </li>
         </ul>
         <ul class="pager">
