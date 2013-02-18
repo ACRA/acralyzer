@@ -200,3 +200,7 @@ table td {
 .rss, .direct-link {
     float: right;
 }
+
+.polling-indicator {
+    margin-top: 16px;
+}

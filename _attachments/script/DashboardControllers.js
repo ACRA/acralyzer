@@ -51,6 +51,7 @@ function CrashReportsCtrl($scope, ReportsStore) {
 
     $scope.getData();
     $scope.$on("refresh", $scope.getData);
+    $scope.$on("new data", $scope.getData);
 }
 
 
@@ -247,6 +248,7 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
     $scope.getData();
 
     $scope.$on("refresh", $scope.getData);
+    $scope.$on("new data", $scope.getData);
 }
 
 
@@ -446,6 +448,7 @@ function PieChartsCtrl($scope, ReportsStore) {
     $scope.getData();
 
     $scope.$on("refresh", $scope.getData);
+    $scope.$on("new data", $scope.getData);
 }
 
 var formatAsPercentage = d3.format("%"),

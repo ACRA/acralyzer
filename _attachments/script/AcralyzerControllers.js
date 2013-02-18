@@ -22,6 +22,7 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope) {
         apps: []
     };
     $scope.acralyzer.app = acralyzerConfig.defaultApp;
+    $scope.acralyzer.isPolling = false;
 
     $scope.acralyzer.setApp = function(appName) {
         $scope.acralyzer.app = appName;
@@ -37,8 +38,20 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope) {
 
     });
 
+    $scope.acralyzer.startPolling = function() {
+        $scope.acralyzer.isPolling = true;
+        ReportsStore.startPolling(function(){
+            if($scope.acralyzer.isPolling) {
+                $rootScope.$broadcast("new data");
+            } // Do not refresh if a late response is received after the user asked to stop polling.
+        });
+    }
 
-    ReportsStore.startPolling(function(){
-        $rootScope.$broadcast("refresh");
-    });
+    $scope.acralyzer.stopPolling = function() {
+        $scope.acralyzer.isPolling = false;
+        ReportsStore.stopPolling();
+    }
+
+    $scope.acralyzer.startPolling();
+
 }

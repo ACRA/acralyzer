@@ -19,9 +19,11 @@
 
 angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function($resource, $http) {
-        var lastseq = 0;
+        var lastseq = -1;
         // ReportsStore service instance
         var ReportsStore = {};
+
+        var continuePolling = true;
 
         ReportsStore.setApp = function(newAppName) {
             var dbName = acralyzerConfig.appDBPrefix + newAppName;
@@ -130,31 +132,46 @@ angular.module('acra-storage', ['ngResource']).
                 function(data){
                     if(data.last_seq > lastseq) {
                         console.log("New changes");
-                        cb();
-                        lastseq = data.last_seq;
+                        if(continuePolling) {
+                            cb();
+                            lastseq = data.last_seq;
+                        }
                     }
-                    ReportsStore.pollChanges(cb);
+                    if(continuePolling) {
+                        ReportsStore.pollChanges(cb);
+                    }
                 },
                 function() {
                     console.log("Error wile polling changes");
-                    ReportsStore.pollChanges(cb);
+                    if(continuePolling) {
+                        ReportsStore.pollChanges(cb);
+                    }
                 }
             );
-        }
+        };
 
         ReportsStore.startPolling = function(cb) {
             ReportsStore.dbstate.get(
                 {},
                 // Success
                 function(data) {
-                    lastseq = data.update_seq;
+                    if(lastseq == -1) {
+                        lastseq = data.update_seq;
+                    }
                     console.log("DB status retrieved, last_seq = " + lastseq);
+                    continuePolling = true;
                     ReportsStore.pollChanges(cb);
                 },
                 // Error
                 function() {
-                console.log("Polling failed");
-            });
+                    continuePolling = false;
+                    console.log("Polling failed");
+                }
+            );
+        };
+
+        ReportsStore.stopPolling = function() {
+            continuePolling = false;
         }
 
         return ReportsStore;
