@@ -1,6 +1,7 @@
 (function(acralyzerConfig, $, undefined ) {
     // Update this variable with the name of your app:
     acralyzerConfig.defaultApp = "storage";
+    acralyzerConfig.backgroundPollingOnStartup = true;
 
     acralyzerConfig.appDBPrefix = "acra-";
 

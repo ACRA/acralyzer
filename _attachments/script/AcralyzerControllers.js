@@ -27,6 +27,9 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope) {
     $scope.acralyzer.setApp = function(appName) {
         $scope.acralyzer.app = appName;
         ReportsStore.setApp($scope.acralyzer.app);
+        if($scope.acralyzer.isPolling) {
+            $scope.acralyzer.startPolling();
+        }
     }
 
     ReportsStore.listApps(function(data) {
@@ -52,6 +55,8 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope) {
         ReportsStore.stopPolling();
     }
 
-    $scope.acralyzer.startPolling();
+    if(acralyzerConfig.backgroundPollingOnStartup) {
+        $scope.acralyzer.startPolling();
+    }
 
 }

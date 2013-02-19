@@ -24,13 +24,14 @@ angular.module('acra-storage', ['ngResource']).
         var ReportsStore = {};
 
         var continuePolling = true;
-
+        var dbName = "";
         ReportsStore.setApp = function(newAppName) {
-            var dbName = acralyzerConfig.appDBPrefix + newAppName;
+            dbName = acralyzerConfig.appDBPrefix + newAppName;
             ReportsStore.views = $resource('/' + dbName + '/_design/acra-storage/_view/:view');
             ReportsStore.details = $resource('/' + dbName + '/:reportid');
             ReportsStore.dbstate = $resource('/' + dbName + '/');
             ReportsStore.changes = $resource('/' + dbName + '/_changes');
+            lastseq = -1;
         }
         ReportsStore.setApp(acralyzerConfig.defaultApp);
 
@@ -127,17 +128,20 @@ angular.module('acra-storage', ['ngResource']).
 
         ReportsStore.pollChanges = function(cb) {
             console.log("Polling changes since = " + lastseq);
+            // Store the current dbName on polling start
+            var currentlyPolledDB = dbName;
             ReportsStore.changes.get(
                 {feed:'longpoll', since: lastseq},
                 function(data){
                     if(data.last_seq > lastseq) {
-                        console.log("New changes");
-                        if(continuePolling) {
+                        // If the user asked to stop polling or changed DataBase, don't handle the result.
+                        if(continuePolling && dbName == currentlyPolledDB) {
+                            console.log("New changes");
                             cb();
                             lastseq = data.last_seq;
                         }
                     }
-                    if(continuePolling) {
+                    if(continuePolling  && dbName == currentlyPolledDB) {
                         ReportsStore.pollChanges(cb);
                     }
                 },
