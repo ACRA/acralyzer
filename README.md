@@ -22,6 +22,7 @@ Acralyzer uses other open source software:
   * [CouchDB](http://couchdb.apache.org)
   * [AngularJS](http://angularjs.org)
   * [Twitter Bootstrap](http://twitter.github.com/bootstrap/)
+  * [Bootstrap-Notify](http://nijikokun.github.com/bootstrap-notify/)
   * [d3.js](http://d3js.org)
   * [JQuery](http://jquery.com/)
   * [prettyprint.js](http://james.padolsey.com/javascript/prettyprint-for-javascript/),

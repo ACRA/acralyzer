@@ -204,3 +204,7 @@ table td {
 .polling-indicator {
     margin-top: 16px;
 }
+
+.notifications.top-right{
+    top:45px;
+}

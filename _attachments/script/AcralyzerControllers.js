@@ -59,4 +59,13 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope) {
         $scope.acralyzer.startPolling();
     }
 
+    var notifyNewData = function() {
+        $('.top-right').notify({
+            message: { text: 'Received new report(s)' },
+            type: 'warning'
+        }).show();
+    };
+
+    $scope.$on("new data", notifyNewData);
+
 }

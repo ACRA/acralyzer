@@ -25,6 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-responsive.min.css" type="text/css">
+    <link rel="stylesheet" href="vendor/bootstrap-notify/css/bootstrap-notify.css" type="text/css">
     <link rel="stylesheet" href="style/main.css" type="text/css">
     <link rel="stylesheet" href="style/graph.css" type="text/css">
     <script src="vendor/couchapp/sha1.js"></script>
@@ -37,6 +38,7 @@
     <script src="vendor/couchapp/jquery.couchProfile.js"></script>
     <script src="vendor/couchapp/md5.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/bootstrap-notify/js/bootstrap-notify.js"></script>
     <script src="vendor/angular/angular.min.js"></script>
     <script src="vendor/angular/angular-resource.min.js"></script>
     <script src="vendor/d3/d3.v3.min.js"></script>
@@ -66,6 +68,8 @@
         </div>
     </div>
 
+    <div class='notifications top-right'></div>
+
     <div ng-view></div>
 
     <script src="script/config.js"></script>
@@ -89,7 +93,16 @@
                 <li><a href="https://github.com/ACRA/acralyzer/wiki" target="_blank">Documentation</a></li>
             </ul>
         </div>
-        <p>Acralyzer uses other open source software: <a href="http://couchdb.apache.org" target="_blank">CouchDB</a> · <a href="http://angularjs.org" target="_blank">AngularJS</a> · <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a> · <a href="http://d3js.org" target="_blank">d3.js</a> · <a href="http://jquery.com/" target="_blank">JQuery</a> · <a href="http://james.padolsey.com/javascript/prettyprint-for-javascript/" target="_blank">prettyprint.js</a> · <a href="http://momentjs.com/" target="_blank">moment.js</a></p>
+        <p>Acralyzer uses other open source software:
+            <a href="http://couchdb.apache.org" target="_blank">CouchDB</a> ·
+            <a href="http://angularjs.org" target="_blank">AngularJS</a> ·
+            <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a> ·
+            <a href="http://d3js.org" target="_blank">d3.js</a> ·
+            <a href="http://jquery.com/" target="_blank">JQuery</a> ·
+            <a href="http://james.padolsey.com/javascript/prettyprint-for-javascript/" target="_blank">prettyprint.js</a> ·
+            <a href="http://momentjs.com/" target="_blank">moment.js</a></p>
+            <a href="http://nijikokun.github.com/bootstrap-notify/" target="_blank">Bootstrap-Notify</a></p>
+
     </footer>
   </body>
 </html>
