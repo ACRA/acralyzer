@@ -17,7 +17,7 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function AcralyzerCtrl($scope, ReportsStore, $rootScope) {
+function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
     $scope.acralyzer = {
         apps: []
     };
@@ -60,6 +60,7 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope) {
     }
 
     var notifyNewData = function() {
+        desktopNotifications.notify({ title: "Acralyzer - " + $scope.acralyzer.app, body: "Received new report(s)", icon: null });
         $('.top-right').notify({
             message: { text: 'Received new report(s)' },
             type: 'warning'
@@ -67,5 +68,4 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope) {
     };
 
     $scope.$on("new data", notifyNewData);
-
 }

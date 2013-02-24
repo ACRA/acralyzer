@@ -93,6 +93,62 @@ acralyzer.directive('reportDetails', function() {
     };
 });
 
+acralyzer.factory('desktopNotifications', [function() {
+    /* data is an object with 'title', 'body' and optional 'icon' keys */
+    if ("Notification" in window && window.Notification.permissionLevel) {
+        return {
+            notify: function(data) {
+                if (Notification.permissionLevel() !== "granted") { return; }
+
+                var notif = new Notification(data.title, data);
+                notif.show();
+            }
+        };
+    }
+    else if (window.webkitNotifications) {
+        return {
+            notify: function(data) {
+                if (webkitNotifications.checkPermission()) { return; }
+
+                var notif = webkitNotifications.createNotification(data.icon, data.title, data.body);
+                notif.show();
+            }
+        };
+    }
+}]);
+
+acralyzer.directive('notificationsSupport', [function() {
+    return {
+        restrict: 'A',
+        link: function(scope,elm,attrs,controller) {
+            elm.addClass('btn');
+            elm.text("Desktop Notifications?");
+            if ("Notification" in window && window.Notification.permissionLevel) {
+                if (Notification.permissionLevel() === "default") {
+                    elm.on('click', function(ev) {
+                        Notification.requestPermission(function () {
+                            elm.remove();
+                        });
+                    });
+                    return;
+                }
+            }
+            else if (window.webkitNotifications) {
+                if (webkitNotifications.checkPermission() === 1) {
+                    elm.on('click', function(ev) {
+                        webkitNotifications.requestPermission(function () {
+                            elm.remove();
+                        });
+                    });
+                    return;
+                }
+            }
+            /* Not allowed or not supported */
+            elm.remove();
+        }
+    };
+}]);
+
 // TODO: migrate this code to angular logic
 ///////////////////////////////////
 // Apache 2.0 J Chris Anderson 2011
