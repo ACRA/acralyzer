@@ -101,6 +101,11 @@ acralyzer.factory('desktopNotifications', [function() {
                 if (Notification.permissionLevel() !== "granted") { return; }
 
                 var notif = new Notification(data.title, data);
+                notif.onshow = function() {
+                    setTimeout(function(){
+                        notif.close();
+                    }, '10000');
+                };
                 notif.show();
             }
         };
@@ -111,9 +116,11 @@ acralyzer.factory('desktopNotifications', [function() {
                 if (webkitNotifications.checkPermission()) { return; }
 
                 var notif = webkitNotifications.createNotification(data.icon, data.title, data.body);
-                setTimeout(function(){
-                    notif.cancel();
-                }, '10000');
+                notif.onshow = function() {
+                    setTimeout(function(){
+                        notif.close();
+                    }, '10000');
+                };
                 notif.show();
             }
         };
