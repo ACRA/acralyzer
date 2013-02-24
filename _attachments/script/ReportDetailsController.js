@@ -30,7 +30,7 @@ function ReportDetailsCtrl($scope, $routeParams, ReportsStore) {
             data.formatedCrashDate = moment(data.USER_CRASH_DATE).format('LLL');
             data.formatedTimestamp = moment(data.timestamp).format('LLL');
         });
-    }
+    };
     $scope.loadReport($scope.reportId);
 
 }

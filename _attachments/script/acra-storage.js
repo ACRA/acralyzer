@@ -32,7 +32,7 @@ angular.module('acra-storage', ['ngResource']).
             ReportsStore.dbstate = $resource('/' + dbName + '/');
             ReportsStore.changes = $resource('/' + dbName + '/_changes');
             lastseq = -1;
-        }
+        };
         ReportsStore.setApp(acralyzerConfig.defaultApp);
 
         ReportsStore.listApps = function(cb, errorHandler) {
@@ -42,15 +42,15 @@ angular.module('acra-storage', ['ngResource']).
                 console.log(data);
                 var finalData = [];
                 for(var i in data) {
-                    if(data[i].indexOf(acralyzerConfig.appDBPrefix) == 0) {
+                    if(data[i].indexOf(acralyzerConfig.appDBPrefix) === 0) {
                         console.log("Found one acra storage: " + data[i]);
                         finalData.push(data[i].substring(acralyzerConfig.appDBPrefix.length));
                     }
                 }
                 cb(finalData);
-            }
+            };
             $http.get('/_all_dbs').success(filterDbsCallback).error(errorHandler);
-        }
+        };
 
         // Key: date/time Value: quantity
         ReportsStore.reportsPerDay = function(grouplvl, cb, errorHandler) {
@@ -70,7 +70,7 @@ angular.module('acra-storage', ['ngResource']).
                 limit: reportsCount + 1,
                 include_docs: includeDocs
             };
-            if(startKey != null) {
+            if(startKey !== null) {
                 viewParams.startkey = '"' + startKey + '"';
             }
 
@@ -95,7 +95,7 @@ angular.module('acra-storage', ['ngResource']).
                 startkey: JSON.stringify([filterValue,{}]),
                 reduce: false
             };
-            if(pageStartKey != null) {
+            if(pageStartKey !== null) {
                 viewParams.startkey = JSON.stringify(pageStartKey);
             }
 
@@ -112,7 +112,7 @@ angular.module('acra-storage', ['ngResource']).
         // 1 full report
         ReportsStore.reportDetails = function(id, cb) {
             return ReportsStore.details.get({reportid: id}, cb);
-        }
+        };
 
         ReportsStore.reportsPerFieldName = function(fieldName, cb, errorHandler) {
             return ReportsStore.views.get({view: 'reports-per-' + fieldName, group_level: 1}, cb, errorHandler);
@@ -120,11 +120,11 @@ angular.module('acra-storage', ['ngResource']).
 
         ReportsStore.appVersionsList = function(cb) {
             return ReportsStore.views.get({view: 'recent-items-by-appver', group_level: 1}, cb);
-        }
+        };
 
         ReportsStore.androidVersionsList = function(cb) {
             return ReportsStore.views.get({view: 'recent-items-by-androidver', group_level: 1}, cb);
-        }
+        };
 
         ReportsStore.pollChanges = function(cb) {
             console.log("Polling changes since = " + lastseq);
@@ -176,7 +176,7 @@ angular.module('acra-storage', ['ngResource']).
 
         ReportsStore.stopPolling = function() {
             continuePolling = false;
-        }
+        };
 
         return ReportsStore;
     });

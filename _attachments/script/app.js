@@ -36,10 +36,10 @@ acralyzer.directive('prettyprint',function(){
                 // Persistent container for json output
                 var $json = $('<div>');
                 $element.prepend($json);
-                
-                $attr.$observe('prettyprint',function(value){  
-                    
-                    if (value!='') {
+
+                $attr.$observe('prettyprint',function(value){
+
+                    if (value !== '') {
                         // Register watcher on evaluated expression
                         $scope.$watch(function watcher(){
                             return $scope.$eval(value);
@@ -48,7 +48,7 @@ acralyzer.directive('prettyprint',function(){
                         // Watch entire scope
                         $scope.$watch(dopp);
                     }
-                    
+
                     function dopp(inspect){
                         // Replace contents of persistent json container with new json table
                         $json.empty();
@@ -152,7 +152,7 @@ acralyzer.directive('notificationsSupport', [function() {
 // TODO: migrate this code to angular logic
 ///////////////////////////////////
 // Apache 2.0 J Chris Anderson 2011
-$(function() {   
+$(function() {
     // friendly helper http://tinyurl.com/6aow6yn
     $.fn.serializeObject = function() {
         var o = {};

@@ -30,7 +30,7 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
         if($scope.acralyzer.isPolling) {
             $scope.acralyzer.startPolling();
         }
-    }
+    };
 
     ReportsStore.listApps(function(data) {
         console.log("Storage list retrieved.");
@@ -48,12 +48,12 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
                 $rootScope.$broadcast("new data");
             } // Do not refresh if a late response is received after the user asked to stop polling.
         });
-    }
+    };
 
     $scope.acralyzer.stopPolling = function() {
         $scope.acralyzer.isPolling = false;
         ReportsStore.stopPolling();
-    }
+    };
 
     if(acralyzerConfig.backgroundPollingOnStartup) {
         $scope.acralyzer.startPolling();
