@@ -25,7 +25,7 @@ function CrashReportsCtrl($scope, ReportsStore) {
             console.log("Refresh data for latest reports");
             $scope.reports = data.rows;
             $scope.totalReports = data.total_rows;
-            for(row in $scope.reports) {
+            for(var row in $scope.reports) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
                 // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
                 $scope.reports[row].value.signature = acralyzerConfig.getReportSignature($scope.reports[row]);
@@ -65,7 +65,7 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
       {name: "Second", value: 6}
     ];
     $scope.period = $scope.periods[2];
-    
+
     $scope.reportsPerDay=[];
 
     $scope.dataDate = function(d) {
@@ -129,7 +129,7 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
                 }
             }
         });
-    }
+    };
 
 
     $scope.buildGraph = function () {
@@ -141,7 +141,7 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
             height : container.height() * 0.8,
             padding : container.height() * 0.15
         };
-                
+
         // create an svg container
         if(!$scope.vis) {
             $scope.vis =  d3.select("#graph-container")
@@ -153,30 +153,30 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
 /*                .attr("width", $scope.metrics.width)
                 .attr("height", $scope.metrics.height);
 */        }
-     
+
 
         $scope.xScale = d3.time.scale()
             .domain([d3.min($scope.reportsPerDay, $scope.dataDate), new Date()])
             .range([$scope.metrics.padding, $scope.metrics.width - $scope.metrics.padding]);   // map these the the chart width = total width minus padding at both sides
-            
+
 
         // define the y scale  (vertical)
         $scope.yScale = d3.scale.linear()
             .domain([0, d3.max($scope.reportsPerDay, $scope.dataValue)])
             .range([$scope.metrics.height - $scope.metrics.padding, $scope.metrics.padding]);   // map these to the chart height, less padding.  
                  //REMEMBER: y axis range has the bigger number first because the y value of zero is at the top of chart and increases as you go down.
-            
-     
+
+
         // define the y axis
         $scope.yAxis = d3.svg.axis()
             .orient("left")
             .scale($scope.yScale);
-        
+
         // define the y axis
         $scope.xAxis = d3.svg.axis()
             .orient("bottom")
             .scale($scope.xScale);
-            
+
         // draw y axis with labels and move in from the size by the amount of padding
         $scope.vis.append("g")
             .attr("class", "yaxis")   // give it a class so it can be used to select only xaxis labels  below
@@ -188,8 +188,8 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
             .attr("class", "xaxis")   // give it a class so it can be used to select only xaxis labels  below
             .attr("transform", "translate(0," + ($scope.metrics.height - $scope.metrics.padding) + ")")
             .call($scope.xAxis);
-            
-    }
+
+    };
 
 
     $scope.updateGraph = function updateGraph() {
@@ -218,31 +218,31 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
         bars.attr("class", "update")
           .transition().duration(375)
            .attr("height", 0)
-           .attr("y", function(d){return $scope.yScale(0)})
+           .attr("y", function(d){return $scope.yScale(0);})
           .transition().delay(375).duration(1)
-           .attr("x", function(d){return $scope.xScale($scope.dataDate(d))})
+           .attr("x", function(d){return $scope.xScale($scope.dataDate(d));})
           .transition().delay(376).duration(374)
-           .attr("y", function(d){return $scope.yScale($scope.dataValue(d))})
-           .attr("height", function(d) { return $scope.metrics.height - $scope.metrics.padding - $scope.yScale($scope.dataValue(d)) });
+           .attr("y", function(d){return $scope.yScale($scope.dataValue(d));})
+           .attr("height", function(d) { return $scope.metrics.height - $scope.metrics.padding - $scope.yScale($scope.dataValue(d));});
 
         bars.enter().append("rect")
           .attr("class","enter")
-          .attr("x", function(d){return $scope.xScale($scope.dataDate(d))})
-          .attr("y", function(d){return $scope.yScale(0)})
+          .attr("x", function(d){return $scope.xScale($scope.dataDate(d));})
+          .attr("y", function(d){return $scope.yScale(0);})
           .attr("height", 0)
           .transition().duration(750)
-          .attr("x", function(d){return $scope.xScale($scope.dataDate(d))})
-          .attr("y", function(d){return $scope.yScale($scope.dataValue(d))})
+          .attr("x", function(d){return $scope.xScale($scope.dataDate(d));})
+          .attr("y", function(d){return $scope.yScale($scope.dataValue(d));})
           .attr("width", 1)
-          .attr("height", function(d) { return $scope.metrics.height - $scope.metrics.padding - $scope.yScale($scope.dataValue(d)) });
+          .attr("height", function(d) { return $scope.metrics.height - $scope.metrics.padding - $scope.yScale($scope.dataValue(d)); });
 
          bars.exit()
            .attr("class","exit")
            .transition().duration(750)
            .attr("height", 0)
-           .attr("y", function(d){return $scope.yScale(0)})
+           .attr("y", function(d){return $scope.yScale(0);})
            .remove();
-    }
+    };
 
     $scope.buildGraph();
     $scope.getData();
@@ -285,11 +285,12 @@ function PieChartsCtrl($scope, ReportsStore) {
                     ReportsStore.reportsPerFieldName($scope.fieldName.name, function(data) {
                         $scope.reportsPerFieldName = getBidimensionalArray(data.rows);
                         var totalReports = 0;
+                        var i = 0;
                         // Get total number of reports before calculating the ratio for each value.
-                        for(var i = 0; i < $scope.reportsPerFieldName.length; i++) {
+                        for(i = 0; i < $scope.reportsPerFieldName.length; i++) {
                             totalReports += $scope.reportsPerFieldName[i][1];
                         }
-                        for(var i = 0; i < $scope.reportsPerFieldName.length; i++) {
+                        for(i = 0; i < $scope.reportsPerFieldName.length; i++) {
                             $scope.reportsPerFieldName[i][2] = $scope.reportsPerFieldName[i][1] / totalReports;
                         }
                         $scope.updateGraph();
@@ -301,7 +302,7 @@ function PieChartsCtrl($scope, ReportsStore) {
                 }
             }
         });
-    }
+    };
 
     $scope.mouseover = function() {
         d3.select(this).select("path").transition()
@@ -310,7 +311,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             //.attr("stroke-width", 1.5)
             .attr("d", $scope.arcFinal3)
         ;
-    }
+    };
 
     $scope.mouseout = function() {
         d3.select(this).select("path").transition()
@@ -319,7 +320,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             //.attr("stroke-width", 1.5)
             .attr("d", $scope.arcFinal)
         ;
-    }
+    };
 
     $scope.up = function(d, i) {
         /* update bar chart when user selects piece of the pie chart */
@@ -327,13 +328,13 @@ function PieChartsCtrl($scope, ReportsStore) {
 //            updateBarChart(d.data.category, color(i));
 //            updateLineChart(d.data.category, color(i));
 
-    }
+    };
 
     $scope.buildGraph = function () {
         var container = $("#pie-charts");
 
         var outerRad =  Math.min(container.width(), container.height()) / 2;
-        var innerRad = outerRad * .999;
+        var innerRad = outerRad * 0.999;
         $scope.metrics = {
             width : container.width(),
             height : container.height(),
@@ -342,8 +343,8 @@ function PieChartsCtrl($scope, ReportsStore) {
             outerRadiusSelected : outerRad * 1.05,
             innerRadius : innerRad,
             // for animation
-            innerRadiusFinal : outerRad * .2,
-            innerRadiusFinal3 : outerRad * .25,
+            innerRadiusFinal : outerRad * 0.2,
+            innerRadiusFinal3 : outerRad * 0.25,
             color : d3.scale.category20()    //builtin range of colors
         };
 
@@ -385,7 +386,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             .attr("class","title")
 */        ;
 
-    }
+    };
 
     $scope.updateGraph = function () {
         $scope.vis.data([$scope.reportsPerFieldName]);
@@ -398,7 +399,7 @@ function PieChartsCtrl($scope, ReportsStore) {
 
         arcs.select(".pie-label").remove();
 
-        arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
+        arcs.filter(function(d) { return d.endAngle - d.startAngle > 0.2; })
             .append("svg:text")
             .attr("class", "pie-label")
             .attr("dy", ".35em")
@@ -408,7 +409,7 @@ function PieChartsCtrl($scope, ReportsStore) {
         ;
 
         arcs.select("title")
-            .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value) + " (" + d.data[1] + " reports)"; })
+            .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value) + " (" + d.data[1] + " reports)"; });
 
         arcs.exit().remove();
 
@@ -426,7 +427,7 @@ function PieChartsCtrl($scope, ReportsStore) {
                 .text(function(d) { return d.data[0] + " : " + formatAsPercentage(d.value) + " (" + d.data[1] + " reports)"; })
         ;
 
-        newarcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
+        newarcs.filter(function(d) { return d.endAngle - d.startAngle > 0.2; })
             .append("svg:text")
               .attr("class", "pie-label")
               .attr("dy", ".35em")
@@ -442,7 +443,7 @@ function PieChartsCtrl($scope, ReportsStore) {
             .attr("d", $scope.arcFinal )
         ;
 */
-    }
+    };
 
     $scope.buildGraph();
     $scope.getData();
@@ -467,10 +468,10 @@ var formatAsPercentage = d3.format("%"),
 function DashboardCtrl($scope, $routeParams) {
     if($routeParams.app) {
         console.log("Dashboard: Direct access to app " + $routeParams.app);
-        $scope.acralyzer.setApp($routeParams.app)
+        $scope.acralyzer.setApp($routeParams.app);
     } else {
         console.log("Dashboard: Access to default app " + acralyzerConfig.defaultApp);
-        $scope.acralyzer.setApp(acralyzerConfig.defaultApp)
+        $scope.acralyzer.setApp(acralyzerConfig.defaultApp);
     }
 }
 

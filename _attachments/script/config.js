@@ -35,6 +35,6 @@
                 return result;
             }
         }
-    }
+    };
 
 }( window.acralyzerConfig = window.acralyzerConfig || {}, jQuery ));

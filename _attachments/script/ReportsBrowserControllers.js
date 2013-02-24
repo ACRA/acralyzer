@@ -20,10 +20,10 @@
 function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
     if($routeParams.app) {
         console.log("ReportsBrowser: Direct access to app " + $routeParams.app);
-        $scope.acralyzer.setApp($routeParams.app)
+        $scope.acralyzer.setApp($routeParams.app);
     } else {
         console.log("ReportsBorwser: Access to default app " + acralyzerConfig.defaultApp);
-        $scope.acralyzer.setApp(acralyzerConfig.defaultApp)
+        $scope.acralyzer.setApp(acralyzerConfig.defaultApp);
     }
 
     console.log("Init ReportsBrowserCtrl");
@@ -53,13 +53,13 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
         $scope.previousStartKeys.push($scope.startKey);
         $scope.startKey = $scope.nextKey;
         $scope.getData();
-    }
+    };
 
     $scope.getPreviousPage = function() {
         $scope.nextKey = null;
         $scope.startKey = $scope.previousStartKeys.pop();
         $scope.getData();
-    }
+    };
 
     $scope.getData = function() {
         $scope.loading = true;
@@ -68,7 +68,7 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
             console.log("Refresh data for latest reports");
             $scope.reports = data.rows;
             $scope.totalReports = data.total_rows;
-            for(row in $scope.reports) {
+            for(var row in $scope.reports) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
                 // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
                 $scope.reports[row].value.signature = acralyzerConfig.getReportSignature($scope.reports[row]);
@@ -93,7 +93,7 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
         } else {
             ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
         }
-    }
+    };
 
     $scope.changeFilterValues = function() {
 
@@ -113,7 +113,7 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
                     console.log("Update filter values");
                     $scope.filterValues.length = 0;
                     $scope.filterValues.push($scope.noFilterValue);
-                    for(row in data.rows) {
+                    for(var row in data.rows) {
                         $scope.filterValues.push({value:data.rows[row].key[0], label:data.rows[row].key[0]});
                     }
                     $scope.filterValues.sort();
@@ -140,7 +140,7 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
             data.formatedCrashDate = moment(data.USER_CRASH_DATE).format('LLL');
             data.formatedTimestamp = moment(data.timestamp).format('LLL');
         });
-    }
+    };
 
 
     $scope.$on("refresh", $scope.getData);
