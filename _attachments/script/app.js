@@ -111,6 +111,9 @@ acralyzer.factory('desktopNotifications', [function() {
                 if (webkitNotifications.checkPermission()) { return; }
 
                 var notif = webkitNotifications.createNotification(data.icon, data.title, data.body);
+                setTimeout(function(){
+                    notif.cancel();
+                }, '10000');
                 notif.show();
             }
         };

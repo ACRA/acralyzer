@@ -60,7 +60,7 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
     }
 
     var notifyNewData = function() {
-        desktopNotifications.notify({ title: "Acralyzer - " + $scope.acralyzer.app, body: "Received new report(s)", icon: null });
+        desktopNotifications.notify({ title: "Acralyzer - " + $scope.acralyzer.app, body: "Received new report(s)", icon: "img/loader.gif" });
         $('.top-right').notify({
             message: { text: 'Received new report(s)' },
             type: 'warning'

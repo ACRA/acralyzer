@@ -18,14 +18,14 @@
  */
 
 angular.module('acra-storage', ['ngResource']).
-    factory('ReportsStore', function($resource, $http) {
-        var lastseq = -1;
+    factory('ReportsStore', function ($resource, $http) {
+        var lastseq = -1,
         // ReportsStore service instance
-        var ReportsStore = {};
+            ReportsStore = {},
+            continuePolling = true,
+            dbName = "";
 
-        var continuePolling = true;
-        var dbName = "";
-        ReportsStore.setApp = function(newAppName) {
+        ReportsStore.setApp = function (newAppName) {
             dbName = acralyzerConfig.appDBPrefix + newAppName;
             ReportsStore.views = $resource('/' + dbName + '/_design/acra-storage/_view/:view');
             ReportsStore.details = $resource('/' + dbName + '/:reportid');
@@ -41,7 +41,7 @@ angular.module('acra-storage', ['ngResource']).
                 console.log("_all_dbs retrieved");
                 console.log(data);
                 var finalData = [];
-                for(var i in data) {
+                for (var i in data) {
                     if(data[i].indexOf(acralyzerConfig.appDBPrefix) === 0) {
                         console.log("Found one acra storage: " + data[i]);
                         finalData.push(data[i].substring(acralyzerConfig.appDBPrefix.length));
