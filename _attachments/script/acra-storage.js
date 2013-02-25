@@ -16,29 +16,39 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular) {
+(function(acralyzerConfig,angular,acralyzerEvents) {
 "use strict";
 
 angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function ($resource, $http, $rootScope) {
         var lastseq = -1,
         // ReportsStore service instance
+            /** @namespace */
             ReportsStore = {},
             continuePolling = true,
             dbName = "";
 
-        ReportsStore.POLLING_FAILED = "polling failed";
-
-        ReportsStore.setApp = function (newAppName) {
+        /**
+         * Switch to another app, i.e. reports storage database.
+         * @param newAppName The app name. The database name is determined by adding prefix set in
+         * acralyzerConfig.appDBPrefix
+         */
+        ReportsStore.setApp = function (newAppName, cb) {
             dbName = acralyzerConfig.appDBPrefix + newAppName;
             ReportsStore.views = $resource('/' + dbName + '/_design/acra-storage/_view/:view');
             ReportsStore.details = $resource('/' + dbName + '/:reportid');
             ReportsStore.dbstate = $resource('/' + dbName + '/');
             ReportsStore.changes = $resource('/' + dbName + '/_changes');
             lastseq = -1;
+            cb();
         };
-        ReportsStore.setApp(acralyzerConfig.defaultApp);
 
+        /**
+         * Gets the list of available apps for which we have crash reports databases.
+         * Looks for all CouchDB databases starting with
+         * @param cb : callback which will receive an array of strings (app names) as a parameter.
+         * @param errorHandler : callback to be triggered if an error occurs.
+         */
         ReportsStore.listApps = function(cb, errorHandler) {
             console.log("get _all_dbs");
             var filterDbsCallback = function(data) {
@@ -84,8 +94,7 @@ angular.module('acra-storage', ['ngResource']).
                 }
                 cb(data);
             };
-            var result = ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
-            return result;
+            return ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
         };
 
         // Key: report ID Value: report digest
@@ -173,17 +182,18 @@ angular.module('acra-storage', ['ngResource']).
                 // Error
                 function() {
                     continuePolling = false;
-                    $rootScope.$broadcast(ReportsStore.POLLING_FAILED);
+                    $rootScope.$broadcast(acralyzerEvents.POLLING_FAILED);
                     console.log("Polling failed");
                 }
             );
         };
 
         ReportsStore.stopPolling = function() {
+            console.log("STOP POLLING !");
             continuePolling = false;
         };
 
         return ReportsStore;
     });
 
-})(window.acralyzerConfig,window.angular);
+})(window.acralyzerConfig,window.angular,window.acralyzerEvents);

@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular,acralyzer) {
+(function(acralyzerConfig,angular,acralyzer,acralyzerEvents) {
 "use strict";
 
 function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
@@ -70,10 +70,8 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
             console.log("Refresh data for latest reports");
             $scope.reports = data.rows;
             $scope.totalReports = data.total_rows;
-            for(var row in $scope.reports) {
+            for(var row = 0; row < $scope.reports.length; row++) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
-                // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
-                $scope.reports[row].value.signature = acralyzerConfig.getReportSignature($scope.reports[row]);
             }
 
             // If there are more rows, here is the key to the next page
@@ -115,7 +113,7 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
                     console.log("Update filter values");
                     $scope.filterValues.length = 0;
                     $scope.filterValues.push($scope.noFilterValue);
-                    for(var row in data.rows) {
+                    for(var row = 0; row < data.rows.length; row++) {
                         $scope.filterValues.push({value:data.rows[row].key[0], label:data.rows[row].key[0]});
                     }
                     $scope.filterValues.sort();
@@ -134,10 +132,6 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
 
     $scope.loadReport = function(report) {
         $scope.selectedReport = ReportsStore.reportDetails(report.id, function(data) {
-            // TODO: discard this uptime computation as it is now done in the DB.
-            if(!data.uptime) {
-                data.uptime = (new Date(data.USER_CRASH_DATE).getTime() - new Date(data.USER_APP_START_DATE).getTime())  / 1000;
-            }
             data.readableUptime = moment.duration(data.uptime, 'seconds').humanize();
             data.formatedCrashDate = moment(data.USER_CRASH_DATE).format('LLL');
             data.formatedTimestamp = moment(data.timestamp).format('LLL');
@@ -153,4 +147,4 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
 
 acralyzer.controller('ReportsBrowserCtrl', ReportsBrowserCtrl);
 
-})(window.acralyzerConfig,window.angular,window.acralyzer);
+})(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents);

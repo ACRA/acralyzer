@@ -18,7 +18,10 @@
  */
 
 (function(acralyzerEvents, $, undefined ) {
+    "use strict";
     acralyzerEvents.LOGGED_IN = "logged_in";
     acralyzerEvents.LOGGED_OUT = "logged_out";
+    acralyzerEvents.POLLING_FAILED = "polling failed";
+    acralyzerEvents.APP_CHANGED = "app changed";
 
-}( window.acralyzerEvents = window.acralyzerEvents || {}, jQuery ));
+}( window.acralyzerEvents = window.acralyzerEvents || {}, window.jQuery, undefined ));
