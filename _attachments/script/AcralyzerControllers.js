@@ -16,6 +16,8 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function(acralyzerConfig,angular,acralyzer) {
+"use strict";
 
 function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
     $scope.acralyzer = {
@@ -72,3 +74,6 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
         }
     });
 }
+
+acralyzer.controller('AcralyzerCtrl', AcralyzerCtrl);
+})(window.acralyzerConfig,window.angular,window.acralyzer);

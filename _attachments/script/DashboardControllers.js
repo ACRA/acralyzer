@@ -16,6 +16,29 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function(acralyzerConfig,angular,acralyzer) {
+"use strict";
+
+function getBidimensionalArray(rows) {
+	var result = new Array(rows.length);
+	for(var i = 0; i < rows.length; i++) {
+		var row = rows[i];
+		if(row.key && row.value) {
+			result[i] = [row.key, row.value];
+		}
+	}
+	return result;
+}
+
+var formatAsPercentage = d3.format("%"),
+    formatAsPercentage1Dec = d3.format(".1%"),
+    formatAsInteger = d3.format(","),
+    fsec = d3.time.format("%S s"),
+    fmin = d3.time.format("%M m"),
+    fhou = d3.time.format("%H h"),
+    fwee = d3.time.format("%a"),
+    fdat = d3.time.format("%d d"),
+    fmon = d3.time.format("%b");
 
 function CrashReportsCtrl($scope, ReportsStore) {
     $scope.selectedReport = "";
@@ -253,19 +276,6 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
     $scope.$on("new data", $scope.getData);
 }
 
-
-
-function getBidimensionalArray(rows) {
-	var result = new Array(rows.length);
-	for(var i = 0; i < rows.length; i++) {
-		var row = rows[i];
-		if(row.key && row.value) {
-			result[i] = [row.key, row.value];
-		}
-	}
-	return result;
-}
-
 /* Pie charts */
 function PieChartsCtrl($scope, ReportsStore) {
     $scope.fieldNames = [
@@ -455,19 +465,6 @@ function PieChartsCtrl($scope, ReportsStore) {
     $scope.$on("new data", $scope.getData);
 }
 
-var formatAsPercentage = d3.format("%"),
-    formatAsPercentage1Dec = d3.format(".1%"),
-    formatAsInteger = d3.format(","),
-    fsec = d3.time.format("%S s"),
-    fmin = d3.time.format("%M m"),
-    fhou = d3.time.format("%H h"),
-    fwee = d3.time.format("%a"),
-    fdat = d3.time.format("%d d"),
-    fmon = d3.time.format("%b")
-    ;
-
-
-
 function DashboardCtrl($scope, $routeParams) {
     if($routeParams.app) {
         console.log("Dashboard: Direct access to app " + $routeParams.app);
@@ -478,3 +475,9 @@ function DashboardCtrl($scope, $routeParams) {
     }
 }
 
+acralyzer.controller('ReportsPerDayCtrl',ReportsPerDayCtrl);
+acralyzer.controller('PieChartsCtrl',PieChartsCtrl);
+acralyzer.controller('DashboardCtrl', DashboardCtrl);
+acralyzer.controller('CrashReportsCtrl', CrashReportsCtrl);
+
+})(window.acralyzerConfig,window.angular,window.acralyzer);

@@ -16,16 +16,18 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function(acralyzerConfig) {
+"use strict";
 
-var acralyzer = angular.module('Acralyzer', ['acra-storage']);
+var acralyzer = window.acralyzer = angular.module('Acralyzer', ['acra-storage']);
 
 acralyzer.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
-        when('/dashboard', {templateUrl: 'partials/dashboard.html',   controller: DashboardCtrl, activetab: "dashboard"}).
-        when('/dashboard/:app', {templateUrl: 'partials/dashboard.html',   controller: DashboardCtrl, activetab: "dashboard"}).
-        when('/reports-browser', {templateUrl: 'partials/reports-browser.html', controller: ReportsBrowserCtrl, activetab: "reports-browser"}).
-        when('/reports-browser/:app', {templateUrl: 'partials/reports-browser.html', controller: ReportsBrowserCtrl, activetab: "reports-browser"}).
-        when('/report-details/:app/:reportId', {templateUrl: 'partials/report-details.html', controller: ReportDetailsCtrl, activetab: "none"}).
+        when('/dashboard', {templateUrl: 'partials/dashboard.html',   controller: 'DashboardCtrl', activetab: "dashboard"}).
+        when('/dashboard/:app', {templateUrl: 'partials/dashboard.html',   controller: 'DashboardCtrl', activetab: "dashboard"}).
+        when('/reports-browser', {templateUrl: 'partials/reports-browser.html', controller: 'ReportsBrowserCtrl', activetab: "reports-browser"}).
+        when('/reports-browser/:app', {templateUrl: 'partials/reports-browser.html', controller: 'ReportsBrowserCtrl', activetab: "reports-browser"}).
+        when('/report-details/:app/:reportId', {templateUrl: 'partials/report-details.html', controller: 'ReportDetailsCtrl', activetab: "none"}).
         otherwise({redirectTo: '/dashboard'});
     }]);
 
@@ -38,6 +40,7 @@ acralyzer.directive('prettyprint',function(){
                 $element.prepend($json);
 
                 $attr.$observe('prettyprint',function(value){
+                    var dopp;
 
                     if (value !== '') {
                         // Register watcher on evaluated expression
@@ -49,7 +52,7 @@ acralyzer.directive('prettyprint',function(){
                         $scope.$watch(dopp);
                     }
 
-                    function dopp(inspect){
+                    dopp = function (inspect){
                         // Replace contents of persistent json container with new json table
                         $json.empty();
                         $json.append(prettyPrint(inspect, {
@@ -66,7 +69,7 @@ acralyzer.directive('prettyprint',function(){
                                 }
                             }
                         }));
-                    }
+                    };
                 });
             }
         };
@@ -98,13 +101,13 @@ acralyzer.factory('desktopNotifications', [function() {
     if ("Notification" in window && window.Notification.permissionLevel) {
         return {
             notify: function(data) {
-                if (Notification.permissionLevel() !== "granted") { return; }
+                if (window.Notification.permissionLevel() !== "granted") { return; }
 
-                var notif = new Notification(data.title, data);
+                var notif = new window.Notification(data.title, data);
                 notif.onshow = function() {
                     setTimeout(function(){
                         notif.close();
-                    }, '10000');
+                    }, 10000);
                 };
                 notif.show();
             }
@@ -113,13 +116,13 @@ acralyzer.factory('desktopNotifications', [function() {
     else if (window.webkitNotifications) {
         return {
             notify: function(data) {
-                if (webkitNotifications.checkPermission()) { return; }
+                if (window.webkitNotifications.checkPermission()) { return; }
 
-                var notif = webkitNotifications.createNotification(data.icon, data.title, data.body);
+                var notif = window.webkitNotifications.createNotification(data.icon, data.title, data.body);
                 notif.onshow = function() {
                     setTimeout(function(){
                         notif.close();
-                    }, '10000');
+                    }, 10000);
                 };
                 notif.show();
             }
@@ -131,12 +134,10 @@ acralyzer.directive('notificationsSupport', [function() {
     return {
         restrict: 'A',
         link: function(scope,elm,attrs,controller) {
-            elm.addClass('btn');
-            elm.text("Desktop Notifications?");
             if ("Notification" in window && window.Notification.permissionLevel) {
-                if (Notification.permissionLevel() === "default") {
+                if (window.Notification.permissionLevel() === "default") {
                     elm.on('click', function(ev) {
-                        Notification.requestPermission(function () {
+                        window.Notification.requestPermission(function () {
                             elm.remove();
                         });
                     });
@@ -144,9 +145,9 @@ acralyzer.directive('notificationsSupport', [function() {
                 }
             }
             else if (window.webkitNotifications) {
-                if (webkitNotifications.checkPermission() === 1) {
+                if (window.webkitNotifications.checkPermission() === 1) {
                     elm.on('click', function(ev) {
-                        webkitNotifications.requestPermission(function () {
+                        window.webkitNotifications.requestPermission(function () {
                             elm.remove();
                         });
                     });
@@ -182,16 +183,17 @@ $(function() {
 
     $("#account").couchLogin({
         loggedIn : function(r) {
-            scope = angular.element(document).scope();
+            var scope = angular.element(document).scope();
             scope.$apply(function($rootScope){
                 $rootScope.$broadcast(acralyzerEvents.LOGGED_IN);
             });
         },
         loggedOut : function() {
-            scope = angular.element(document).scope();
+            var scope = angular.element(document).scope();
             scope.$apply(function($rootScope){
                 $rootScope.$broadcast(acralyzerEvents.LOGGED_OUT);
             });
         }
     });
  });
+})(window.acralyzerConfig);
