@@ -88,7 +88,7 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
                 $scope.totalReports="";
         };
 
-        if($scope.filterName == $scope.noFilter || $scope.filterValue == $scope.noFilterValue) {
+        if($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) {
             ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
         } else {
             ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
@@ -97,14 +97,14 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
 
     $scope.changeFilterValues = function() {
 
-        if($scope.filterName == $scope.noFilter) {
+        if($scope.filterName === $scope.noFilter) {
             $scope.filterValue = $scope.noFilterValue;
             $scope.filterValueSelected();
         } else {
             var getFilteredValues;
-            if($scope.filterName.value == "androidver") {
+            if($scope.filterName.value === "androidver") {
                 getFilteredValues = ReportsStore.androidVersionsList;
-            } else if ($scope.filterName.value == "appver") {
+            } else if ($scope.filterName.value === "appver") {
                 getFilteredValues = ReportsStore.appVersionsList;
             }
 
