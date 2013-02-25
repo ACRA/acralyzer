@@ -4,9 +4,9 @@
         "moment": true,
 
         "d3": true,
-        "prettyPrint": true,
-        "acralyzerConfig": true
+        "prettyPrint": true
     },
+    "strict": true,
     "curly": true,
     "eqeqeq": true,
     "immed": true,

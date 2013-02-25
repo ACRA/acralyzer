@@ -16,6 +16,8 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function(acralyzerConfig,angular) {
+"use strict";
 
 angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function ($resource, $http) {
@@ -180,3 +182,5 @@ angular.module('acra-storage', ['ngResource']).
 
         return ReportsStore;
     });
+
+})(window.acralyzerConfig,window.angular);

@@ -16,6 +16,8 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function(acralyzerConfig,angular,acralyzer) {
+"use strict";
 
 function getBidimensionalArray(rows) {
 	var result = new Array(rows.length);
@@ -470,3 +472,9 @@ function DashboardCtrl($scope, $routeParams) {
     }
 }
 
+acralyzer.controller('ReportsPerDayCtrl',ReportsPerDayCtrl);
+acralyzer.controller('PieChartsCtrl',PieChartsCtrl);
+acralyzer.controller('DashboardCtrl', DashboardCtrl);
+acralyzer.controller('CrashReportsCtrl', CrashReportsCtrl);
+
+})(window.acralyzerConfig,window.angular,window.acralyzer);

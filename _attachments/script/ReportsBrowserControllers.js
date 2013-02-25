@@ -16,6 +16,8 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function(acralyzerConfig,angular,acralyzer) {
+"use strict";
 
 function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
     if($routeParams.app) {
@@ -146,3 +148,8 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
     $scope.$on("refresh", $scope.getData);
     $scope.getData();
 }
+
+
+acralyzer.controller('ReportsBrowserCtrl', ReportsBrowserCtrl);
+
+})(window.acralyzerConfig,window.angular,window.acralyzer);

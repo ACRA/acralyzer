@@ -16,8 +16,10 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function(acralyzerConfig) {
+"use strict";
 
-var acralyzer = angular.module('Acralyzer', ['acra-storage']);
+var acralyzer = window.acralyzer = angular.module('Acralyzer', ['acra-storage']);
 
 acralyzer.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
@@ -196,3 +198,4 @@ $(function() {
         }
     });
  });
+})(window.acralyzerConfig);
