@@ -16,6 +16,8 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function(acralyzerConfig,angular) {
+"use strict";
 
 angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function ($resource, $http) {
@@ -135,13 +137,13 @@ angular.module('acra-storage', ['ngResource']).
                 function(data){
                     if(data.last_seq > lastseq) {
                         // If the user asked to stop polling or changed DataBase, don't handle the result.
-                        if(continuePolling && dbName == currentlyPolledDB) {
+                        if(continuePolling && dbName === currentlyPolledDB) {
                             console.log("New changes");
                             cb();
                             lastseq = data.last_seq;
                         }
                     }
-                    if(continuePolling  && dbName == currentlyPolledDB) {
+                    if(continuePolling  && dbName === currentlyPolledDB) {
                         ReportsStore.pollChanges(cb);
                     }
                 },
@@ -159,7 +161,7 @@ angular.module('acra-storage', ['ngResource']).
                 {},
                 // Success
                 function(data) {
-                    if(lastseq == -1) {
+                    if(lastseq === -1) {
                         lastseq = data.update_seq;
                     }
                     console.log("DB status retrieved, last_seq = " + lastseq);
@@ -180,3 +182,5 @@ angular.module('acra-storage', ['ngResource']).
 
         return ReportsStore;
     });
+
+})(window.acralyzerConfig,window.angular);

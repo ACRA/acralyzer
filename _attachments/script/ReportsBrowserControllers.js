@@ -16,6 +16,8 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
+(function(acralyzerConfig,angular,acralyzer) {
+"use strict";
 
 function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
     if($routeParams.app) {
@@ -88,7 +90,7 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
                 $scope.totalReports="";
         };
 
-        if($scope.filterName == $scope.noFilter || $scope.filterValue == $scope.noFilterValue) {
+        if($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) {
             ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
         } else {
             ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
@@ -97,14 +99,14 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
 
     $scope.changeFilterValues = function() {
 
-        if($scope.filterName == $scope.noFilter) {
+        if($scope.filterName === $scope.noFilter) {
             $scope.filterValue = $scope.noFilterValue;
             $scope.filterValueSelected();
         } else {
             var getFilteredValues;
-            if($scope.filterName.value == "androidver") {
+            if($scope.filterName.value === "androidver") {
                 getFilteredValues = ReportsStore.androidVersionsList;
-            } else if ($scope.filterName.value == "appver") {
+            } else if ($scope.filterName.value === "appver") {
                 getFilteredValues = ReportsStore.appVersionsList;
             }
 
@@ -146,3 +148,8 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
     $scope.$on("refresh", $scope.getData);
     $scope.getData();
 }
+
+
+acralyzer.controller('ReportsBrowserCtrl', ReportsBrowserCtrl);
+
+})(window.acralyzerConfig,window.angular,window.acralyzer);
