@@ -184,13 +184,13 @@ $(function() {
         loggedIn : function(r) {
             scope = angular.element(document).scope();
             scope.$apply(function($rootScope){
-                $rootScope.$broadcast("refresh");
+                $rootScope.$broadcast(acralyzerEvents.LOGGED_IN);
             });
         },
         loggedOut : function() {
             scope = angular.element(document).scope();
             scope.$apply(function($rootScope){
-                $rootScope.$broadcast("refresh");
+                $rootScope.$broadcast(acralyzerEvents.LOGGED_OUT);
             });
         }
     });

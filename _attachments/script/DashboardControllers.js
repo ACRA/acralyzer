@@ -50,7 +50,8 @@ function CrashReportsCtrl($scope, ReportsStore) {
     };
 
     $scope.getData();
-    $scope.$on("refresh", $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
     $scope.$on("new data", $scope.getData);
 }
 
@@ -247,7 +248,8 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
     $scope.buildGraph();
     $scope.getData();
 
-    $scope.$on("refresh", $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
     $scope.$on("new data", $scope.getData);
 }
 
@@ -448,7 +450,8 @@ function PieChartsCtrl($scope, ReportsStore) {
     $scope.buildGraph();
     $scope.getData();
 
-    $scope.$on("refresh", $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
     $scope.$on("new data", $scope.getData);
 }
 

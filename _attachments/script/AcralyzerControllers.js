@@ -55,10 +55,6 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
         ReportsStore.stopPolling();
     };
 
-    if(acralyzerConfig.backgroundPollingOnStartup) {
-        $scope.acralyzer.startPolling();
-    }
-
     var notifyNewData = function() {
         desktopNotifications.notify({ title: "Acralyzer - " + $scope.acralyzer.app, body: "Received new report(s)", icon: "img/loader.gif" });
         $('.top-right').notify({
@@ -68,4 +64,11 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
     };
 
     $scope.$on("new data", notifyNewData);
+    $scope.$on(ReportsStore.POLLING_FAILED, $scope.acralyzer.stopPolling());
+    $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.acralyzer.stopPolling());
+    $scope.$on(acralyzerEvents.LOGGED_IN, function() {
+        if(acralyzerConfig.backgroundPollingOnStartup) {
+            $scope.acralyzer.startPolling();
+        }
+    });
 }

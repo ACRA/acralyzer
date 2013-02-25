@@ -18,12 +18,14 @@
  */
 
 angular.module('acra-storage', ['ngResource']).
-    factory('ReportsStore', function ($resource, $http) {
+    factory('ReportsStore', function ($resource, $http, $rootScope) {
         var lastseq = -1,
         // ReportsStore service instance
             ReportsStore = {},
             continuePolling = true,
             dbName = "";
+
+        ReportsStore.POLLING_FAILED = "polling failed";
 
         ReportsStore.setApp = function (newAppName) {
             dbName = acralyzerConfig.appDBPrefix + newAppName;
@@ -169,6 +171,7 @@ angular.module('acra-storage', ['ngResource']).
                 // Error
                 function() {
                     continuePolling = false;
+                    $rootScope.$broadcast(ReportsStore.POLLING_FAILED);
                     console.log("Polling failed");
                 }
             );

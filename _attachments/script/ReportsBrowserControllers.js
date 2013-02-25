@@ -143,6 +143,7 @@ function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
     };
 
 
-    $scope.$on("refresh", $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
     $scope.getData();
 }
