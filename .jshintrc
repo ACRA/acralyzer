@@ -1,16 +1,23 @@
 {
-  "predef": {
-    "angular": true
-  },
-  "curly": true,
-  "eqeqeq": true,
-  "immed": true,
-  "latedef": true,
-  "newcap": true,
-  "noarg": true,
-  "sub": true,
-  "undef": true,
-  "boss": true,
-  "eqnull": true,
-  "browser": true
+    "predef": {
+        "angular": true,
+        "moment": true,
+
+        "d3": true,
+        "prettyPrint": true,
+        "acralyzerConfig": true
+    },
+    "curly": true,
+    "eqeqeq": true,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "sub": true,
+    "undef": true,
+    "boss": true,
+    "eqnull": true,
+    "jquery": true,
+    "devel": true,
+    "browser": true
 }
