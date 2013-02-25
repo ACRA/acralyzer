@@ -40,7 +40,6 @@
                     $element.prepend($json);
 
                     $attr.$observe('prettyprint',function(value){
-                        var dopp;
 
                         if (value !== '') {
                             // Register watcher on evaluated expression
@@ -52,7 +51,7 @@
                             $scope.$watch(dopp);
                         }
 
-                        dopp = function (inspect){
+                        function dopp(inspect){
                             // Replace contents of persistent json container with new json table
                             $json.empty();
                             $json.append(prettyPrint(inspect, {
@@ -69,7 +68,7 @@
                                     }
                                 }
                             }));
-                        };
+                        }
                     });
                 }
             };

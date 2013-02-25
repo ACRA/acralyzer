@@ -21,10 +21,10 @@
 
 angular.module('acra-storage', ['ngResource']).
     factory('ReportsStore', function ($resource, $http, $rootScope) {
-        var lastseq = -1,
         // ReportsStore service instance
-            /** @namespace */
-            ReportsStore = {},
+        /** @namespace */
+        var ReportsStore = {},
+            lastseq = -1,
             continuePolling = true,
             dbName = "";
 
@@ -32,6 +32,7 @@ angular.module('acra-storage', ['ngResource']).
          * Switch to another app, i.e. reports storage database.
          * @param newAppName The app name. The database name is determined by adding prefix set in
          * acralyzerConfig.appDBPrefix
+         * @param cb callback to be executed after database changed.
          */
         ReportsStore.setApp = function (newAppName, cb) {
             dbName = acralyzerConfig.appDBPrefix + newAppName;
@@ -66,7 +67,13 @@ angular.module('acra-storage', ['ngResource']).
             $http.get('/_all_dbs').success(filterDbsCallback).error(errorHandler);
         };
 
-        // Key: date/time Value: quantity
+        /**
+         * Gets the number of reports per unit of time.
+         * @param grouplvl Grouping level: Year = 1, Month = 2, Day = 3, Hour = 4, Minute = 5, Second = 6.
+         * @param cb Callback which receives the results.
+         * @param errorHandler Called in case of error while retreiving data
+         * @return Key: date/time, Value: quantity
+         */
         ReportsStore.reportsPerDay = function(grouplvl, cb, errorHandler) {
             return ReportsStore.views.get({view: 'reports-per-day', group_level: grouplvl}, cb, errorHandler);
         };
