@@ -107,7 +107,7 @@ acralyzer.factory('desktopNotifications', [function() {
                 notif.onshow = function() {
                     setTimeout(function(){
                         notif.close();
-                    }, '10000');
+                    }, 10000);
                 };
                 notif.show();
             }
@@ -122,7 +122,7 @@ acralyzer.factory('desktopNotifications', [function() {
                 notif.onshow = function() {
                     setTimeout(function(){
                         notif.close();
-                    }, '10000');
+                    }, 10000);
                 };
                 notif.show();
             }
