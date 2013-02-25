@@ -41,22 +41,12 @@
 
                     $attr.$observe('prettyprint',function(value){
 
-                        if (value !== '') {
-                            // Register watcher on evaluated expression
-                            $scope.$watch(function watcher(){
-                                return $scope.$eval(value);
-                            },dopp,true);
-                        } else {
-                            // Watch entire scope
-                            $scope.$watch(dopp);
-                        }
-
-                        function dopp(inspect){
+                        var dopp = function (inspect){
                             // Replace contents of persistent json container with new json table
                             $json.empty();
                             $json.append(prettyPrint(inspect, {
                                 // Config
-    //                            maxArray: 20, // Set max for array display (default: infinity)
+                                //                            maxArray: 20, // Set max for array display (default: infinity)
                                 expanded: false, // Expanded view (boolean) (default: true),
                                 maxDepth: 5, // Max member depth (when displaying objects) (default: 3)
                                 sortKeys: true,
@@ -69,6 +59,17 @@
                                 }
                             }));
                         }
+
+                        if (value !== '') {
+                            // Register watcher on evaluated expression
+                            $scope.$watch(function watcher(){
+                                return $scope.$eval(value);
+                            },dopp,true);
+                        } else {
+                            // Watch entire scope
+                            $scope.$watch(dopp);
+                        }
+
                     });
                 }
             };
