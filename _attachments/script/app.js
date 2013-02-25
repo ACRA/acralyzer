@@ -134,8 +134,6 @@ acralyzer.directive('notificationsSupport', [function() {
     return {
         restrict: 'A',
         link: function(scope,elm,attrs,controller) {
-            elm.addClass('btn');
-            elm.text("Desktop Notifications?");
             if ("Notification" in window && window.Notification.permissionLevel) {
                 if (window.Notification.permissionLevel() === "default") {
                     elm.on('click', function(ev) {
