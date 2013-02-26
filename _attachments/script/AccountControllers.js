@@ -23,10 +23,8 @@ function AccountCtrl($scope, $dialog) {
     $scope.username = null;
 
     var updateState = function() {
-        console.log("Update State");
         window.jQuery.couch.session({
             success : function(session) {
-                console.log("Session: ", session);
                 var userCtx = session.userCtx;
                 $scope.$apply(function() {
                     if (userCtx.name) {
