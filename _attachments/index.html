@@ -23,8 +23,8 @@
     <meta charset="utf-8">
     <link rel="alternate" type="application/rss+xml"  href="{{rsslink}}" title="Latest Crash Reports">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-responsive.min.css" type="text/css">
+    <link rel="stylesheet" href="vendor/angular-ui-bootstrap/assets/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="vendor/angular-ui-bootstrap/assets/bootstrap-responsive.css" type="text/css">
     <link rel="stylesheet" href="vendor/bootstrap-notify/css/bootstrap-notify.css" type="text/css">
     <link rel="stylesheet" href="style/main.css" type="text/css">
     <link rel="stylesheet" href="style/graph.css" type="text/css">
@@ -33,11 +33,7 @@
     <script src="vendor/jquery/jquery-1.8.3.min.js"></script>
     <script src="vendor/couchapp/jquery.couch.js"></script>
     <script src="vendor/couchapp/jquery.couch.app.util.js"></script>
-    <script src="vendor/couchapp/jquery.mustache.js"></script>
-    <script src="vendor/couchapp/jquery.couchLogin.js"></script>
-    <script src="vendor/couchapp/jquery.couchProfile.js"></script>
     <script src="vendor/couchapp/md5.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="vendor/bootstrap-notify/js/bootstrap-notify.js"></script>
     <script src="vendor/angular/angular.min.js"></script>
     <script src="vendor/angular/angular-resource.min.js"></script>
@@ -62,9 +58,20 @@
                 </li>
                 <li ng-class="{active: $route.current.activetab == 'dashboard'}"><a href="#/dashboard/{{acralyzer.app}}">Dashboard</a></li>
                 <li ng-class="{active: $route.current.activetab == 'reports-browser'}"><a href="#/reports-browser/{{acralyzer.app}}">Reports browser</a></li>
-                <li class="btn" notifications-support>Desktop Notifications?</li>
             </ul>
-            <div id="account"></div>
+
+            <div id="usermenu" class="btn-group pull-right" data-ng-controller="AccountCtrl">
+              <button style="min-width: 150px" class="btn dropdown-toggle" data-toggle="dropdown">
+                  <i class="icon-user"></i> {{username || "Anonymous"}}
+                  <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <li ng-class="{ hide: username }"><a ng-click="showLogin('loginModal')" title="Login"><strong>Login</strong></a></li>
+                <li notifications-support><a href="#">Enable Notifications</a></li>
+                <li ng-class="{ hide: !username }"><a ng-click="logout()" title="Logout"><i class="icon-off" alt="logout"></i> Logout</a></li>
+              </ul>
+
+            </div>
 
         </div>
     </div>
@@ -74,9 +81,11 @@
     <div ng-view></div>
 
     <script src="script/config.js"></script>
+    <script src="vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.1.0.min.js"></script>
     <script src="script/app.js"></script>
     <script src="script/acra-storage.js"></script>
     <script src="script/AcralyzerControllers.js"></script>
+    <script src="script/AccountControllers.js"></script>
     <script src="script/NavigationController.js"></script>
     <script src="script/ReportDetailsController.js"></script>
     <script src="script/DashboardControllers.js"></script>

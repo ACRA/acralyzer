@@ -19,7 +19,7 @@
 (function(acralyzerConfig,angular,acralyzer) {
 "use strict";
 
-function NavigationCtrl($scope, $route) {
+function NavigationCtrl($scope, $route, $dialog) {
     $scope.$route = $route;
 }
 

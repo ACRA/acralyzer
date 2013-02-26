@@ -19,7 +19,7 @@
 (function(acralyzerConfig) {
 "use strict";
 
-var acralyzer = window.acralyzer = angular.module('Acralyzer', ['acra-storage']);
+var acralyzer = window.acralyzer = angular.module('Acralyzer', ['acra-storage','ui.bootstrap']);
 
 acralyzer.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
@@ -30,6 +30,24 @@ acralyzer.config(['$routeProvider', function($routeProvider) {
         when('/report-details/:app/:reportId', {templateUrl: 'partials/report-details.html', controller: 'ReportDetailsCtrl', activetab: "none"}).
         otherwise({redirectTo: '/dashboard'});
     }]);
+
+/* http://jsfiddle.net/mchung/e9nkv/2/ */
+acralyzer.directive('sameAs', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      ctrl.$parsers.unshift(function(viewValue) {
+        if (viewValue === scope[attrs.sameAs]) {
+          ctrl.$setValidity('sameAs', true);
+          return viewValue;
+        } else {
+          ctrl.$setValidity('sameAs', false);
+          return undefined;
+        }
+      });
+    }
+  };
+});
 
 acralyzer.directive('prettyprint',function(){
         return {
@@ -180,20 +198,5 @@ $(function() {
         });
         return o;
     };
-
-    $("#account").couchLogin({
-        loggedIn : function(r) {
-            var scope = angular.element(document).scope();
-            scope.$apply(function($rootScope){
-                $rootScope.$broadcast("refresh");
-            });
-        },
-        loggedOut : function() {
-            var scope = angular.element(document).scope();
-            scope.$apply(function($rootScope){
-                $rootScope.$broadcast("refresh");
-            });
-        }
-    });
  });
 })(window.acralyzerConfig);
