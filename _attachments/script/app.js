@@ -58,7 +58,7 @@
                                     }
                                 }
                             }));
-                        }
+                        };
 
                         if (value !== '') {
                             // Register watcher on evaluated expression
