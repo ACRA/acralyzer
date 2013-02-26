@@ -1,18 +1,22 @@
-<form ng-submit="close()" name="loginForm">
+<form ng-submit="close()" name="loginForm" class="form-horizontal">
     <div class="modal-header">
         <h3>Login</h3>
     </div>
     <div class="modal-body">
-        <p>
-            <label for="username">Username</label>
-            <input ng-model="username" name="username" type="text" required />
-            <span class="error" ng-show="loginForm.username.$error.required">Required!</span><br>
-        </p>
-        <p>
-            <label for="password">Password</label>
-            <input ng-model="password" name="password" type="password" required />
-            <span class="error" ng-show="loginForm.password.$error.required">Required!</span><br>
-        </p>
+          <div ng-class="{ 'control-group': true, 'error': loginForm.username.$invalid }">
+              <label class="control-label" for="username">Username</label>
+              <div class="controls">
+                  <input ng-model="username" name="username" type="text" required />
+                  <span class="help-inline" ng-show="loginForm.username.$error.required">Required!</span><br>
+              </div>
+          </div>
+          <div ng-class="{ 'control-group': true, 'error': loginForm.password.$invalid }">
+              <label class="control-label" for="password">Password</label>
+              <div class="controls">
+                  <input ng-model="password" name="password" type="password" required />
+                  <span class="help-inline" ng-show="loginForm.password.$error.required">Required!</span><br>
+              </div>
+          </div>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" ng-click="close()" data-my-disabled="!loginForm.$valid" ng-disabled='!loginForm.$valid' >Login</button>
