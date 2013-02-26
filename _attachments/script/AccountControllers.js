@@ -64,16 +64,15 @@ function AccountCtrl($scope, $dialog) {
                     var userDocId = "org.couchdb.user:"+$scope.username;
                     db.openDoc(userDocId, {
                         success : function(userDoc) {
-                            console.log(userDoc);
-                            /*
-                            userDoc["couch.app.profile"] = newProfile;
+                            userDoc.password = newPassword;
                             db.saveDoc(userDoc, {
                                 success : function() {
-                                    newProfile.name = userDoc.name;
-                                    profileReady(newProfile);
+                                    $('.top-right').notify({
+                                        message: { text: 'Password Changed' },
+                                        type: 'info'
+                                    }).show();
                                 }
                             });
-                            */
                         }
                     });
                 });
@@ -97,8 +96,12 @@ function LoginDialogCtrl($scope, dialog) {
 }
 
 function ChangePasswordDialogCtrl($scope, dialog) {
+    $scope.password = "";
+    $scope.confirm_password = "";
+
     $scope.close = function(password) {
-        dialog.close(password);
+        if (this.disabled) { return; }
+        dialog.close($scope.password);
     };
 }
 

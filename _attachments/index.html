@@ -69,6 +69,7 @@
               <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                 <li ng-class="{ hide: username }"><a ng-click="showLogin()" title="Login"><strong>Login</strong></a></li>
                 <li notifications-support><a href="#">Enable Notifications</a></li>
+                <li ng-class="{ hide: !username }"><a ng-click="showChangePassword()" title="Change Password">Change Password</a></li>
                 <li ng-class="{ hide: !username }"><a ng-click="logout()" title="Logout"><i class="icon-off" alt="logout"></i> Logout</a></li>
               </ul>
 
