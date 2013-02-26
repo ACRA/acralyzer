@@ -6,7 +6,7 @@
           <div ng-class="{ 'control-group': true, 'error': loginForm.username.$invalid }">
               <label class="control-label" for="username">Username</label>
               <div class="controls">
-                  <input ng-model="username" name="username" type="text" required />
+                  <input ng-model="username" name="username" type="text" required init-focus/>
                   <span class="help-inline" ng-show="loginForm.username.$error.required">Required!</span><br>
               </div>
           </div>

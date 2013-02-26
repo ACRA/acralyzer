@@ -49,6 +49,20 @@ acralyzer.directive('sameAs', function() {
   };
 });
 
+/* http://jsfiddle.net/vojtajina/nycgX/ */
+acralyzer.directive('initFocus', function() {
+    var timer;
+    return {
+        restrict: 'A',
+        link: function($scope, $element, $attr) {
+            if (timer) { clearTimeout(timer); }
+            timer = setTimeout(function() {
+                $element.focus();
+            }, 0);
+        }
+    };
+});
+
 acralyzer.directive('prettyprint',function(){
         return {
             restrict: 'A',
