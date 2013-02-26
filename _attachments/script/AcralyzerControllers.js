@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular,acralyzer) {
+(function(acralyzerConfig,angular,acralyzer,acralyzerEvents,$) {
 "use strict";
 
 function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
@@ -28,11 +28,17 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
 
     $scope.acralyzer.setApp = function(appName) {
         $scope.acralyzer.app = appName;
-        ReportsStore.setApp($scope.acralyzer.app);
+        ReportsStore.setApp($scope.acralyzer.app,
+            function() {
+                console.log("broadcasting APP_CHANGED");
+                $rootScope.$broadcast(acralyzerEvents.APP_CHANGED);
+            }
+        );
         if($scope.acralyzer.isPolling) {
             $scope.acralyzer.startPolling();
         }
     };
+    $scope.acralyzer.setApp($scope.acralyzer.app);
 
     ReportsStore.listApps(function(data) {
         console.log("Storage list retrieved.");
@@ -47,19 +53,16 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
         $scope.acralyzer.isPolling = true;
         ReportsStore.startPolling(function(){
             if($scope.acralyzer.isPolling) {
-                $rootScope.$broadcast("new data");
+                $rootScope.$broadcast(acralyzerEvents.NEW_DATA);
             } // Do not refresh if a late response is received after the user asked to stop polling.
         });
     };
 
     $scope.acralyzer.stopPolling = function() {
+        console.log("Ok, let's stop polling...");
         $scope.acralyzer.isPolling = false;
         ReportsStore.stopPolling();
     };
-
-    if(acralyzerConfig.backgroundPollingOnStartup) {
-        $scope.acralyzer.startPolling();
-    }
 
     var notifyNewData = function() {
         desktopNotifications.notify({ title: "Acralyzer - " + $scope.acralyzer.app, body: "Received new report(s)", icon: "img/loader.gif" });
@@ -69,8 +72,15 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
         }).show();
     };
 
-    $scope.$on("new data", notifyNewData);
+    $scope.$on(acralyzerEvents.NEW_DATA, notifyNewData);
+    $scope.$on(acralyzerEvents.POLLING_FAILED, $scope.acralyzer.stopPolling);
+    $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.acralyzer.stopPolling);
+    $scope.$on(acralyzerEvents.LOGGED_IN, function() {
+        if(acralyzerConfig.backgroundPollingOnStartup) {
+            $scope.acralyzer.startPolling();
+        }
+    });
 }
 
 acralyzer.controller('AcralyzerCtrl', AcralyzerCtrl);
-})(window.acralyzerConfig,window.angular,window.acralyzer);
+})(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);

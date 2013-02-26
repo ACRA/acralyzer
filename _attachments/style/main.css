@@ -22,6 +22,12 @@ body {
   padding-top: 55px;
 }
 
+@media (max-width: 979px) {
+    body {
+        padding-top: 0;
+    }
+}
+
 h1 {
   margin-top:0;
 }

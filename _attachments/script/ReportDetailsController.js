@@ -24,10 +24,6 @@ function ReportDetailsCtrl($scope, $routeParams, ReportsStore) {
     $scope.reportId = $routeParams.reportId;
     $scope.loadReport = function(reportId) {
         $scope.report = ReportsStore.reportDetails(reportId, function(data) {
-            // TODO: discard this uptime computation as it is now done in the DB.
-            if(!data.uptime) {
-                data.uptime = (new Date(data.USER_CRASH_DATE).getTime() - new Date(data.USER_APP_START_DATE).getTime())  / 1000;
-            }
             data.readableUptime = moment.duration(data.uptime, 'seconds').humanize();
             data.formatedCrashDate = moment(data.USER_CRASH_DATE).format('LLL');
             data.formatedTimestamp = moment(data.timestamp).format('LLL');

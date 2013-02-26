@@ -16,27 +16,40 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular) {
+(function(acralyzerConfig,angular,acralyzerEvents) {
 "use strict";
 
 angular.module('acra-storage', ['ngResource']).
-    factory('ReportsStore', function ($resource, $http) {
-        var lastseq = -1,
+    factory('ReportsStore', function ($resource, $http, $rootScope) {
         // ReportsStore service instance
-            ReportsStore = {},
+        /** @namespace */
+        var ReportsStore = {},
+            lastseq = -1,
             continuePolling = true,
             dbName = "";
 
-        ReportsStore.setApp = function (newAppName) {
+        /**
+         * Switch to another app, i.e. reports storage database.
+         * @param newAppName The app name. The database name is determined by adding prefix set in
+         * acralyzerConfig.appDBPrefix
+         * @param cb callback to be executed after database changed.
+         */
+        ReportsStore.setApp = function (newAppName, cb) {
             dbName = acralyzerConfig.appDBPrefix + newAppName;
             ReportsStore.views = $resource('/' + dbName + '/_design/acra-storage/_view/:view');
             ReportsStore.details = $resource('/' + dbName + '/:reportid');
             ReportsStore.dbstate = $resource('/' + dbName + '/');
             ReportsStore.changes = $resource('/' + dbName + '/_changes');
             lastseq = -1;
+            cb();
         };
-        ReportsStore.setApp(acralyzerConfig.defaultApp);
 
+        /**
+         * Gets the list of available apps for which we have crash reports databases.
+         * Looks for all CouchDB databases starting with
+         * @param cb : callback which will receive an array of strings (app names) as a parameter.
+         * @param errorHandler : callback to be triggered if an error occurs.
+         */
         ReportsStore.listApps = function(cb, errorHandler) {
             console.log("get _all_dbs");
             var filterDbsCallback = function(data) {
@@ -54,7 +67,13 @@ angular.module('acra-storage', ['ngResource']).
             $http.get('/_all_dbs').success(filterDbsCallback).error(errorHandler);
         };
 
-        // Key: date/time Value: quantity
+        /**
+         * Gets the number of reports per unit of time.
+         * @param grouplvl Grouping level: Year = 1, Month = 2, Day = 3, Hour = 4, Minute = 5, Second = 6.
+         * @param cb Callback which receives the results.
+         * @param errorHandler Called in case of error while retreiving data
+         * @return Key: date/time, Value: quantity
+         */
         ReportsStore.reportsPerDay = function(grouplvl, cb, errorHandler) {
             return ReportsStore.views.get({view: 'reports-per-day', group_level: grouplvl}, cb, errorHandler);
         };
@@ -82,8 +101,7 @@ angular.module('acra-storage', ['ngResource']).
                 }
                 cb(data);
             };
-            var result = ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
-            return result;
+            return ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
         };
 
         // Key: report ID Value: report digest
@@ -171,16 +189,18 @@ angular.module('acra-storage', ['ngResource']).
                 // Error
                 function() {
                     continuePolling = false;
+                    $rootScope.$broadcast(acralyzerEvents.POLLING_FAILED);
                     console.log("Polling failed");
                 }
             );
         };
 
         ReportsStore.stopPolling = function() {
+            console.log("STOP POLLING !");
             continuePolling = false;
         };
 
         return ReportsStore;
     });
 
-})(window.acralyzerConfig,window.angular);
+})(window.acralyzerConfig,window.angular,window.acralyzerEvents);

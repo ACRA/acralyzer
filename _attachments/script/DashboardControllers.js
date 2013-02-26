@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular,acralyzer) {
+(function(acralyzerConfig,angular,acralyzer,acralyzerEvents,$) {
 "use strict";
 
 function getBidimensionalArray(rows) {
@@ -48,10 +48,8 @@ function CrashReportsCtrl($scope, ReportsStore) {
             console.log("Refresh data for latest reports");
             $scope.reports = data.rows;
             $scope.totalReports = data.total_rows;
-            for(var row in $scope.reports) {
+            for(var row = 0; row < $scope.reports.length; row++) {
                 $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
-                // TODO: Remove the signature computation when a large amount of reports have been generated with their own signature.
-                $scope.reports[row].value.signature = acralyzerConfig.getReportSignature($scope.reports[row]);
             }
         },
         function(response, getResponseHeaders){
@@ -62,19 +60,16 @@ function CrashReportsCtrl($scope, ReportsStore) {
 
     $scope.loadReport = function(report) {
         $scope.selectedReport = ReportsStore.reportDetails(report.id, function(data) {
-            // TODO: discard this uptime computation as it is now done in the DB.
-            if(!data.uptime) {
-                data.uptime = (new Date(data.USER_CRASH_DATE).getTime() - new Date(data.USER_APP_START_DATE).getTime())  / 1000;
-            }
             data.readableUptime = moment.duration(data.uptime, 'seconds').humanize();
             data.formatedCrashDate = moment(data.USER_CRASH_DATE).format('LLL');
             data.formatedTimestamp = moment(data.timestamp).format('LLL');
         });
     };
 
+    $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
+    $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
     $scope.getData();
-    $scope.$on("refresh", $scope.getData);
-    $scope.$on("new data", $scope.getData);
 }
 
 
@@ -268,10 +263,11 @@ function ReportsPerDayCtrl($scope, ReportsStore) {
     };
 
     $scope.buildGraph();
-    $scope.getData();
 
-    $scope.$on("refresh", $scope.getData);
-    $scope.$on("new data", $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
+    $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
+    $scope.getData();
 }
 
 /* Pie charts */
@@ -456,10 +452,11 @@ function PieChartsCtrl($scope, ReportsStore) {
     };
 
     $scope.buildGraph();
-    $scope.getData();
 
-    $scope.$on("refresh", $scope.getData);
-    $scope.$on("new data", $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
+    $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
+    $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
+    $scope.getData();
 }
 
 function DashboardCtrl($scope, $routeParams) {
@@ -477,4 +474,4 @@ acralyzer.controller('PieChartsCtrl',PieChartsCtrl);
 acralyzer.controller('DashboardCtrl', DashboardCtrl);
 acralyzer.controller('CrashReportsCtrl', CrashReportsCtrl);
 
-})(window.acralyzerConfig,window.angular,window.acralyzer);
+})(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);
