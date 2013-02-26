@@ -19,7 +19,7 @@
 (function(acralyzerConfig, angular, $, acralyzerEvents) {
     "use strict";
 
-    var acralyzer = window.acralyzer = angular.module('Acralyzer', ['acra-storage']);
+    var acralyzer = window.acralyzer = angular.module('Acralyzer', ['acra-storage', 'ui.bootstrap']);
 
     acralyzer.config(['$routeProvider', function($routeProvider) {
         $routeProvider.
@@ -159,27 +159,40 @@
             }
         };
     }]);
-})(window.acralyzerConfig, window.angular, window.jQuery, window.acralyzerEvents);
+    /* http://jsfiddle.net/S8TYF/ */
+    acralyzer.directive('sameAs', function() {
+        return {
+            require: 'ngModel',
+            link: function(scope, elm, attr, ctrl) {
+                var pwdWidget = elm.inheritedData('$formController')[attr.sameAs];
 
-// TODO: migrate this code to angular logic
-///////////////////////////////////
-// Apache 2.0 J Chris Anderson 2011
-(function(angular, $, acralyzerEvents, document) {
-    "use strict";
-    $(function() {
-        $("#account").couchLogin({
-            loggedIn : function(session) {
-                var scope = angular.element(document).scope();
-                scope.$apply(function($rootScope){
-                    $rootScope.$broadcast(acralyzerEvents.LOGGED_IN);
+                ctrl.$parsers.push(function(value) {
+                    if (value === pwdWidget.$viewValue) {
+                        ctrl.$setValidity('MATCH', true);
+                        return value;
+                    }
+                    ctrl.$setValidity('MATCH', false);
                 });
-            },
-            loggedOut : function() {
-                var scope = angular.element(document).scope();
-                scope.$apply(function($rootScope){
-                    $rootScope.$broadcast(acralyzerEvents.LOGGED_OUT);
+
+                pwdWidget.$parsers.push(function(value) {
+                    ctrl.$setValidity('MATCH', value === ctrl.$viewValue);
+                    return value;
                 });
             }
-        });
-     });
-})(window.angular, window.jQuery, window.acralyzerEvents, window.document);
+        };
+    });
+
+    /* http://jsfiddle.net/vojtajina/nycgX/ */
+    acralyzer.directive('initFocus', function() {
+        var timer;
+        return {
+            restrict: 'A',
+            link: function($scope, $element, $attr) {
+                if (timer) { clearTimeout(timer); }
+                timer = setTimeout(function() {
+                    $element.focus();
+                }, 0);
+            }
+        };
+    });
+})(window.acralyzerConfig, window.angular, window.jQuery, window.acralyzerEvents);
