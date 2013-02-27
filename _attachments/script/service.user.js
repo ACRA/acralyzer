@@ -35,7 +35,7 @@
                     userCtx.roles.forEach(function(role) {
                         ret.roles[role] = 1;
                     });
-                    ret.isAdmin = ret.roles['_admin'] !== undefined;
+                    ret.isAdmin = (ret.roles['_admin'] === 1);
                     ret.username = userCtx.name;
                     $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, ret);
                     $rootScope.$broadcast(acralyzerEvents.LOGIN_CHANGE, ret);
@@ -96,7 +96,7 @@
                 deferred.reject("Missing password");
                 return deferred.promise;
             }
-            if (ret.hasAdminPath === true) {
+            if (ret.isAdmin && ret.hasAdminPath === true) {
                 $.ajax({
                     type: "PUT", url: $.couch.urlPrefix + "/_config/admins/" + ret.username,
                     data: '"' + password + '"',
@@ -129,11 +129,12 @@
                             success : function() {
                                 $rootScope.$broadcast(acralyzerEvents.USER_PASSWORD_CHANGE, ret);
                                 $rootScope.$broadcast(acralyzerEvents.LOGIN_CHANGE, ret);
-                                deferred.resolve(ret);
-                                $rootScope.$apply();
+                                ret.logout().then(function() {
+                                    deferred.resolve();
+                                });
                             },
-                            error: function() {
-                                deferred.reject(ret);
+                            error: function(data) {
+                                deferred.reject(data.missing);
                                 $rootScope.$apply();
                             }
                         });
