@@ -16,40 +16,21 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular,acralyzer) {
+(function(acralyzerConfig,angular,acralyzer,acralyzerEvents) {
 "use strict";
 
-function AccountCtrl($scope, $dialog) {
-    $scope.username = null;
+function AccountCtrl($rootScope, $scope, $user, $dialog) {
+    $rootScope.$on(acralyzerEvents.LOGIN_CHANGE, function(event, $user) {
+        $scope.username = $user.username;
+        $scope.isAdmin  = $user.isAdmin;
+    });
 
-    var updateState = function() {
-        window.jQuery.couch.session({
-            success : function(session) {
-                var userCtx = session.userCtx;
-                $scope.$apply(function() {
-                    if (userCtx.name) {
-                        /* logged in */
-                        $scope.username = userCtx.name;
-                    } else {
-                        /* Logged out */
-                        $scope.username = null;
-                    }
-                });
-            }
-        });
-    };
-
-    updateState();
     $scope.showLogin = function() {
         var d = $dialog.dialog({
             templateUrl: 'partials/login-dialog.html',
             controller:  'LoginDialogCtrl'
         });
         d.open().then(function(result){
-            if(result.username && result.password)
-            {
-                window.jQuery.couch.login({name:result.username,password:result.password, success : updateState});
-            }
         });
     };
     $scope.showChangePassword = function() {
@@ -57,57 +38,64 @@ function AccountCtrl($scope, $dialog) {
             templateUrl: 'partials/change-password.html',
             controller:  'ChangePasswordDialogCtrl'
         });
-        d.open().then(function(newPassword){
-            if($scope.username && newPassword)
-            {
-                window.jQuery.couch.userDb(function(db) {
-                    var userDocId = "org.couchdb.user:"+$scope.username;
-                    db.openDoc(userDocId, {
-                        success : function(userDoc) {
-                            userDoc.password = newPassword;
-                            db.saveDoc(userDoc, {
-                                success : function() {
-                                    $('.top-right').notify({
-                                        message: { text: 'Password Changed' },
-                                        type: 'info'
-                                    }).show();
-                                }
-                            });
-                        }
-                    });
-                });
-            }
+        d.open().then(function(result){
         });
     };
 
     $scope.logout = function() {
-        window.jQuery.couch.logout({success : updateState});
+        $user.logout();
     };
 }
 
-function LoginDialogCtrl($scope, dialog) {
+function LoginDialogCtrl($scope, $user, dialog) {
     $scope.username = "";
     $scope.password = "";
+    $scope.pending = false;
+    $scope.badUsername = false;
 
     $scope.close = function(result) {
         if (this.disabled) { return; }
-        dialog.close({ username: $scope.username, password: $scope.password });
+        $scope.pending = true;
+        $scope.badUsername = false;
+        $user.login($scope.username, $scope.password).then(
+            function(data) {
+                $scope.pending = false;
+                dialog.close();
+            },
+            function(data) {
+                $scope.badUsername = true;
+                $scope.pending = false;
+            }
+        );
+
     };
 }
 
-function ChangePasswordDialogCtrl($scope, dialog) {
+function ChangePasswordDialogCtrl($scope, $user, dialog) {
     $scope.password = "";
     $scope.confirm_password = "";
+    $scope.pending = false;
 
     $scope.close = function(password) {
         if (this.disabled) { return; }
-        dialog.close($scope.password);
+        $scope.pending = true;
+        $user.changePassword(password).then(
+            function() {
+                /* success */
+                $scope.pending = false;
+                dialog.close($scope.password);
+            },
+            function() {
+                /* error */
+                $scope.pending = false;
+                dialog.close($scope.password);
+            }
+        );
     };
 }
 
-acralyzer.controller('AccountCtrl', ['$scope','$dialog', AccountCtrl]);
-acralyzer.controller('LoginDialogCtrl', ['$scope','dialog', LoginDialogCtrl]);
-acralyzer.controller('ChangePasswordDialogCtrl', ['$scope', 'dialog', ChangePasswordDialogCtrl]);
+acralyzer.controller('AccountCtrl', ['$rootScope', '$scope','$user','$dialog', AccountCtrl]);
+acralyzer.controller('LoginDialogCtrl', ['$scope','$user','dialog', LoginDialogCtrl]);
+acralyzer.controller('ChangePasswordDialogCtrl', ['$scope', '$user', 'dialog', ChangePasswordDialogCtrl]);
 
-})(window.acralyzerConfig,window.angular,window.acralyzer);
-
+})(window.acralyzerConfig,window.angular,window.acralyzer, window.acralyzerEvents);

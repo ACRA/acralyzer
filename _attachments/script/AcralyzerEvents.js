@@ -19,9 +19,11 @@
 
 (function(acralyzerEvents, $, undefined ) {
     "use strict";
+    acralyzerEvents.LOGIN_CHANGE = "login_change";
     acralyzerEvents.LOGGED_IN = "logged_in";
     acralyzerEvents.LOGGED_OUT = "logged_out";
     acralyzerEvents.POLLING_FAILED = "polling failed";
     acralyzerEvents.APP_CHANGED = "app changed";
+    acralyzerEvents.USER_PASSWORD_CHANGE = "password_change";
 
 }( window.acralyzerEvents = window.acralyzerEvents || {}, window.jQuery, undefined ));
