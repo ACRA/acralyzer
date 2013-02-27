@@ -19,8 +19,8 @@
 (function(acralyzerConfig,angular,acralyzer,acralyzerEvents) {
 "use strict";
 
-function AccountCtrl($rootScope, $scope, $user, $dialog) {
-    $rootScope.$on(acralyzerEvents.LOGIN_CHANGE, function(event, $user) {
+function AccountCtrl($scope, $user, $dialog) {
+    $scope.$on(acralyzerEvents.LOGIN_CHANGE, function(event, $user) {
         $scope.username = $user.username;
         $scope.isAdmin  = $user.isAdmin;
     });
@@ -94,7 +94,7 @@ function ChangePasswordDialogCtrl($scope, $user, dialog) {
     };
 }
 
-acralyzer.controller('AccountCtrl', ['$rootScope', '$scope','$user','$dialog', AccountCtrl]);
+acralyzer.controller('AccountCtrl', ['$scope','$user','$dialog', AccountCtrl]);
 acralyzer.controller('LoginDialogCtrl', ['$scope','$user','dialog', LoginDialogCtrl]);
 acralyzer.controller('ChangePasswordDialogCtrl', ['$scope', '$user', 'dialog', ChangePasswordDialogCtrl]);
 
