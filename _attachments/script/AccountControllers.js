@@ -34,6 +34,10 @@ function AccountCtrl($scope, $user, $dialog) {
         });
     };
     $scope.showChangePassword = function() {
+        if (!$user.hasAdminPath && $user.isAdmin) {
+            alert("Sorry, your couchdb setup does not allow you to change an admins password");
+            return;
+        }
         var d = $dialog.dialog({
             templateUrl: 'partials/change-password.html',
             controller:  'ChangePasswordDialogCtrl'
@@ -72,6 +76,8 @@ function LoginDialogCtrl($scope, $user, dialog) {
 }
 
 function ChangePasswordDialogCtrl($scope, $user, dialog) {
+    $scope.isAdmin  = $user.isAdmin;
+    $scope.username = $user.username;
     $scope.password = "";
     $scope.confirm_password = "";
     $scope.pending = false;
@@ -79,16 +85,17 @@ function ChangePasswordDialogCtrl($scope, $user, dialog) {
     $scope.close = function(password) {
         if (this.disabled) { return; }
         $scope.pending = true;
-        $user.changePassword(password).then(
+        $scope.errmessage = null;
+        $user.changePassword($scope.password).then(
             function() {
                 /* success */
                 $scope.pending = false;
-                dialog.close($scope.password);
+                dialog.close();
             },
-            function() {
+            function(result) {
                 /* error */
                 $scope.pending = false;
-                dialog.close($scope.password);
+                $scope.errmessage = result;
             }
         );
     };

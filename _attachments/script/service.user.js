@@ -20,6 +20,7 @@
     "use strict";
     acralyzer.service('$user', ['$rootScope', '$q', function($rootScope, $q) {
         var ret = this;
+        ret.hasAdminPath = undefined;
         ret.reset = function() {
             ret.username = null;
             ret.isAdmin = false;
@@ -34,10 +35,27 @@
                     userCtx.roles.forEach(function(role) {
                         ret.roles[role] = 1;
                     });
-                    ret.isAdmin = typeof ret.roles['_admin'] !== undefined;
+                    ret.isAdmin = ret.roles['_admin'] !== undefined;
                     ret.username = userCtx.name;
                     $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, ret);
                     $rootScope.$broadcast(acralyzerEvents.LOGIN_CHANGE, ret);
+                    if (ret.username && ret.isAdmin && ret.hasAdminPath === undefined )
+                    {
+                        $.ajax({
+                            type: "GET", url: $.couch.urlPrefix + "/_config/admins/" + ret.username,
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader('Accept', 'application/json');
+                            },
+                            complete: function(req) {
+                                var resp = $.parseJSON(req.responseText);
+                                if (req.status === 200 && resp.match(/^-hashed-/)) {
+                                    ret.hasAdminPath = true;
+                                } else {
+                                    ret.hasAdminPath = false;
+                                }
+                            }
+                        });
+                    }
                     if (deferred) {
                         deferred.resolve(ret);
                         $rootScope.$apply();
@@ -74,7 +92,35 @@
 
         ret.changePassword = function(password) {
             var deferred = $q.defer();
-            $.jQuery.couch.userDb(function(db) {
+            if (!password) {
+                deferred.reject("Missing password");
+                return deferred.promise;
+            }
+            if (ret.hasAdminPath === true) {
+                $.ajax({
+                    type: "PUT", url: $.couch.urlPrefix + "/_config/admins/" + ret.username,
+                    data: '"' + password + '"',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('Accept', 'application/json');
+                    },
+                    complete: function(req) {
+                        var resp = $.parseJSON(req.responseText);
+                        if (req.status === 200) {
+                            /* Once we update the password, our current session is expired */
+                            /* Tried re-logging in, but there's a race condition here that is hard to track
+                             * So easiest just to log the user out */
+                            ret.logout().then(function() {
+                                deferred.resolve();
+                            });
+                        } else {
+                            deferred.reject(resp.reason);
+                            $rootScope.$apply();
+                        }
+                    }
+                });
+                return deferred.promise;
+            }
+            $.couch.userDb(function(db) {
                 var userDocId = "org.couchdb.user:"+ret.username;
                 db.openDoc(userDocId, {
                     success : function(userDoc) {
