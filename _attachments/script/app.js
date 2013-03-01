@@ -96,40 +96,6 @@
         };
     });
 
-    acralyzer.factory('desktopNotifications', [function() {
-        /* data is an object with 'title', 'body' and optional 'icon' keys */
-        if ("Notification" in window && window.Notification.permissionLevel) {
-            return {
-                notify: function(data) {
-                    if (window.Notification.permissionLevel() !== "granted") { return; }
-
-                    var notif = new window.Notification(data.title, data);
-                    notif.onshow = function() {
-                        setTimeout(function(){
-                            notif.close();
-                        }, 10000);
-                    };
-                    notif.show();
-                }
-            };
-        }
-        else if (window.webkitNotifications) {
-            return {
-                notify: function(data) {
-                    if (window.webkitNotifications.checkPermission()) { return; }
-
-                    var notif = window.webkitNotifications.createNotification(data.icon, data.title, data.body);
-                    notif.onshow = function() {
-                        setTimeout(function(){
-                            notif.close();
-                        }, 10000);
-                    };
-                    notif.show();
-                }
-            };
-        }
-    }]);
-
     acralyzer.directive('notificationsSupport', [function() {
         return {
             restrict: 'A',

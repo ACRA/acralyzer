@@ -25,7 +25,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-responsive.min.css" type="text/css">
-    <link rel="stylesheet" href="vendor/bootstrap-notify/css/bootstrap-notify.css" type="text/css">
     <link rel="stylesheet" href="style/main.css" type="text/css">
     <link rel="stylesheet" href="style/graph.css" type="text/css">
     <script src="vendor/couchapp/sha1.js"></script>
@@ -35,7 +34,6 @@
     <script src="vendor/couchapp/jquery.couch.app.util.js"></script>
     <script src="vendor/couchapp/md5.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="vendor/bootstrap-notify/js/bootstrap-notify.js"></script>
     <script src="vendor/angular/angular.min.js"></script>
     <script src="vendor/angular/angular-resource.min.js"></script>
     <script src="vendor/d3/d3.v3.min.js"></script>
@@ -78,7 +76,9 @@
         </div>
     </div>
 
-    <div class='notifications top-right'></div>
+    <div class='notifications top-right' ng-controller="AlertCtrl">
+        <alert ng-repeat="alert in alerts" type="alert.type" close="close($index)">{{alert.msg}}</alert>
+    </div>
 
     <div ng-view></div>
 
@@ -87,9 +87,11 @@
     <script src="script/AcralyzerEvents.js"></script>
     <script src="script/app.js"></script>
     <script src="script/service.user.js"></script>
+    <script src="script/services.js"></script>
     <script src="script/acra-storage.js"></script>
     <script src="script/AcralyzerControllers.js"></script>
     <script src="script/AccountControllers.js"></script>
+    <script src="script/AlertController.js"></script>
     <script src="script/NavigationController.js"></script>
     <script src="script/ReportDetailsController.js"></script>
     <script src="script/DashboardControllers.js"></script>
@@ -111,11 +113,11 @@
             <a href="http://couchdb.apache.org" target="_blank">CouchDB</a> ·
             <a href="http://angularjs.org" target="_blank">AngularJS</a> ·
             <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a> ·
+            <a href="http://angular-ui.github.com/bootstrap/" target="_blank">Angular-UI Bootstrap</a></p>
             <a href="http://d3js.org" target="_blank">d3.js</a> ·
             <a href="http://jquery.com/" target="_blank">JQuery</a> ·
             <a href="http://james.padolsey.com/javascript/prettyprint-for-javascript/" target="_blank">prettyprint.js</a> ·
             <a href="http://momentjs.com/" target="_blank">moment.js</a></p>
-            <a href="http://nijikokun.github.com/bootstrap-notify/" target="_blank">Bootstrap-Notify</a></p>
 
     </footer>
   </body>
