@@ -211,6 +211,5 @@ table td {
     margin-top: 16px;
 }
 
-.notifications.top-right{
-    top:45px;
-}
+.notifications{position:fixed;}
+.notifications.top-right{right:10px;top:45px;}

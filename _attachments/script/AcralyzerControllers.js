@@ -19,7 +19,7 @@
 (function(acralyzerConfig,angular,acralyzer,acralyzerEvents,$) {
 "use strict";
 
-function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
+function AcralyzerCtrl($scope, ReportsStore, $rootScope, $notify) {
     $scope.acralyzer = {
         apps: []
     };
@@ -65,11 +65,13 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
     };
 
     var notifyNewData = function() {
-        desktopNotifications.notify({ title: "Acralyzer - " + $scope.acralyzer.app, body: "Received new report(s)", icon: "img/loader.gif" });
-        $('.top-right').notify({
-            message: { text: 'Received new report(s)' },
-            type: 'warning'
-        }).show();
+        $notify.warning({
+            desktop: true,
+            timeout: 10000,
+            title: "Acralyzer - " + $scope.acralyzer.app,
+            body: "Received new report(s)",
+            icon: "img/loader.gif"
+        });
     };
 
     $scope.$on(acralyzerEvents.NEW_DATA, notifyNewData);
@@ -80,6 +82,10 @@ function AcralyzerCtrl($scope, ReportsStore, $rootScope, desktopNotifications) {
             $scope.acralyzer.startPolling();
         }
     });
+
+    window.testNot = function() {
+        $scope.$apply(function() { notifyNewData();});
+    };
 }
 
 acralyzer.controller('AcralyzerCtrl', AcralyzerCtrl);
