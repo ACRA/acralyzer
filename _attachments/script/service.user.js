@@ -18,15 +18,55 @@
  */
 (function(acralyzerConfig,acralyzer,acralyzerEvents,$) {
     "use strict";
+    /**
+    * Couchdb user service
+    *
+    * @class user
+    * @singleton
+    * @static
+    */
     acralyzer.service('$user', ['$rootScope', '$q', function($rootScope, $q) {
         var ret = this;
+
         ret.hasAdminPath = undefined;
+        /**
+        * Resets the user object back to the default state
+        * @method reset
+        */
         ret.reset = function() {
+            /** 
+             * Username of current logged in user
+             *
+             * @property {String} username
+             * @type String
+             * @readOnly
+             */
             ret.username = null;
+            /**
+             * Is current user an admin
+             *
+             * @property {Boolean} isAdmin
+             * @type Boolean
+             * @readOnly
+             */
             ret.isAdmin = false;
+            /**
+             * Current users roles (as object)
+             *
+             * @property {Object} roles
+             * @type Object
+             * @readOnly
+             */
             ret.roles = {};
         };
         ret.reset();
+        /**
+         * Updates the session of the current user 
+         *
+         * @private
+         * @method updateSession
+         * @param {Promise} deferred Promise to update when completed
+         */
         ret.updateSession = function(deferred) {
             $.couch.session({
                 success : function(session) {
@@ -71,6 +111,16 @@
             });
         };
 
+        /**
+        * Logs in the user.
+        *
+        * @method login
+        * @param {String} username Username to log in with
+        * @param {String} password Password to log in username with
+        *
+        * @return {Promise} Promise for completion of login
+        */
+
         ret.login = function(username, password) {
             var deferred = $q.defer();
 
@@ -91,6 +141,16 @@
             return deferred.promise;
         };
 
+        /**
+        * Changes the password of the currently logged in user
+        *
+        * Side effect: logs out user
+        *
+        * @method changePassword
+        * @param {String} password New Password for the user
+        *
+        * @return {Promise} Promise for completion of change password
+        */
         ret.changePassword = function(password) {
             var deferred = $q.defer();
             if (!password) {
@@ -150,6 +210,12 @@
             return deferred.promise;
         };
 
+        /**
+        * Logout the current user
+        *
+        * @method logout
+        * @return {Promise} Promise for completion of logout
+        */
         ret.logout = function() {
             var deferred = $q.defer();
 
@@ -169,6 +235,7 @@
             return deferred.promise;
         };
 
+        /* First time we grab our session from couchdb */
         ret.updateSession();
         return ret;
     }]);
