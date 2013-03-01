@@ -17,12 +17,12 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(acralyzerConfig,angular,acralyzer) {
-"use strict";
+    "use strict";
 
-function NavigationCtrl($scope, $route, $dialog) {
-    $scope.$route = $route;
-}
+    function NavigationCtrl($scope, $route, $dialog) {
+        $scope.$route = $route;
+    }
 
-acralyzer.controller('NavigationCtrl', NavigationCtrl);
+    acralyzer.controller('NavigationCtrl', NavigationCtrl);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer);

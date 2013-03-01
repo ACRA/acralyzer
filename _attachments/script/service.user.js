@@ -42,7 +42,8 @@
                     if (ret.username && ret.isAdmin && ret.hasAdminPath === undefined )
                     {
                         $.ajax({
-                            type: "GET", url: $.couch.urlPrefix + "/_config/admins/" + ret.username,
+                            type: "GET",
+                            url: $.couch.urlPrefix + "/_config/admins/" + ret.username,
                             beforeSend: function(xhr) {
                                 xhr.setRequestHeader('Accept', 'application/json');
                             },
@@ -98,7 +99,8 @@
             }
             if (ret.isAdmin && ret.hasAdminPath === true) {
                 $.ajax({
-                    type: "PUT", url: $.couch.urlPrefix + "/_config/admins/" + ret.username,
+                    type: "PUT",
+                    url: $.couch.urlPrefix + "/_config/admins/" + ret.username,
                     data: '"' + password + '"',
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Accept', 'application/json');

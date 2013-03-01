@@ -29,7 +29,7 @@
             when('/reports-browser/:app', {templateUrl: 'partials/reports-browser.html', controller: 'ReportsBrowserCtrl', activetab: "reports-browser"}).
             when('/report-details/:app/:reportId', {templateUrl: 'partials/report-details.html', controller: 'ReportDetailsCtrl', activetab: "none"}).
             otherwise({redirectTo: '/dashboard'});
-        }]);
+    }]);
 
     acralyzer.directive('prettyprint',function(){
             return {
