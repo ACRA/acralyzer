@@ -17,7 +17,7 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(acralyzerConfig,acralyzer,$) {
-"use strict";
+    "use strict";
 
     acralyzer.factory('$notify', ['$timeout', function($timeout) {
         var ret = {};

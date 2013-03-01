@@ -17,16 +17,16 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 (function(acralyzerConfig,acralyzer) {
-"use strict";
+    "use strict";
 
-function AlertCtrl($scope, $notify) {
-    $scope.alerts = $notify._alerts;
-    $scope.close = function(index) {
-        $notify.remove(index);
-    };
-}
+    function AlertCtrl($scope, $notify) {
+        $scope.alerts = $notify._alerts;
+        $scope.close = function(index) {
+            $notify.remove(index);
+        };
+    }
 
-acralyzer.controller('AlertCtrl', ['$scope','$notify', AlertCtrl]);
+    acralyzer.controller('AlertCtrl', ['$scope','$notify', AlertCtrl]);
 
 })(window.acralyzerConfig,window.acralyzer);
 
