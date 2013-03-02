@@ -1,6 +1,12 @@
 [
-  "^imgsrc",
-  "^usertemplates",
+  "^app$",
+  "^node_modules$",
+  "testacular.conf",
+  "component.json",
+  "Gruntfile.js",
+  "package.json",
+  "^imgsrc$",
+  "^usertemplates$",
   "LICENSE",
   "README.md"
 ]

@@ -1,0 +1,14 @@
+{
+  "name": "a2",
+  "version": "0.0.0",
+  "dependencies": {
+    "modernizr": "~2.6.2",
+    "jquery": "~1.9.1",
+    "bootstrap": "~2.3.0",
+    "bootstrap-notify": "~0.1.0",
+    "moment": "~2.0.0",
+    "angular-bootstrap": "~0.1.0",
+    "prettyPrint.js": "git://github.com/halkeye/prettyPrint.js.git"
+  },
+  "devDependencies": {}
+}
