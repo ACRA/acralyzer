@@ -16,13 +16,18 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular,acralyzerEvents) {
+(function(acralyzerConfig,angular,acralyzerEvents,acralyzer) {
     "use strict";
 
-    angular.module('acra-storage', ['ngResource']).
-    factory('ReportsStore', function ($resource, $http, $rootScope) {
+    /**
+     * Reports storage access module.
+     *
+     * @class ReportsStore
+     * @singleton
+     * @static
+     */
+    acralyzer.service('ReportsStore', ['$rootScope', '$http', '$resource', function($rootScope, $http, $resource) {
         // ReportsStore service instance
-        /** @namespace */
         var ReportsStore = {},
         lastseq = -1,
         continuePolling = true,
@@ -30,9 +35,9 @@
 
         /**
         * Switch to another app, i.e. reports storage database.
-        * @param newAppName The app name. The database name is determined by adding prefix set in
+        * @param {String} newAppName The app name. The database name is determined by adding prefix set in
         * acralyzerConfig.appDBPrefix
-        * @param cb callback to be executed after database changed.
+        * @param {function} cb Callback to be executed after database changed.
         */
         ReportsStore.setApp = function (newAppName, cb) {
             dbName = acralyzerConfig.appDBPrefix + newAppName;
@@ -47,8 +52,8 @@
         /**
         * Gets the list of available apps for which we have crash reports databases.
         * Looks for all CouchDB databases starting with
-        * @param cb : callback which will receive an array of strings (app names) as a parameter.
-        * @param errorHandler : callback to be triggered if an error occurs.
+        * @param {function} cb Callback which will receive an array of strings (app names) as a parameter.
+        * @param {function} [errorHandler] Callback to be triggered if an error occurs.
         */
         ReportsStore.listApps = function(cb, errorHandler) {
             console.log("get _all_dbs");
@@ -69,9 +74,9 @@
 
         /**
         * Gets the number of reports per unit of time.
-        * @param grouplvl Grouping level: Year = 1, Month = 2, Day = 3, Hour = 4, Minute = 5, Second = 6.
-        * @param cb Callback which receives the results.
-        * @param errorHandler Called in case of error while retreiving data
+        * @param {Number} grouplvl Grouping level: Year = 1, Month = 2, Day = 3, Hour = 4, Minute = 5, Second = 6.
+        * @param {function} [cb] Callback which receives the results.
+        * @param {function} [errorHandler] Called in case of error while retrieving data
         * @return Key: date/time, Value: quantity
         */
         ReportsStore.reportsPerDay = function(grouplvl, cb, errorHandler) {
@@ -201,6 +206,6 @@
         };
 
         return ReportsStore;
-    });
+    }]);
 
-})(window.acralyzerConfig,window.angular,window.acralyzerEvents);
+})(window.acralyzerConfig,window.angular,window.acralyzerEvents,window.acralyzer);

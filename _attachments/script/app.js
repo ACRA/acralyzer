@@ -19,7 +19,7 @@
 (function(acralyzerConfig, angular, $, acralyzerEvents) {
     "use strict";
 
-    var acralyzer = window.acralyzer = angular.module('Acralyzer', ['acra-storage', 'ui.bootstrap']);
+    var acralyzer = window.acralyzer = angular.module('Acralyzer', ['ui.bootstrap', 'ngResource']);
 
     acralyzer.config(['$routeProvider', function($routeProvider) {
         $routeProvider.
