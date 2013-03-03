@@ -26,7 +26,7 @@
      * @singleton
      * @static
      */
-    acralyzer.factory('ReportsStore', function($rootScope, $http, $resource) {
+    acralyzer.factory('ReportsStore', ['$rootScope', '$http', '$resource', function($rootScope, $http, $resource) {
         // ReportsStore service instance
         var ReportsStore = {
             lastseq : -1,
@@ -212,6 +212,6 @@
         };
 
         return ReportsStore;
-    });
+    }]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzerEvents,window.acralyzer);
