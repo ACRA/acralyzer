@@ -113,35 +113,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        htmlmin: {
-            dist: {
-                options: {
-                    /*removeCommentsFromCDATA: true,
-                    // https://github.com/yeoman/grunt-usemin/issues/44
-                    //collapseWhitespace: true,
-                    collapseBooleanAttributes: true,
-                    removeAttributeQuotes: true,
-                    removeRedundantAttributes: true,
-                    useShortDoctype: true,
-                    removeEmptyAttributes: true,
-                    removeOptionalTags: true*/
-                },
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.app %>',
-                        src: '*.html',
-                        dest: '<%= yeoman.dist %>'
-                    },
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.app %>/partials',
-                        src: '*.html',
-                        dest: '<%= yeoman.dist %>/partials'
-                    }
-                ]
-            }
-        },
         copy: {
             dist: {
                 files: [
@@ -151,6 +122,8 @@ module.exports = function (grunt) {
                         cwd: '<%= yeoman.app %>',
                         dest: '<%= yeoman.dist %>',
                         src: [
+                            'index.html',
+                            'partials/*.html',
                             '*.{ico,txt}',
                             'img/*.gif',
                             'vendor/bootstrap/img/*.png',
@@ -182,7 +155,7 @@ module.exports = function (grunt) {
     grunt.renameTask('regarde', 'watch');
 
     /* Push up to couchdb server for dev test */
-    grunt.registerTask('couchapp', 'deploy couchapp', function() {
+    grunt.registerTask('couchapp', 'deploy couchapp', function () {
         var done = this.async();
 
         var urlOptions = {
@@ -197,11 +170,11 @@ module.exports = function (grunt) {
 
         var spawnOpts = {
             cmd: 'couchapp',
-            args: ['push',url.format(urlOptions)]
+            args: ['push', url.format(urlOptions)]
         };
         grunt.verbose.writeln('Now Running' + util.inspect(spawnOpts).cyan);
 
-        grunt.util.spawn(spawnOpts, function(err, res/*, code*/) {
+        grunt.util.spawn(spawnOpts, function (err, res/*, code*/) {
             grunt.log.ok();
             grunt.log.write(res.stderr);
             done();
@@ -210,16 +183,15 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', [
         'clean:server',
-        'compass',
+//        'compass',
         'mocha'
     ]);
 
     grunt.registerTask('build', [
         'clean:dist',
-        'compass:dist',
+//        'compass:dist',
         'useminPrepare',
         'imagemin',
-        'htmlmin',
         'concat',
         'cssmin',
         'uglify',
@@ -229,7 +201,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'jshint',
-        'test',
-        'build'
+        'test'
     ]);
 };
