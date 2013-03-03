@@ -22,15 +22,26 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         yeoman: yeomanConfig,
-        watch: {
-            compass: {
-                files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass']
-            }
-        },
         clean: {
             dist: ['.tmp', '<%= yeoman.dist %>/*'],
             server: '.tmp'
+        },
+        watch: {
+            js: {
+                files: ['Gruntfile.js', '.jshintrc', '<%= yeoman.app %>/script/*.js'],
+                tasks: ['jshint', 'couchapp'],
+                spawn: true
+            },
+            html: {
+                files: ['<%= yeoman.app %>/partials/*.html', '<%= yeoman.app %>/index.html'],
+                tasks: ['couchapp'],
+                spawn: true
+            },
+            css: {
+                files: '<%= yeoman.app %>/style/*.css',
+                tasks: ['couchapp'],
+                spawn: true
+            }
         },
         jshint: {
             options: {
@@ -166,6 +177,14 @@ module.exports = function (grunt) {
         };
         if (process.env.COUCHAPP_AUTH) {
             urlOptions.auth = process.env.COUCHAPP_AUTH;
+        }
+
+        if (grunt.file.exists('.couchapp_deploy'))
+        {
+            urlOptions = grunt.util._.merge(
+                urlOptions,
+                grunt.file.readJSON('.couchapp_deploy')
+            );
         }
 
         var spawnOpts = {

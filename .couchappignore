@@ -1,6 +1,7 @@
 [
-  "^app$",
+  "^dist$",
   "^node_modules$",
+  ".couchapp_deploy",
   "testacular.conf",
   "component.json",
   "Gruntfile.js",
