@@ -23,6 +23,6 @@
         $scope.$route = $route;
     }
 
-    acralyzer.controller('NavigationCtrl', NavigationCtrl);
+    acralyzer.controller('NavigationCtrl', ["$scope", "$route", "$dialog", NavigationCtrl]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer);

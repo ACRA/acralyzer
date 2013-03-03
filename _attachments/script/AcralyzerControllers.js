@@ -83,5 +83,5 @@
         });
 
     }
-    acralyzer.controller('AcralyzerCtrl', AcralyzerCtrl);
+    acralyzer.controller('AcralyzerCtrl', ["$scope", "ReportsStore", "$rootScope", "$notify", AcralyzerCtrl]);
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);
