@@ -26,12 +26,14 @@
      * @singleton
      * @static
      */
-    acralyzer.service('ReportsStore', ['$rootScope', '$http', '$resource', function($rootScope, $http, $resource) {
+    acralyzer.factory('ReportsStore', function($rootScope, $http, $resource) {
         // ReportsStore service instance
-        var ReportsStore = {},
-        lastseq = -1,
-        continuePolling = true,
-        dbName = "";
+        var ReportsStore = {
+            lastseq : -1,
+            continuePolling : true,
+            dbName : "",
+            pollCounter : 0
+        };
 
         /**
         * Switch to another app, i.e. reports storage database.
@@ -40,12 +42,12 @@
         * @param {function} cb Callback to be executed after database changed.
         */
         ReportsStore.setApp = function (newAppName, cb) {
-            dbName = acralyzerConfig.appDBPrefix + newAppName;
-            ReportsStore.views = $resource('/' + dbName + '/_design/acra-storage/_view/:view');
-            ReportsStore.details = $resource('/' + dbName + '/:reportid');
-            ReportsStore.dbstate = $resource('/' + dbName + '/');
-            ReportsStore.changes = $resource('/' + dbName + '/_changes');
-            lastseq = -1;
+            ReportsStore.dbName = acralyzerConfig.appDBPrefix + newAppName;
+            ReportsStore.views = $resource('/' + ReportsStore.dbName + '/_design/acra-storage/_view/:view');
+            ReportsStore.details = $resource('/' + ReportsStore.dbName + '/:reportid');
+            ReportsStore.dbstate = $resource('/' + ReportsStore.dbName + '/');
+            ReportsStore.changes = $resource('/' + ReportsStore.dbName + '/_changes');
+            ReportsStore.lastseq = -1;
             cb();
         };
 
@@ -151,28 +153,31 @@
             return ReportsStore.views.get({view: 'recent-items-by-androidver', group_level: 1}, cb);
         };
 
-        ReportsStore.pollChanges = function(cb) {
-            console.log("Polling changes since = " + lastseq);
+        ReportsStore.pollChanges = function(cb, pollCount) {
+            console.log("Polling changes since = " + ReportsStore.lastseq + " (poller " + pollCount + ")");
             // Store the current dbName on polling start
-            var currentlyPolledDB = dbName;
+            var currentlyPolledDB = ReportsStore.dbName;
             ReportsStore.changes.get(
-                {feed:'longpoll', since: lastseq},
+                {feed:'longpoll', since: ReportsStore.lastseq},
                 function(data){
-                    if(data.last_seq > lastseq) {
+                    if(data.last_seq > ReportsStore.lastseq) {
                         // If the user asked to stop polling or changed DataBase, don't handle the result.
-                        if(continuePolling && dbName === currentlyPolledDB) {
-                            console.log("New changes");
+                        if(ReportsStore.continuePolling && ReportsStore.dbName === currentlyPolledDB && pollCount === ReportsStore.pollCounter) {
+                            console.log("New changes (poller " + pollCount + ")");
                             cb();
-                            lastseq = data.last_seq;
+                            ReportsStore.lastseq = data.last_seq;
                         }
                     }
-                    if(continuePolling  && dbName === currentlyPolledDB) {
-                        ReportsStore.pollChanges(cb);
+                    if(ReportsStore.continuePolling  && ReportsStore.dbName === currentlyPolledDB && pollCount === ReportsStore.pollCounter) {
+                        console.log("poller " + pollCount + " continues");
+                        ReportsStore.pollChanges(cb, pollCount);
+                    } else {
+                        console.log("poller " + pollCount + " stops");
                     }
                 },
                 function() {
-                    console.log("Error wile polling changes");
-                    if(continuePolling) {
+                    console.log("Error while polling changes");
+                    if(ReportsStore.continuePolling) {
                         ReportsStore.pollChanges(cb);
                     }
                 }
@@ -184,16 +189,17 @@
                 {},
                 // Success
                 function(data) {
-                    if(lastseq === -1) {
-                        lastseq = data.update_seq;
+                    if(ReportsStore.lastseq === -1) {
+                        ReportsStore.lastseq = data.update_seq;
                     }
-                    console.log("DB status retrieved, last_seq = " + lastseq);
-                    continuePolling = true;
-                    ReportsStore.pollChanges(cb);
+                    console.log("DB status retrieved, last_seq = " + ReportsStore.lastseq);
+                    ReportsStore.continuePolling = true;
+                    ReportsStore.pollCounter++;
+                    ReportsStore.pollChanges(cb, ReportsStore.pollCounter);
                 },
                 // Error
                 function() {
-                    continuePolling = false;
+                    ReportsStore.continuePolling = false;
                     $rootScope.$broadcast(acralyzerEvents.POLLING_FAILED);
                     console.log("Polling failed");
                 }
@@ -202,10 +208,10 @@
 
         ReportsStore.stopPolling = function() {
             console.log("STOP POLLING !");
-            continuePolling = false;
+            ReportsStore.continuePolling = false;
         };
 
         return ReportsStore;
-    }]);
+    });
 
 })(window.acralyzerConfig,window.angular,window.acralyzerEvents,window.acralyzer);

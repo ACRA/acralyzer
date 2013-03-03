@@ -19,6 +19,7 @@
 
 (function(acralyzerEvents, $, undefined ) {
     "use strict";
+    acralyzerEvents.NEW_DATA = "new_data";
     acralyzerEvents.LOGIN_CHANGE = "login_change";
     acralyzerEvents.LOGGED_IN = "logged_in";
     acralyzerEvents.LOGGED_OUT = "logged_out";

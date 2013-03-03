@@ -18,23 +18,41 @@
  */
 (function(acralyzerConfig,angular,acralyzer,acralyzerEvents,$) {
     "use strict";
+    /**
+     * @class AcralyzerCtrl
+     *
+     * Application root controller, handles global behavior such as login logout and reports store change.
+     *
+     */
     function AcralyzerCtrl($scope, ReportsStore, $rootScope, $notify) {
+        /**
+         * Application scope, visible to children scopes with $scope.acralyzer.
+         * @type {Object}
+         */
         $scope.acralyzer = {
             apps: []
         };
-        $scope.acralyzer.app = acralyzerConfig.defaultApp;
-        $scope.acralyzer.isPolling = false;
+        $scope.acralyzer.app = null;
+        $scope.acralyzer.isPolling = acralyzerConfig.backgroundPollingOnStartup;
 
+        /**
+         * Switch to another reports store.
+         * @param {String} appName The name of the chosen android application (reports store database without database
+         * prefix)
+         */
         $scope.acralyzer.setApp = function(appName) {
-            $scope.acralyzer.app = appName;
-            ReportsStore.setApp($scope.acralyzer.app,
-                function() {
-                    console.log("broadcasting APP_CHANGED");
-                    $rootScope.$broadcast(acralyzerEvents.APP_CHANGED);
+            if(appName !== $scope.acralyzer.app) {
+                $scope.acralyzer.app = appName;
+                ReportsStore.setApp($scope.acralyzer.app,
+                    function() {
+                        console.log("broadcasting APP_CHANGED");
+                        $rootScope.$broadcast(acralyzerEvents.APP_CHANGED);
+                    }
+                );
+                if($scope.acralyzer.isPolling) {
+                    console.log("Start polling in AcralyzerControllers.setApp");
+                    $scope.acralyzer.startPolling();
                 }
-            );
-            if($scope.acralyzer.isPolling) {
-                $scope.acralyzer.startPolling();
             }
         };
         $scope.acralyzer.setApp($scope.acralyzer.app);

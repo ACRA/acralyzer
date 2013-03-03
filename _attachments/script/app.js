@@ -23,12 +23,10 @@
 
     acralyzer.config(['$routeProvider', function($routeProvider) {
         $routeProvider.
-            when('/dashboard', {templateUrl: 'partials/dashboard.html',   controller: 'DashboardCtrl', activetab: "dashboard"}).
             when('/dashboard/:app', {templateUrl: 'partials/dashboard.html',   controller: 'DashboardCtrl', activetab: "dashboard"}).
-            when('/reports-browser', {templateUrl: 'partials/reports-browser.html', controller: 'ReportsBrowserCtrl', activetab: "reports-browser"}).
             when('/reports-browser/:app', {templateUrl: 'partials/reports-browser.html', controller: 'ReportsBrowserCtrl', activetab: "reports-browser"}).
             when('/report-details/:app/:reportId', {templateUrl: 'partials/report-details.html', controller: 'ReportDetailsCtrl', activetab: "none"}).
-            otherwise({redirectTo: '/dashboard'});
+            otherwise({redirectTo: '/dashboard/' + acralyzerConfig.defaultApp});
     }]);
 
     acralyzer.directive('prettyprint',function(){
