@@ -160,7 +160,18 @@ module.exports = function (grunt) {
                     }
                 ]
             }
+        },
+        compress: {
+            dist: {
+                options: {
+                    archive: '<%= pkg.name %>-<%= pkg.version %>.tar.gz'
+                },
+                files: [
+                    {expand: true, cwd: 'dist/', src: ['**', '.*'], dest: ''}
+                ]
+            }
         }
+
     });
 
     grunt.renameTask('regarde', 'watch');
