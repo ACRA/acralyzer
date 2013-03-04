@@ -134,6 +134,8 @@ module.exports = function (grunt) {
                         src: [
                             'index.html',
                             'partials/*.html',
+                            /* At least until a solution that does't require editing config.js is found */
+                            'script/config.js',
                             '*.{ico,txt}',
                             'img/*.gif',
                             'vendor/bootstrap/img/*.png',
