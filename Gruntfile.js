@@ -181,27 +181,10 @@ module.exports = function (grunt) {
     grunt.registerTask('couchapp', 'deploy couchapp', function () {
         var done = this.async();
 
-        var urlOptions = {
-            protocol: process.env.COUCHAPP_PROTOCOL || 'http',
-            hostname: process.env.COUCHAPP_SERVER || 'localhost',
-            port: process.env.COUCHAPP_PORT || '5984',
-            pathname: process.env.COUCHAPP_PATH || '/acralyzer'
-        };
-        if (process.env.COUCHAPP_AUTH) {
-            urlOptions.auth = process.env.COUCHAPP_AUTH;
-        }
-
-        if (grunt.file.exists('.couchapp_deploy'))
-        {
-            urlOptions = grunt.util._.merge(
-                urlOptions,
-                grunt.file.readJSON('.couchapp_deploy')
-            );
-        }
 
         var spawnOpts = {
             cmd: 'couchapp',
-            args: ['push', url.format(urlOptions)]
+            args: ['push']
         };
         grunt.verbose.writeln('Now Running' + util.inspect(spawnOpts).cyan);
 
