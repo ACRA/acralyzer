@@ -49,9 +49,9 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%= yeoman.app %>/scripts/{,*/}*.js',
+                '<%= yeoman.app %>/script/{,*/}*.js',
                 '!<%= yeoman.app %>/vendor/*',
-                '!<%= yeoman.app %>/scripts/vendor/*',
+                '!<%= yeoman.app %>/script/vendor/*',
                 'test/spec/{,*/}*.js'
             ]
         },
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
                 sassDir: '<%= yeoman.app %>/styles',
                 cssDir: '.tmp/styles',
                 imagesDir: '<%= yeoman.app %>/img',
-                javascriptsDir: '<%= yeoman.app %>/scripts',
+                javascriptsDir: '<%= yeoman.app %>/script',
                 fontsDir: '<%= yeoman.app %>/styles/fonts',
                 importPath: '<%= yeoman.app %>/components',
                 relativeAssets: true
