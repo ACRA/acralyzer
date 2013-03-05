@@ -33,5 +33,5 @@
 
     }
 
-    acralyzer.controller('ReportDetailsCtrl',ReportDetailsCtrl);
+    acralyzer.controller('ReportDetailsCtrl',["$scope", "$routeParams", "ReportsStore",ReportDetailsCtrl]);
 })(window.acralyzerConfig,window.angular,window.acralyzer);

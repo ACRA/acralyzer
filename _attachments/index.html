@@ -23,22 +23,16 @@
     <meta charset="utf-8">
     <link rel="alternate" type="application/rss+xml"  href="{{rsslink}}" title="Latest Crash Reports">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- build:css vendor/bootstrap/css/bootstrap.min.css -->
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap-responsive.min.css" type="text/css">
+    <!-- endbuild -->
+
+    <!-- build:css styles/main.min.css -->
     <link rel="stylesheet" href="style/main.css" type="text/css">
     <link rel="stylesheet" href="style/graph.css" type="text/css">
-    <script src="vendor/couchapp/sha1.js"></script>
-    <script src="vendor/couchapp/json2.js"></script>
-    <script src="vendor/jquery/jquery-1.8.3.min.js"></script>
-    <script src="vendor/couchapp/jquery.couch.js"></script>
-    <script src="vendor/couchapp/jquery.couch.app.util.js"></script>
-    <script src="vendor/couchapp/md5.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="vendor/angular/angular.min.js"></script>
-    <script src="vendor/angular/angular-resource.min.js"></script>
-    <script src="vendor/d3/d3.v3.min.js"></script>
-    <script src="vendor/timrwood/moment.min.js"></script>
-    <script src="vendor/padolsey/prettyprint.js"></script>
+    <!-- endbuild -->
   </head>
   <body>
     <div class="navbar navbar-fixed-top" ng-controller="NavigationCtrl">
@@ -82,20 +76,6 @@
 
     <div ng-view></div>
 
-    <script src="script/config.js"></script>
-    <script src="vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.1.0.min.js"></script>
-    <script src="script/AcralyzerEvents.js"></script>
-    <script src="script/app.js"></script>
-    <script src="script/service.user.js"></script>
-    <script src="script/services.js"></script>
-    <script src="script/service.reportsstore.js"></script>
-    <script src="script/AcralyzerControllers.js"></script>
-    <script src="script/AccountControllers.js"></script>
-    <script src="script/AlertController.js"></script>
-    <script src="script/NavigationController.js"></script>
-    <script src="script/ReportDetailsController.js"></script>
-    <script src="script/DashboardControllers.js"></script>
-    <script src="script/ReportsBrowserControllers.js"></script>
 
     <footer class="footer">
         <div class="container">
@@ -120,5 +100,43 @@
             <a href="http://momentjs.com/" target="_blank">moment.js</a></p>
 
     </footer>
+
+    <!-- build:js script/vendors.js -->
+    <script src="vendor/jquery/jquery-1.8.3.min.js"></script>
+    <script src="vendor/angular/angular.min.js"></script>
+    <script src="vendor/angular/angular-resource.min.js"></script>
+    <script src="vendor/d3/d3.v3.min.js"></script>
+    <!-- endbuild -->
+    <!-- build:js script/libs.js -->
+    <script src="vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.1.0.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/couchapp/jquery.couch.app.util.js"></script>
+    <script src="vendor/couchapp/jquery.couch.js"></script>
+    <script src="vendor/couchapp/json2.js"></script>
+    <script src="vendor/couchapp/md5.js"></script>
+    <script src="vendor/couchapp/sha1.js"></script>
+    <script src="vendor/padolsey/prettyprint.js"></script>
+    <script src="vendor/timrwood/moment.min.js"></script>
+    <!-- endbuild -->
+
+    <!-- Config file has user changes in it, so for now don't minify it -->
+    <script src="script/config.js"></script>
+
+    <!-- build:js script/app.js -->
+    <script src="script/AcralyzerEvents.js"></script>
+    <script src="script/app.js"></script>
+
+    <script src="script/AlertController.js"></script>
+    <script src="script/AccountControllers.js"></script>
+    <script src="script/AcralyzerControllers.js"></script>
+    <script src="script/DashboardControllers.js"></script>
+    <script src="script/NavigationController.js"></script>
+    <script src="script/ReportDetailsController.js"></script>
+    <script src="script/ReportsBrowserControllers.js"></script>
+
+    <script src="script/services.js"></script>
+    <script src="script/service.user.js"></script>
+    <script src="script/service.reportsstore.js"></script>
+    <!-- endbuild -->
   </body>
 </html>

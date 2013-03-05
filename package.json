@@ -1,0 +1,55 @@
+{
+  "name": "acralyzer",
+  "version": "0.0.0",
+  "description": "Open source backend for ACRA reports.",
+  "main": "Gruntfile.js",
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-copy": "~0.4.0",
+    "grunt-contrib-concat": "~0.1.2",
+    "grunt-contrib-coffee": "~0.4.0",
+    "grunt-contrib-uglify": "~0.1.1",
+    "grunt-contrib-compass": "~0.1.2",
+    "grunt-contrib-jshint": "~0.2.0",
+    "grunt-contrib-cssmin": "~0.4.1",
+    "grunt-contrib-clean": "0.4.0",
+    "grunt-contrib-imagemin": "0.1.2",
+    "grunt-bower-hooks": "~0.2.0",
+    "grunt-usemin": "~0.1.9",
+    "grunt-regarde": "~0.1.1",
+    "grunt-mocha": "~0.2.2",
+    "grunt-open": "~0.2.0",
+    "matchdep": "~0.1.1",
+    "grunt-contrib-compress": "~0.4.1"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ACRA/acralyzer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ACRA/acralyzer/issues"
+  },
+  "author": {
+    "name": "Kevin Gaudin",
+    "email": "kevin.gaudin@gmail.com",
+    "url": "http://acra.ch"
+  },
+  "contributors": [
+    {
+      "name": "Gavin Mogan",
+      "email": "gavin@kodekoan.com",
+      "url": "http://www.kodekoan.com"
+    }
+  ],
+  "licenses": [
+    {
+      "type": "GPL",
+      "url": "https://github.com/ACRA/acralyzer/blob/master/LICENSE"
+    }
+  ],
+  "readmeFilename": "README.md",
+  "gitHead": "23be1fa9c6c5b390884b7df186386db164f33580"
+}

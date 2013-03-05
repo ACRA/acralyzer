@@ -476,9 +476,9 @@
         }
     }
 
-    acralyzer.controller('ReportsPerDayCtrl',ReportsPerDayCtrl);
-    acralyzer.controller('PieChartsCtrl',PieChartsCtrl);
-    acralyzer.controller('DashboardCtrl', DashboardCtrl);
-    acralyzer.controller('CrashReportsCtrl', CrashReportsCtrl);
+    acralyzer.controller('ReportsPerDayCtrl', [ "$scope", "ReportsStore", ReportsPerDayCtrl]);
+    acralyzer.controller('PieChartsCtrl', ["$scope", "ReportsStore", PieChartsCtrl]);
+    acralyzer.controller('DashboardCtrl', ["$scope", "$routeParams", DashboardCtrl]);
+    acralyzer.controller('CrashReportsCtrl', ["$scope", "ReportsStore", CrashReportsCtrl]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);

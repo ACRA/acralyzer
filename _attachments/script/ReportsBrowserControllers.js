@@ -145,6 +145,6 @@
     }
 
 
-    acralyzer.controller('ReportsBrowserCtrl', ReportsBrowserCtrl);
+    acralyzer.controller('ReportsBrowserCtrl', ["$scope", "ReportsStore", "$routeParams", ReportsBrowserCtrl]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents);
