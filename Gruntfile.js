@@ -178,7 +178,7 @@ module.exports = function (grunt) {
     grunt.renameTask('regarde', 'watch');
 
     /* Push up to couchdb server for dev test */
-    grunt.registerTask('couchapp', 'deploy couchapp', function () {
+    grunt.registerTask('couchapp', 'deploy couchapp', function (targetEnv, sourcePath) {
         var done = this.async();
 
 
@@ -186,6 +186,15 @@ module.exports = function (grunt) {
             cmd: 'couchapp',
             args: ['push']
         };
+
+        if(sourcePath) {
+            spawnOpts.args.push(sourcePath);
+        }
+
+        if(targetEnv) {
+            spawnOpts.args.push(targetEnv);
+        }
+
         grunt.verbose.writeln('Now Running' + util.inspect(spawnOpts).cyan);
 
         grunt.util.spawn(spawnOpts, function (err, res/*, code*/) {
@@ -213,8 +222,14 @@ module.exports = function (grunt) {
         'usemin'
     ]);
 
+    grunt.registerTask('deploy', [
+        'build',
+        'couchapp:prod:dist'
+    ]);
+
     grunt.registerTask('default', [
         'jshint',
         'test'
     ]);
+
 };
