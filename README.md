@@ -1,4 +1,4 @@
-[![Click here to lend your support to: ACRA - Application Crash Reports for Android and make a donation at www.pledgie.com !](http://www.pledgie.com/campaigns/18789.png?skin_name=chrome)](http://www.pledgie.com/campaigns/18789)
+[![Click here to lend your support to: ACRA - Application Crash Reports for Android and make a donation at www.pledgie.com !](https://www.pledgie.com/campaigns/18789.png?skin_name=chrome)](http://www.pledgie.com/campaigns/18789)
 
 
 [![Build Status](https://travis-ci.org/ACRA/acralyzer.png)](https://travis-ci.org/ACRA/acralyzer)
