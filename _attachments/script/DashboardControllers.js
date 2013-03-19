@@ -74,7 +74,7 @@
     }
 
 
-    function ReportsPerDayCtrl($scope, ReportsStore) {
+    function ReportsPerDayCtrl($scope, ReportsStore, $user) {
         $scope.periods = [
             {name: "Year", value: 1},
             {name: "Month", value: 2},
@@ -133,21 +133,20 @@
 
 
         $scope.getData = function() {
-            $.couch.session({
-                success: function(session) {
-                    if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
-                        console.log("You are authorized as a reader!");
-                        ReportsStore.reportsPerDay($scope.period.value, function(data) {
-                            $scope.reportsPerDay= getBidimensionalArray(data.rows);
-                            $scope.updateGraph();
-                        },
-                        function(response, getResonseHeaders){
-                            $scope.reportsPerDay=[[]];
-                            $scope.updateGraph();
-                        });
+            if ($user.isReader()) {
+                alert('gettig that data');
+                ReportsStore.reportsPerDay(
+                    $scope.period.value,
+                    function(data) {
+                        $scope.reportsPerDay = getBidimensionalArray(data.rows);
+                        $scope.updateGraph();
+                    },
+                    function(response, getResonseHeaders){
+                        $scope.reportsPerDay=[[]];
+                        $scope.updateGraph();
                     }
-                }
-            });
+                );
+            }
         };
 
 
@@ -277,7 +276,7 @@
     }
 
     /* Pie charts */
-    function PieChartsCtrl($scope, ReportsStore) {
+    function PieChartsCtrl($scope, ReportsStore, $user) {
         $scope.fieldNames = [
             {name: "android-version", label: "Android version"},
             {name: "android-sdk-version", label: "Android SDK version"},
@@ -290,30 +289,28 @@
         $scope.reportsPerFieldName=[];
 
         $scope.getData = function() {
-            $.couch.session({
-                success: function(session) {
-                    if(session.userCtx.roles.indexOf("reader") >= 0 || session.userCtx.roles.indexOf("_admin") >= 0) {
-                        console.log("You are authorized as a reader!");
-                        ReportsStore.reportsPerFieldName($scope.fieldName.name, function(data) {
-                            $scope.reportsPerFieldName = getBidimensionalArray(data.rows);
-                            var totalReports = 0;
-                            var i = 0;
-                            // Get total number of reports before calculating the ratio for each value.
-                            for(i = 0; i < $scope.reportsPerFieldName.length; i++) {
-                                totalReports += $scope.reportsPerFieldName[i][1];
-                            }
-                            for(i = 0; i < $scope.reportsPerFieldName.length; i++) {
-                                $scope.reportsPerFieldName[i][2] = $scope.reportsPerFieldName[i][1] / totalReports;
-                            }
-                            $scope.updateGraph();
-                        },
-                        function(response, getResonseHeaders){
-                            $scope.reportsPerFieldName=[[]];
-                            $scope.updateGraph();
-                        });
+            if ($user.isReader()) {
+                ReportsStore.reportsPerFieldName(
+                    $scope.fieldName.name,
+                    function(data) {
+                        $scope.reportsPerFieldName = getBidimensionalArray(data.rows);
+                        var totalReports = 0;
+                        var i = 0;
+                        // Get total number of reports before calculating the ratio for each value.
+                        for(i = 0; i < $scope.reportsPerFieldName.length; i++) {
+                            totalReports += $scope.reportsPerFieldName[i][1];
+                        }
+                        for(i = 0; i < $scope.reportsPerFieldName.length; i++) {
+                            $scope.reportsPerFieldName[i][2] = $scope.reportsPerFieldName[i][1] / totalReports;
+                        }
+                        $scope.updateGraph();
+                    },
+                    function(response, getResonseHeaders){
+                        $scope.reportsPerFieldName=[[]];
+                        $scope.updateGraph();
                     }
-                }
-            });
+                );
+            }
         };
 
         $scope.mouseover = function() {
@@ -476,8 +473,8 @@
         }
     }
 
-    acralyzer.controller('ReportsPerDayCtrl', [ "$scope", "ReportsStore", ReportsPerDayCtrl]);
-    acralyzer.controller('PieChartsCtrl', ["$scope", "ReportsStore", PieChartsCtrl]);
+    acralyzer.controller('ReportsPerDayCtrl', [ "$scope", "ReportsStore", "$user", ReportsPerDayCtrl]);
+    acralyzer.controller('PieChartsCtrl', ["$scope", "ReportsStore", "$user", PieChartsCtrl]);
     acralyzer.controller('DashboardCtrl', ["$scope", "$routeParams", DashboardCtrl]);
     acralyzer.controller('CrashReportsCtrl', ["$scope", "ReportsStore", CrashReportsCtrl]);
 

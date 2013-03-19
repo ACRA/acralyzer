@@ -25,15 +25,18 @@
     * @singleton
     * @static
     */
-    acralyzer.service('$user', ['$rootScope', '$q', function($rootScope, $q) {
-        var ret = this;
+    acralyzer.service('$user', ['$rootScope', '$q', '$resource', '$http', function($rootScope, $q, $resource, $http) {
+        var SessionResource = $resource('/_session');
+        var UserResource;
 
-        ret.hasAdminPath = undefined;
-        /**
-        * Resets the user object back to the default state
-        * @method reset
-        */
-        ret.reset = function() {
+        var _hasAdminPath;
+        var _session;
+
+        /*
+         * Resets the user object back to the default state
+         * @method reset
+         */
+        var _reset = function($user) {
             /** 
              * Username of current logged in user
              *
@@ -41,7 +44,7 @@
              * @type String
              * @readOnly
              */
-            ret.username = null;
+            $user.username = null;
             /**
              * Is current user an admin
              *
@@ -49,7 +52,7 @@
              * @type Boolean
              * @readOnly
              */
-            ret.isAdmin = false;
+            $user.isAdmin = false;
             /**
              * Current users roles (as object)
              *
@@ -57,60 +60,61 @@
              * @type Object
              * @readOnly
              */
-            ret.roles = {};
+            $user.roles = {};
         };
-        ret.reset();
-        /**
+
+
+        /*
          * Updates the session of the current user 
          *
          * @private
-         * @method updateSession
+         * @method _processSession
          * @param {Promise} deferred Promise to update when completed
          */
-        ret.updateSession = function(deferred) {
-            $.couch.session({
-                success : function(session) {
-                    var userCtx = session.userCtx;
-                    ret.roles = {};
-                    userCtx.roles.forEach(function(role) {
-                        ret.roles[role] = 1;
-                    });
-                    ret.isAdmin = (ret.roles['_admin'] === 1);
-                    ret.username = userCtx.name;
-                    $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, ret);
-                    $rootScope.$broadcast(acralyzerEvents.LOGIN_CHANGE, ret);
-                    if (ret.username && ret.isAdmin && ret.hasAdminPath === undefined )
-                    {
-                        $.ajax({
-                            type: "GET",
-                            url: $.couch.urlPrefix + "/_config/admins/" + ret.username,
-                            beforeSend: function(xhr) {
-                                xhr.setRequestHeader('Accept', 'application/json');
-                            },
-                            complete: function(req) {
-                                var resp = $.parseJSON(req.responseText);
-                                if (req.status === 200 && resp.match(/^-hashed-/)) {
-                                    ret.hasAdminPath = true;
-                                } else {
-                                    ret.hasAdminPath = false;
-                                }
-                            }
-                        });
-                    }
-                    if (deferred) {
-                        deferred.resolve(ret);
-                        $rootScope.$apply();
-                    }
-                },
-                error: function(data) {
-                    if (deferred) {
-                        deferred.reject(data.reason);
-                        $rootScope.$apply();
-                    }
-                }
+        var _processSession = function(data) {
+            if (!data) {
+                return _reset($user);
+            }
+            if (!UserResource)
+            {
+                UserResource = $resource(
+                    '/' + data.info.authentication_db + '/org.couchdb.user\\::name',
+                    {'name':'@name'},
+                    {'save': { method: 'PUT' } }
+                );
+            }
+            /* Grab user session after login */
+            var userCtx = data.userCtx;
+            $user.roles = {};
+            userCtx.roles.forEach(function(role) {
+                $user.roles[role] = 1;
             });
+            $user.isAdmin = ($user.roles['_admin'] === 1);
+            $user.username = userCtx.name;
+            if ($user.username) {
+                $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, $user);
+            } else {
+                $rootScope.$broadcast(acralyzerEvents.LOGGED_OUT, $user);
+            }
+            $rootScope.$broadcast(acralyzerEvents.LOGIN_CHANGE, $user);
+
+            /* Does this box support changing admin passwords */
+            if ($user.username && $user.isAdmin && _hasAdminPath === undefined)
+            {
+                $http.get('/_config/admins/' + $user.username)
+                .success(function(data, status, headers, config) {
+                    if (data.match(/^"-hashed-/)) {
+                        _hasAdminPath = true;
+                    } else {
+                        _hasAdminPath = false;
+                    }
+                }).error(function(data, status, headers, config) {
+                    _hasAdminPath = false;
+                });
+            }
         };
 
+        var $user = this;
         /**
         * Logs in the user.
         *
@@ -120,24 +124,22 @@
         *
         * @return {Promise} Promise for completion of login
         */
-
-        ret.login = function(username, password) {
+        $user.login = function(username, password) {
             var deferred = $q.defer();
-
-            var options = {
+            var newSession = new SessionResource({
                 name: username,
-                password: password,
-                success: function(data) {
-                    /* Grab user session after login */
-                    ret.updateSession(deferred);
-                },
-                error: function(data) {
-                    deferred.reject(data.reason);
-                    $rootScope.$apply();
-                }
-            };
-            $.couch.login(options);
-
+                password: password
+            });
+            newSession.$save(function(sess) {
+                /* Apparently admin user doesn't return the ctx properly, so lets fetch it */
+                _session = SessionResource.get({}, function(a) {
+                    /* success */
+                    _processSession(a);
+                    deferred.resolve($user);
+                });
+            }, function($http) {
+                deferred.reject();
+            });
             return deferred.promise;
         };
 
@@ -151,61 +153,38 @@
         *
         * @return {Promise} Promise for completion of change password
         */
-        ret.changePassword = function(password) {
+        $user.changePassword = function(password) {
             var deferred = $q.defer();
             if (!password) {
                 deferred.reject("Missing password");
                 return deferred.promise;
             }
-            if (ret.isAdmin && ret.hasAdminPath === true) {
-                $.ajax({
-                    type: "PUT",
-                    url: $.couch.urlPrefix + "/_config/admins/" + ret.username,
-                    data: '"' + password + '"',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('Accept', 'application/json');
-                    },
-                    complete: function(req) {
-                        var resp = $.parseJSON(req.responseText);
-                        if (req.status === 200) {
-                            /* Once we update the password, our current session is expired */
-                            /* Tried re-logging in, but there's a race condition here that is hard to track
-                             * So easiest just to log the user out */
-                            ret.logout().then(function() {
-                                deferred.resolve();
-                            });
-                        } else {
-                            deferred.reject(resp.reason);
-                            $rootScope.$apply();
-                        }
-                    }
+
+            if ($user.isAdmin && _hasAdminPath === true) {
+                $http.put('/_config/admins/'+$user.username, JSON.stringify(password))
+                .success(function() {
+                    $user.logout();
+                    deferred.resolve();
+                })
+                .error(function() {
+                    deferred.reject(/* data.reason */);
                 });
                 return deferred.promise;
             }
-            $.couch.userDb(function(db) {
-                var userDocId = "org.couchdb.user:"+ret.username;
-                db.openDoc(userDocId, {
-                    success : function(userDoc) {
-                        userDoc.password = password;
-                        db.saveDoc(userDoc, {
-                            success : function() {
-                                $rootScope.$broadcast(acralyzerEvents.USER_PASSWORD_CHANGE, ret);
-                                $rootScope.$broadcast(acralyzerEvents.LOGIN_CHANGE, ret);
-                                ret.logout().then(function() {
-                                    deferred.resolve();
-                                });
-                            },
-                            error: function(data) {
-                                deferred.reject(data.missing);
-                                $rootScope.$apply();
-                            }
-                        });
+            UserResource.get({ 'name': $user.username }, function(user) {
+                user.password = password;
+                user.$save(
+                    function() {
+                        $rootScope.$broadcast(acralyzerEvents.USER_PASSWORD_CHANGE, $user);
+                        $rootScope.$broadcast(acralyzerEvents.LOGIN_CHANGE, $user);
+                        $user.logout();
+                        deferred.resolve();
                     },
-                    error: function() {
-                        deferred.reject(ret);
-                        $rootScope.$apply();
+                    function() {
+                        console.log(arguments);
+                        deferred.reject();
                     }
-                });
+                );
             });
             return deferred.promise;
         };
@@ -216,28 +195,58 @@
         * @method logout
         * @return {Promise} Promise for completion of logout
         */
-        ret.logout = function() {
+        $user.logout = function() {
             var deferred = $q.defer();
-
-            $.couch.logout({
-                success: function(data) {
-                    ret.reset();
-                    $rootScope.$broadcast(acralyzerEvents.LOGGED_OUT, ret);
-                    $rootScope.$broadcast(acralyzerEvents.LOGIN_CHANGE, ret);
-                    deferred.resolve(ret);
-                    $rootScope.$apply();
-                },
-                error: function(data) {
-                    deferred.resolve(ret);
-                    $rootScope.$apply();
-                }
+            _session.$delete(function() {
+                _reset($user);
+                $rootScope.$broadcast(acralyzerEvents.LOGGED_OUT, $user);
+                $rootScope.$broadcast(acralyzerEvents.LOGIN_CHANGE, $user);
+                deferred.resolve($user);
+            }, function() {
+                deferred.reject();
             });
             return deferred.promise;
         };
 
+        /**
+         * Does this install support changing passwords?
+         *
+         * @method canChangePassword
+         * @return {Boolean} True if system can support changing password
+         */
+        $user.canChangePassword = function() {
+            if ($user.isAdmin && !_hasAdminPath) {
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * Is the current logged in user a 'reader'
+         *
+         * @method isReader
+         * @return {Boolean} True if user is allowed to read data
+         */
+        $user.isReader = function() {
+            if ($user.isAdmin || $user.roles.reader) {
+                return true;
+            }
+            return false;
+        };
+
+        /* Initialize all the variables */
+        _reset($user);
+
         /* First time we grab our session from couchdb */
-        ret.updateSession();
-        return ret;
+        _session = SessionResource.get({}, function(a) {
+            /* success */
+            _processSession(a);
+        }, function() {
+            alert('Unable to connect to couchdb');
+            /* failure */
+        });
+
+        return $user;
     }]);
 
 })(window.acralyzerConfig, window.acralyzer, window.acralyzerEvents, window.jQuery);
