@@ -134,7 +134,6 @@
 
         $scope.getData = function() {
             if ($user.isReader()) {
-                alert('gettig that data');
                 ReportsStore.reportsPerDay(
                     $scope.period.value,
                     function(data) {

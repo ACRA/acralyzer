@@ -126,11 +126,24 @@
         */
         $user.login = function(username, password) {
             var deferred = $q.defer();
-            var newSession = new SessionResource({
+            var data = {
                 name: username,
                 password: password
-            });
-            newSession.$save(function(sess) {
+            };
+            /* Disabled until 1.1 is stable as older couch needs x-www-form-urlencoded
+             * https://github.com/angular/angular.js/issues/736
+            var newSession = new SessionResource(data);
+            */
+            var _newSessionPromise = $http.post(
+                '/_session',
+                $.param(data),
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                    }
+                }
+            );
+            _newSessionPromise.then(function(sess) {
                 /* Apparently admin user doesn't return the ctx properly, so lets fetch it */
                 _session = SessionResource.get({}, function(a) {
                     /* success */
