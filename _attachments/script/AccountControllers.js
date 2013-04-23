@@ -34,7 +34,7 @@
             });
         };
         $scope.showChangePassword = function() {
-            if (!$user.hasAdminPath && $user.isAdmin) {
+            if ($user.canChangePassword() === false) {
                 alert("Sorry, your couchdb setup does not allow you to change an admins password");
                 return;
             }
