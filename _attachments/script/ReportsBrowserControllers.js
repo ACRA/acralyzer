@@ -71,7 +71,11 @@
                 $scope.reports = data.rows;
                 $scope.totalReports = data.total_rows;
                 for(var row = 0; row < $scope.reports.length; row++) {
-                    $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
+                    if($scope.filterName === $scope.noFilter && $scope.filterValue === $scope.noFilterValue) {
+                        $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
+                    } else {
+                        $scope.reports[row].displayDate = moment($scope.reports[row].key[1]).fromNow();
+                    }
                 }
 
                 // If there are more rows, here is the key to the next page
