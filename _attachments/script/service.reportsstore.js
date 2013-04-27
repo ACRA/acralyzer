@@ -153,6 +153,21 @@
             return ReportsStore.views.get({view: 'recent-items-by-androidver', group_level: 1}, cb);
         };
 
+
+        ReportsStore.bugs = function(cb, errorHandler) {
+            var viewParams = {
+                view: 'stats-per-signature',
+                descending: true,
+                limit: 10,
+                include_docs: false,
+                group: true
+            };
+
+            var result = ReportsStore.views.get(viewParams, cb, errorHandler);
+            return result;
+        };
+
+
         /**
          * Background polling worker method. If new data is received, the provided callback is executed. Otherwise,
          * if polling is still ok for this worker, immediately start a new request.

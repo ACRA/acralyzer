@@ -73,6 +73,30 @@
         $scope.getData();
     }
 
+    function BugsCtrl($scope, ReportsStore) {
+        $scope.selectedBug = "";
+
+        $scope.getData = function() {
+            ReportsStore.bugs(function(data) {
+                    console.log("Refresh data for latest bugs");
+                    $scope.bugs = data.rows;
+                    $scope.totalBugs = data.total_rows;
+                    for(var row = 0; row < $scope.bugs.length; row++) {
+                        $scope.bugs[row].latest = moment($scope.bugs[row].value.latest).fromNow();
+                    }
+                },
+                function(response, getResponseHeaders){
+                    $scope.bugs=[];
+                    $scope.totalBugs="";
+                });
+        };
+
+        $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
+        $scope.$on(acralyzerEvents.APP_CHANGED, $scope.getData);
+        $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
+        $scope.getData();
+    }
+
 
     function ReportsPerDayCtrl($scope, ReportsStore, $user) {
         $scope.periods = [
@@ -476,5 +500,6 @@
     acralyzer.controller('PieChartsCtrl', ["$scope", "ReportsStore", "$user", PieChartsCtrl]);
     acralyzer.controller('DashboardCtrl', ["$scope", "$routeParams", DashboardCtrl]);
     acralyzer.controller('CrashReportsCtrl', ["$scope", "ReportsStore", CrashReportsCtrl]);
+    acralyzer.controller('BugsCtrl', ["$scope", "ReportsStore", BugsCtrl]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);

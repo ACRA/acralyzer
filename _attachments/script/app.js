@@ -94,6 +94,28 @@
         };
     });
 
+    acralyzer.directive('bugSummary', function() {
+        return {
+            restrict: 'E',
+            scope: {
+                bug: '='
+            },
+            templateUrl: 'partials/bug-summary.html'
+        };
+    });
+
+    acralyzer.directive('bugDetails', function() {
+        return {
+            restrict: 'E',
+            scope: {
+                bug: '=',
+                acralyzer: '='
+            },
+            templateUrl: 'partials/bug-details.html'
+        };
+    });
+
+
     acralyzer.directive('notificationsSupport', [function() {
         return {
             restrict: 'A',
