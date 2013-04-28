@@ -37,11 +37,11 @@
                         <span ng-bind-template="{{bugs.length}} latest bugs:">Loading...</span>
                         <div id="bugs-list" class="div-table table table-condensed">
                             <div class="div-table-row">
-                                <div class="div-table-cell"><i class="icon-time"></i></div>
-                                <div class="div-table-cell"><i class="icon-gift"></i></div>
-                                <div class="div-table-cell"><i class="icon-fire"></i></div>
-                                <div class="div-table-cell"><i class="icon-th-list"></i></div>
                                 <div class="div-table-cell"><i class="icon-ok"></i></div>
+                                <div class="div-table-cell"><i class="icon-time"></i></div>
+                                <div class="div-table-cell"><i class="icon-th-list"></i></div>
+                                <div class="div-table-cell"><i class="icon-gift"></i></div>
+                                <div class="div-table-cell exceptions"><i class="icon-fire"></i></div>
                             </div>
                             <bug-summary class="div-table-row" ng-repeat="bug in bugs" ng-class-odd="'odd'" ng-class-even="'even'" bug="bug"></bug-summary>
                         </div>

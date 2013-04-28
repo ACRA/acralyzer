@@ -222,6 +222,7 @@ report-summary .label-androidversion {
 
 .div-table{
     display:table;
+    border-spacing: 0.3em;
 }
 .div-table-row{
     display:table-row;
@@ -232,8 +233,9 @@ report-summary .label-androidversion {
 
 .div-table-cell {
     display: table-cell;
-    padding: 0.1em;
+    padding: 0.1em 0.3em;
     text-align: center;
+    vertical-align: middle;
 }
 
 .div-table-cell.exceptions {

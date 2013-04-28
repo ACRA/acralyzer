@@ -1,8 +1,8 @@
-<div title="Latest report" class="div-table-cell"><span class="label label-info">{{bug.latest}}</span></div>
-<div title="Application version code" class="div-table-cell"><span class="label label-warning">{{bug.key[0]}}</span></div>
+<div title="Solved ?" class="div-table-cell label label-success">{{bug.value.solved}}</div>
+<div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
+<div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>
+<div title="Application version code" class="div-table-cell label label-warning">{{bug.key[0]}}</div>
 <div title="Exception" class="div-table-cell exceptions">
     <span class="label label-important">{{bug.key[1]}}</span><br/>
     <span class="label label-inverse">Caused by: {{bug.key[2]}}</span>
 </div>
-<div title="Number of reports" class="div-table-cell"><span class="label label">{{bug.value.count}}</span></div>
-<div title="Solved ?" class="div-table-cell"><span class="label label-success">{{bug.value.solved}}</span></div>
