@@ -34,15 +34,17 @@
                 </pane>
                 <pane heading="Bugs">
                     <div ng-controller="BugsCtrl">
-                        <span ng-bind-template="{{bugs.length}} latest bugs (out of {{totalBugs}}):">Loading...</span>
-                        <ul id="bugs-list">
-                            <li ng-repeat="bug in bugs" ng-cloak>
-                                <div ng-class-odd="'odd'" ng-class-even="'even'">
-                                    <a ng-click="" class="btn btn-mini"><i class="icon-search" ng-hide="bug.SIGNATURE === selectedBug.SIGNATURE"></i><i class="icon-asterisk" ng-show="bug.SIGNATURE == selectedBug.SIGNATURE"></i></a>
-                                    <bug-summary bug="bug"></bug-summary>
-                                </div>
-                            </li>
-                        </ul>
+                        <span ng-bind-template="{{bugs.length}} latest bugs:">Loading...</span>
+                        <div id="bugs-list" class="div-table table table-condensed">
+                            <div class="div-table-row">
+                                <div class="div-table-cell"><i class="icon-time"></i></div>
+                                <div class="div-table-cell"><i class="icon-gift"></i></div>
+                                <div class="div-table-cell"><i class="icon-fire"></i></div>
+                                <div class="div-table-cell"><i class="icon-th-list"></i></div>
+                                <div class="div-table-cell"><i class="icon-ok"></i></div>
+                            </div>
+                            <bug-summary class="div-table-row" ng-repeat="bug in bugs" ng-class-odd="'odd'" ng-class-even="'even'" bug="bug"></bug-summary>
+                        </div>
                     </div>
                 </pane>
             </tabs>

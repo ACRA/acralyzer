@@ -218,3 +218,24 @@ report-summary .label-androidversion {
     padding-left: 18px;
     background: #468847 url(../img/bugdroid-white.png) no-repeat 1px 1px;
 }
+
+
+.div-table{
+    display:table;
+}
+.div-table-row{
+    display:table-row;
+}
+.div-table-row:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.div-table-cell {
+    display: table-cell;
+    padding: 0.1em;
+    text-align: center;
+}
+
+.div-table-cell.exceptions {
+    text-align: left;
+}
