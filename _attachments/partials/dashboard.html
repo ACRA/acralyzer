@@ -15,38 +15,37 @@
     </div>
 
     <div class="row-fluid">
-        <div id="content" class="span12" ng-controller="CrashReportsCtrl">
-            <div class="rss"><a href="/acra-{{acralyzer.app}}/_design/acra-storage/_list/rss/recent-items?descending=true"><img src="img/rss.png"></a></div>
-            <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
-            <ul id="reports-list">
-                <li ng-repeat="report in reports" ng-cloak>
-                    <div ng-class-odd="'odd'" ng-class-even="'even'">
-                        <a ng-click="loadReport(report)" class="btn btn-mini"><i class="icon-search" ng-hide="report.id == selectedReport._id"></i><i class="icon-asterisk" ng-show="report.id == selectedReport._id"></i></a>
-                        <report-summary report="report"></report-summary>
-                    </div>
-                </li>
-            </ul>
-            <report-details report="selectedReport" acralyzer="acralyzer"></report-details>
+        <div id="content" class="span12">
             <tabs>
                 <pane heading="Reports">
+                    <div ng-controller="CrashReportsCtrl">
+                        <div class="rss"><a href="/acra-{{acralyzer.app}}/_design/acra-storage/_list/rss/recent-items?descending=true"><img src="img/rss.png"></a></div>
+                        <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
+                        <ul id="reports-list">
+                            <li ng-repeat="report in reports" ng-cloak>
+                                <div ng-class-odd="'odd'" ng-class-even="'even'">
+                                    <a ng-click="loadReport(report)" class="btn btn-mini"><i class="icon-search" ng-hide="report.id == selectedReport._id"></i><i class="icon-asterisk" ng-show="report.id == selectedReport._id"></i></a>
+                                    <report-summary report="report"></report-summary>
+                                </div>
+                            </li>
+                        </ul>
+                        <report-details report="selectedReport" acralyzer="acralyzer"></report-details>
+                    </div>
                 </pane>
                 <pane heading="Bugs">
+                    <div ng-controller="BugsCtrl">
+                        <span ng-bind-template="{{bugs.length}} latest bugs (out of {{totalBugs}}):">Loading...</span>
+                        <ul id="bugs-list">
+                            <li ng-repeat="bug in bugs" ng-cloak>
+                                <div ng-class-odd="'odd'" ng-class-even="'even'">
+                                    <a ng-click="" class="btn btn-mini"><i class="icon-search" ng-hide="bug.SIGNATURE === selectedBug.SIGNATURE"></i><i class="icon-asterisk" ng-show="bug.SIGNATURE == selectedBug.SIGNATURE"></i></a>
+                                    <bug-summary bug="bug"></bug-summary>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </pane>
             </tabs>
-        </div>
-    </div>
-
-    <div class="row-fluid">
-        <div id="content2" class="span12" ng-controller="BugsCtrl">
-            <span ng-bind-template="{{bugs.length}} latest bugs (out of {{totalBugs}}):">Loading...</span>
-            <ul id="bugs-list">
-                <li ng-repeat="bug in bugs" ng-cloak>
-                    <div ng-class-odd="'odd'" ng-class-even="'even'">
-                        <a ng-click="" class="btn btn-mini"><i class="icon-search" ng-hide="bug.SIGNATURE === selectedBug.SIGNATURE"></i><i class="icon-asterisk" ng-show="bug.SIGNATURE == selectedBug.SIGNATURE"></i></a>
-                        <bug-summary bug="bug"></bug-summary>
-                    </div>
-                </li>
-            </ul>
         </div>
     </div>
 </div>
