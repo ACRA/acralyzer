@@ -1,0 +1,30 @@
+.example-repeat-enter-setup,
+.example-repeat-leave-setup,
+.example-repeat-move-setup {
+    -webkit-transition:all linear 0.5s;
+    -moz-transition:all linear 0.5s;
+    -ms-transition:all linear 0.5s;
+    -o-transition:all linear 0.5s;
+    transition:all linear 0.5s;
+}
+
+.example-repeat-enter-setup {
+    line-height:0;
+    opacity:0;
+}
+.example-repeat-enter-setup.example-repeat-enter-start {
+    line-height:20px;
+    opacity:1;
+}
+
+.example-repeat-leave-setup {
+    opacity:1;
+    line-height:20px;
+}
+.example-repeat-leave-setup.example-repeat-leave-start {
+    opacity:0;
+    line-height:0;
+}
+
+.example-repeat-move-setup { }
+.example-repeat-move-setup.example-repeat-move-start { }

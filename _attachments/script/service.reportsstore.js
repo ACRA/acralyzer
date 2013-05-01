@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular,acralyzerEvents,acralyzer) {
+(function(acralyzerConfig,angular,acralyzerEvents,acralyzer,hex_md5) {
     "use strict";
 
     /**
@@ -45,6 +45,7 @@
             ReportsStore.dbName = acralyzerConfig.appDBPrefix + newAppName;
             ReportsStore.views = $resource('/' + ReportsStore.dbName + '/_design/acra-storage/_view/:view');
             ReportsStore.details = $resource('/' + ReportsStore.dbName + '/:reportid');
+            ReportsStore.bug = $resource('/' + ReportsStore.dbName + '/:bugid', { bugid: '@_id' }, { save: {method: 'PUT'}});
             ReportsStore.dbstate = $resource('/' + ReportsStore.dbName + '/');
             ReportsStore.changes = $resource('/' + ReportsStore.dbName + '/_changes');
             ReportsStore.lastseq = -1;
@@ -154,11 +155,10 @@
         };
 
 
-        ReportsStore.bugs = function(cb, errorHandler) {
+        ReportsStore.bugsList = function(cb, errorHandler) {
             var viewParams = {
-                view: 'stats-per-signature',
+                view: 'bugs',
                 descending: true,
-                limit: 10,
                 include_docs: false,
                 group: true
             };
@@ -167,6 +167,26 @@
             return result;
         };
 
+        ReportsStore.toggleSolved = function(bug) {
+            var bugid = hex_md5(bug.key[0] + "|" + bug.key[1] + "|" + bug.key[2]);
+
+            var curBug = ReportsStore.bug.get({ bugid: bugid}, function(){
+                // Success callback
+                console.log("curBug retrieved:");
+                console.log(curBug);
+                curBug.solved = ! curBug.solved;
+                console.log("Bug with id " + bugid + " already exist, solved is now: " + curBug.solved);
+                console.log(curBug);
+                curBug.$save();
+            }, function() {
+                // Fail callback
+                console.log("curBug retrieved:");
+                console.log(curBug);
+                console.log("Let's store solved bug with id " + bugid);
+                curBug = new ReportsStore.bug({_id: bugid, APP_VERSION_CODE: bug.key[0], digest: bug.key[1], rootCause: bug.key[2], solved: true, type: "solved_signature"});
+                curBug.$save();
+            });
+        };
 
         /**
          * Background polling worker method. If new data is received, the provided callback is executed. Otherwise,
@@ -243,4 +263,4 @@
         return ReportsStore;
     }]);
 
-})(window.acralyzerConfig,window.angular,window.acralyzerEvents,window.acralyzer);
+})(window.acralyzerConfig,window.angular,window.acralyzerEvents,window.acralyzer,window.hex_md5);

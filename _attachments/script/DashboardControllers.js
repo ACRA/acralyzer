@@ -75,9 +75,11 @@
 
     function BugsCtrl($scope, ReportsStore) {
         $scope.selectedBug = "";
+        $scope.bugsLimit = 10;
+        $scope.hideSolvedBugs = true;
 
         $scope.getData = function() {
-            ReportsStore.bugs(function(data) {
+            ReportsStore.bugsList(function(data) {
                     console.log("Refresh data for latest bugs");
                     $scope.bugs = data.rows;
                     $scope.totalBugs = data.total_rows;
@@ -89,6 +91,20 @@
                     $scope.bugs=[];
                     $scope.totalBugs="";
                 });
+        };
+
+        $scope.toggleSolved = function(bug) {
+            console.log("let's mark this bug as solved:");
+            console.log(bug);
+            ReportsStore.toggleSolved(bug);
+        };
+
+        $scope.shouldBeDisplayed = function(bug) {
+            if($scope.hideSolvedBugs && bug.value.solved) {
+                return false;
+            } else {
+                return true;
+            }
         };
 
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
