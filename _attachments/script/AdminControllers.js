@@ -24,8 +24,8 @@
         $scope.daysToKeep = 90;
 
         $scope.purge = function() {
-          console.log("Purge reports older than " + $scope.daysToKeep);
-          console.log("key will be: " + moment().subtract('days', $scope.daysToKeep).format("[[]YYYY,M,d[]]"));
+            console.log("Purge reports older than " + $scope.daysToKeep);
+            console.log("key will be: " + moment().subtract('days', $scope.daysToKeep).format("[[]YYYY,M,d[]]"));
         };
     }
     acralyzer.controller('AdminCtrl', ["$scope", "ReportsStore", AdminCtrl]);
