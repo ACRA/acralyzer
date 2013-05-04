@@ -85,6 +85,44 @@
             return ReportsStore.views.get({view: 'reports-per-day', group_level: grouplvl}, cb, errorHandler);
         };
 
+        /**
+         * Purge all reports older than given year/month/day.
+         * @param year Year of the oldest report to keep.
+         * @param month Month of the oldest report to keep.
+         * @param day Day of the oldest report to keep.
+         * @param cb Success callback (angular $http callback).
+         * @param errorHandler Failure callback (angular $http callback).
+         * @returns {*}
+         */
+        ReportsStore.purgeReportsOlderThan = function(year, month, day, cb, errorHandler) {
+            var result;
+
+            // This callback purges reports that will be retrieved by the request below
+            var additionalCallback = function(data) {
+                var docsToPurge = [];
+                console.log(data.rows.length + " reports to purge.");
+                for(var i = 0; i < data.rows.length; i++) {
+                    var doc = data.rows[i].doc;
+                    doc._deleted = true;
+                    docsToPurge.push(doc);
+                }
+                console.log("Deleting " + docsToPurge.length + "reports.");
+                $http.post("/" + ReportsStore.dbName + "/_bulk_docs", { docs: docsToPurge })
+                    .success(cb);
+            };
+
+            // Fetch old reports to purge them via the previously defined callback
+            result = ReportsStore.views.get({
+                    view: 'reports-per-day',
+                    reduce: false,
+                    startkey: '[' + year + ',' + month + ',' + day + ']',
+                    include_docs: true,
+                    descending: true
+                },
+                additionalCallback, errorHandler);
+            return result;
+        };
+
         // 10 latest reports - Key: date/time Value: report digest
         ReportsStore.recentReports = function(cb, errorHandler) {
             return ReportsStore.views.get({view: 'recent-items', limit: 10, descending: true}, cb, errorHandler);

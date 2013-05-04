@@ -20,14 +20,45 @@
 (function(acralyzerConfig,angular,acralyzer,acralyzerEvents,$) {
     "use strict";
 
-    function AdminCtrl($scope, ReportsStore) {
+    function AdminCtrl($scope, ReportsStore, $routeParams, $notify) {
+        if($routeParams.app) {
+            console.log("ReportsBrowser: Direct access to app " + $routeParams.app);
+            $scope.acralyzer.setApp($routeParams.app);
+        } else {
+            console.log("ReportsBorwser: Access to default app " + acralyzerConfig.defaultApp);
+            $scope.acralyzer.setApp(acralyzerConfig.defaultApp);
+        }
+
         $scope.daysToKeep = 90;
 
         $scope.purge = function() {
-          console.log("Purge reports older than " + $scope.daysToKeep);
-          console.log("key will be: " + moment().subtract('days', $scope.daysToKeep).format("[[]YYYY,M,d[]]"));
+            var deadline = moment().subtract('days', $scope.daysToKeep);
+            console.log("Purge reports older than " + $scope.daysToKeep);
+            console.log("key will be: " + deadline.format("[[]YYYY,M,d[]]"));
+            ReportsStore.purgeReportsOlderThan(deadline.year(), deadline.month(), deadline.date(),
+                function(data) {
+                    // Success callback
+                    $notify.success({
+                        desktop: true,
+                        timeout: 10000,
+                        title: "Acralyzer - " + $scope.acralyzer.app,
+                        body: "Purge of " + data.length + " reports succeeded, keeping the last " + $scope.daysToKeep + " days.",
+                        icon: "img/loader.gif"
+                    });
+                },
+                function(){
+                    // Failure callback
+                    $notify.success({
+                        desktop: true,
+                        timeout: 10000,
+                        title: "Acralyzer - " + $scope.acralyzer.app,
+                        body: "Purge failed.",
+                        icon: "img/loader.gif"
+                    });
+                }
+            );
         };
     }
-    acralyzer.controller('AdminCtrl', ["$scope", "ReportsStore", AdminCtrl]);
+    acralyzer.controller('AdminCtrl', ["$scope", "ReportsStore", "$routeParams", "$notify", AdminCtrl]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);
