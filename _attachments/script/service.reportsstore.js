@@ -203,13 +203,13 @@
             // Store the current dbName on polling start
             var currentlyPolledDB = ReportsStore.dbName;
             ReportsStore.changes.get(
-                {feed:'longpoll', since: ReportsStore.lastseq},
+                {feed:'longpoll', since: ReportsStore.lastseq, include_docs: true},
                 function(data){
                     if(data.last_seq > ReportsStore.lastseq) {
                         // If the user asked to stop polling or changed DataBase, don't handle the result.
                         if(ReportsStore.continuePolling && ReportsStore.dbName === currentlyPolledDB && workerId === ReportsStore.currentWorkerId) {
                             console.log("New changes (worker " + workerId + ")");
-                            cb();
+                            cb(data);
                             ReportsStore.lastseq = data.last_seq;
                         }
                     }

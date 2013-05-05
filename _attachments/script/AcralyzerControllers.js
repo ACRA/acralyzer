@@ -68,9 +68,26 @@
 
         $scope.acralyzer.startPolling = function() {
             $scope.acralyzer.isPolling = true;
-            ReportsStore.startPolling(function(){
+            ReportsStore.startPolling(function(data){
                 if($scope.acralyzer.isPolling) {
-                    $rootScope.$broadcast(acralyzerEvents.NEW_DATA);
+
+                    // Determine what kind of change occurred in the database.
+                    var reportsUpdated = false;
+                    var reportsDeleted = false;
+                    if(data.results && data.results.length > 0) {
+                        for(var i = 0; i< data.results.length && !reportsUpdated; i++) {
+                            if(data.results[i].doc && data.results[i].deleted) {
+                                reportsDeleted = true;
+                            } else if(data.results[i].doc && data.results[i].doc.REPORT_ID) {
+                                reportsUpdated = true;
+                            }
+                        }
+                    }
+                    if(reportsUpdated) {
+                        $rootScope.$broadcast(acralyzerEvents.NEW_DATA);
+                    } else if (reportsDeleted) {
+                        $rootScope.$broadcast(acralyzerEvents.REPORTS_DELETED);
+                    }
                 } // Do not refresh if a late response is received after the user asked to stop polling.
             });
         };
