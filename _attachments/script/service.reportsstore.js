@@ -194,7 +194,7 @@
         ReportsStore.deleteReport = function(report, cb) {
             var reportToDelete = ReportsStore.details.get({reportid: report.id}, function() {
                 ReportsStore.details.remove({reportid: report.id, rev: reportToDelete._rev}, cb);
-            })
+            });
         };
 
 
