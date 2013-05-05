@@ -1,1 +1,13 @@
-<button ng-click="purge()">Purge</button> reports older than <input ng-model="daysToKeep"/> days.
+<tabs>
+    <pane heading="Reports">
+        <div>
+            <button ng-click="purgeDays()">Purge</button> reports older than <input ng-model="daysToKeep" class="input-mini"/> days.
+        </div>
+        <div>
+            <button ng-click="purgeVersion(selectedVersion)">Purge</button> reports from apps older than version <select ng-model="selectedVersion" class="input-mini" ng-options="code.value as code.label for code in appVersionCodes"></select>.
+        </div>
+    </pane>
+    <pane heading="Users">
+        Coming soon...
+    </pane>
+</tabs>

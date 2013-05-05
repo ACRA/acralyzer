@@ -30,8 +30,17 @@
         }
 
         $scope.daysToKeep = 90;
+        $scope.selectedVersion = "";
+        $scope.appVersionCodes = [];
 
-        $scope.purge = function() {
+        ReportsStore.appVersionCodesList(function(data){
+            $scope.appVersionCodes.length = 0;
+            for(var row = 0; row < data.rows.length; row++) {
+                $scope.appVersionCodes.push({value:data.rows[row].key[0], label:data.rows[row].key[0]});
+            }
+        });
+
+        $scope.purgeDays = function() {
             var deadline = moment().subtract('days', $scope.daysToKeep);
             console.log("Purge reports older than " + $scope.daysToKeep);
             console.log("key will be: " + deadline.format("[[]YYYY,M,d[]]"));
@@ -43,6 +52,33 @@
                         timeout: 10000,
                         title: "Acralyzer - " + $scope.acralyzer.app,
                         body: "Purge of " + data.length + " reports succeeded, keeping the last " + $scope.daysToKeep + " days.",
+                        icon: "img/loader.gif"
+                    });
+                },
+                function(){
+                    // Failure callback
+                    $notify.success({
+                        desktop: true,
+                        timeout: 10000,
+                        title: "Acralyzer - " + $scope.acralyzer.app,
+                        body: "Purge failed.",
+                        icon: "img/loader.gif"
+                    });
+                }
+            );
+        };
+
+        $scope.purgeVersion = function(selectedVersion) {
+            console.log("Purge reports from version " + selectedVersion + " and older.");
+            console.log(selectedVersion);
+            ReportsStore.purgeReportsFromAppVersionCodeAndBelow(selectedVersion,
+                function(data) {
+                    // Success callback
+                    $notify.success({
+                        desktop: true,
+                        timeout: 10000,
+                        title: "Acralyzer - " + $scope.acralyzer.app,
+                        body: "Purge of " + data.length + " reports succeeded, from " + selectedVersion + " and below.",
                         icon: "img/loader.gif"
                     });
                 },
