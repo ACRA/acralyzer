@@ -191,6 +191,15 @@
             return ReportsStore.views.get({view: 'recent-items-by-androidver', group_level: 1}, cb);
         };
 
+        ReportsStore.deleteReport = function(report, cb) {
+            var reportToDelete = ReportsStore.details.get({reportid: report.id}, function() {
+                ReportsStore.details.remove({reportid: report.id, rev: reportToDelete._rev}, cb);
+            })
+        };
+
+
+        // BACKGROUND POLLING MANAGEMENT
+
         /**
          * Background polling worker method. If new data is received, the provided callback is executed. Otherwise,
          * if polling is still ok for this worker, immediately start a new request.

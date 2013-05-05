@@ -177,6 +177,14 @@ table td {
     background-color: #fff;
 }
 
+.action:hover {
+    text-decoration: none;
+}
+
+.action {
+    cursor: pointer;
+}
+
 /* Footer
 -------------------------------------------------- */
 
