@@ -67,7 +67,7 @@
                         </button>
                         <div id="bugs-list" class="div-table table table-condensed">
                             <div class="div-table-row">
-                                <div class="div-table-cell"><i class="icon-ok"></i></div>
+                                <div class="div-table-cell"></div>
                                 <div class="div-table-cell"><i class="icon-time"></i></div>
                                 <div class="div-table-cell"><i class="icon-th-list"></i></div>
                                 <div class="div-table-cell"><i class="icon-gift"></i></div>
@@ -80,10 +80,9 @@
                                  ng-animate="{ enter: 'example-repeat-enter',
                                                leave: 'example-repeat-leave',
                                                move: 'example-repeat-move'}">
-                                <div title="Switch state" class="div-table-cell btn btn-mini" ng-class="{ 'btn-success': bug.value.solved, 'btn-danger':!bug.value.solved }"
-                                     ng-click="toggleSolved(bug)">
-                                    <span ng-hide="bug.value.solved">unsolved</span>
-                                    <span ng-show="bug.value.solved">solved</span>
+                                <div class="div-table-cell" ng-click="toggleSolved(bug)">
+                                    <span title="Unsolved bug" ng-hide="bug.value.solved"><i class="icon-bug-unsolved"></i></span>
+                                    <span title="Solved bug" ng-show="bug.value.solved"><i class="icon-bug-solved"></i></span>
                                 </div>
                                 <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
                                 <div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>

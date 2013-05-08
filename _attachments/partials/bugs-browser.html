@@ -1,0 +1,68 @@
+<div class="container-fluid">
+    <div id="content">
+        <div id="filters" class="row-fluid">
+            <form ng-submit="getData()" class="form-inline">
+                <div class="input-append">
+                    <input ng-model="reportsCount" type="number" alt="Number of reports per page" class="input-mini"/>
+                    <button class="btn" type="submit">OK</button>
+                </div>
+                <select ng-model="filterName" ng-change="changeFilterValues()" ng-options="f.label for f in availableFilters">
+                </select>
+                <select ng-model="filterValue" ng-disabled="filterName == noFilter"  ng-change="filterValueSelected()" ng-options="v.label for v in filterValues">
+                </select>
+                <input type="text" class="search-query" placeholder="Search in this page" ng-model="search">
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="fullSearch" ng-change="getData()"> All report attributes
+                </label>
+            </form>
+        </div>
+        <div id="reports-list" class="row-fluid tab-content">
+            <span ng-bind-template="reports {{startNumber}} to {{endNumber}} (out of {{totalReports}}):">Loading...</span>
+            <div class="loader" ng-show="loading"><img  src="img/loader.gif"/></div>
+            <div class="div-table" ng-hide="loading">
+                <div class="div-table-row">
+                    <div class="div-table-cell"/>
+                    <div class="div-table-cell"><i class="icon-time"></i></div>
+                    <div class="div-table-cell"><i class="icon-gift"></i></div>
+                    <div class="div-table-cell"><i class="icon-bugdroid"></i></div>
+                    <div class="div-table-cell"><i class="icon-phone"></i></div>
+                    <div class="div-table-cell exceptions"><i class="icon-fire"></i></div>
+                </div>
+                <div class="div-table-row" ng-repeat="report in reports | filter:search" ng-class-odd="'odd'" ng-class-even="'even'" ng-cloak>
+                    <div class="div-table-cell actions">
+                        <a ng-click="loadReport(report)" class="action">
+                            <i class="icon-search" ng-hide="report.id == selectedReport._id" title="Display details"></i>
+                            <i class="icon-asterisk" ng-show="report.id == selectedReport._id" title="Current selection"></i>
+                        </a>
+                        <a ng-click="deleteReport(report)" class="action">
+                            <i class="icon-trash" title="Delete permanently"></i>
+                        </a>
+                    </div>
+                    <span title="Crash date" class="div-table-cell label label-info">{{report.displayDate}}</span>
+                    <span title="Application version name" class="div-table-cell label label-warning">{{report.value.application_version_name}}</span>
+                    <span title="Android verion" class="div-table-cell label label-success">{{report.value.android_version}}</span>
+                    <span title="Device" class="div-table-cell label">{{report.value.device}}</span>
+                    <div class="div-table-cell exceptions">
+                        <span title="Exception" class="label label-important">{{report.value.signature.digest}}</span>
+                        <span title="Root exception" class="label label-inverse" ng-show="report.value.signature.rootCause">Caused by: {{report.value.signature.rootCause}}</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="pager">
+                <li class="previous" ng-show="previousStartKeys.length > 0">
+                    <a ng-click="getPreviousPage()"><i class="icon-chevron-left"></i> Newer</a>
+                </li>
+                <li class="previous disabled" ng-hide="previousStartKeys.length > 0">
+                    <span><i class="icon-chevron-left"></i> Newer</span>
+                </li>
+                <li class="next" ng-show="nextKey != null">
+                    <a ng-click="getNextPage()">Older <i class="icon-chevron-right"></i></a>
+                </li>
+                <li class="next disabled" ng-hide="nextKey != null">
+                    <span>Older <i class="icon-chevron-right"></i></span>
+                </li>
+            </ul>
+        </div>
+        <report-details report="selectedReport" acralyzer="acralyzer"></report-details>
+    </div>
+</div>
