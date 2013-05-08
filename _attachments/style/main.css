@@ -249,3 +249,17 @@ report-summary .label-androidversion {
 .div-table-cell.exceptions {
     text-align: left;
 }
+
+.div-table-cell.actions {
+    white-space: nowrap;
+}
+
+.icon-bugdroid {
+    background-image: url(../img/bugdroid-black14.png);
+    background-position: 0px;
+}
+
+.icon-phone {
+    background-image: url(../img/device-black.png);
+    background-position: 0px;
+}

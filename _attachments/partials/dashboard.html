@@ -21,9 +21,22 @@
                     <div ng-controller="CrashReportsCtrl">
                         <div class="rss"><a href="/acra-{{acralyzer.app}}/_design/acra-storage/_list/rss/recent-items?descending=true"><img src="img/rss.png"></a></div>
                         <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
-                        <ul id="reports-list">
-                            <li ng-repeat="report in reports" ng-cloak>
-                                <div ng-class-odd="'odd'" ng-class-even="'even'">
+                        <div id="reports-list" class="div-table table table-condensed">
+                            <div class="div-table-row">
+                                <div class="div-table-cell"/>
+                                <div class="div-table-cell"><i class="icon-time"></i></div>
+                                <div class="div-table-cell"><i class="icon-gift"></i></div>
+                                <div class="div-table-cell"><i class="icon-bugdroid"></i></div>
+                                <div class="div-table-cell"><i class="icon-phone"></i></div>
+                                <div class="div-table-cell exceptions"><i class="icon-fire"></i></div>
+                            </div>
+
+                            <div class="div-table-row"
+                                 ng-repeat="report in reports"
+                                 ng-class-odd="'odd'"
+                                 ng-class-even="'even'"
+                                 >
+                                <div class="div-table-cell actions">
                                     <a ng-click="loadReport(report)" class="action">
                                         <i class="icon-search" ng-hide="report.id == selectedReport._id" title="Display details"></i>
                                         <i class="icon-asterisk" ng-show="report.id == selectedReport._id" title="Current selection"></i>
@@ -31,10 +44,17 @@
                                     <a ng-click="deleteReport(report)" class="action">
                                         <i class="icon-trash" title="Delete permanently"></i>
                                     </a>
-                                    <report-summary report="report"></report-summary>
                                 </div>
-                            </li>
-                        </ul>
+                                <span title="Crash date" class="div-table-cell label label-info">{{report.displayDate}}</span>
+                                <span title="Application version name" class="div-table-cell label label-warning">{{report.value.application_version_name}}</span>
+                                <span title="Android verion" class="div-table-cell label label-success">{{report.value.android_version}}</span>
+                                <span title="Device" class="div-table-cell label">{{report.value.device}}</span>
+                                <div class="div-table-cell exceptions">
+                                    <span title="Exception" class="label label-important">{{report.value.signature.digest}}</span>
+                                    <span title="Root exception" class="label label-inverse" ng-show="report.value.signature.rootCause">Caused by: {{report.value.signature.rootCause}}</span>
+                                </div>
+                            </div>
+                        </div>
                         <report-details report="selectedReport" acralyzer="acralyzer"></report-details>
                     </div>
                 </pane>
@@ -65,9 +85,9 @@
                                 <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
                                 <div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>
                                 <div title="Application version code" class="div-table-cell label label-warning">{{bug.key[0]}}</div>
-                                <div title="Exception" class="div-table-cell exceptions">
-                                    <span class="label label-important">{{bug.key[1]}}</span><br/>
-                                    <span class="label label-inverse" ng-show="bug.key[2]">Caused by: {{bug.key[2]}}</span>
+                                <div class="div-table-cell exceptions">
+                                    <span title="Exception" class="label label-important">{{bug.key[1]}}</span><br/>
+                                    <span title="Root exception" class="label label-inverse" ng-show="bug.key[2]">Caused by: {{bug.key[2]}}</span>
                                 </div>
                             </div>
                         </div>

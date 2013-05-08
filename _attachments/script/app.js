@@ -74,16 +74,6 @@
             };
         });
 
-    acralyzer.directive('reportSummary', function() {
-        return {
-            restrict: 'E',
-            scope: {
-                report: '='
-            },
-            templateUrl: 'partials/report-summary.html'
-        };
-    });
-
     acralyzer.directive('reportDetails', function() {
         return {
             restrict: 'E',
@@ -92,16 +82,6 @@
                 acralyzer: '='
             },
             templateUrl: 'partials/report-details.html'
-        };
-    });
-
-    acralyzer.directive('bugSummary', function() {
-        return {
-            restrict: 'E',
-            scope: {
-                bug: '='
-            },
-            templateUrl: 'partials/bug-summary.html'
         };
     });
 
