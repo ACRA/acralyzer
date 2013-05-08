@@ -88,11 +88,40 @@
         $scope.selectedBug = "";
         $scope.bugsLimit = 10;
         $scope.hideSolvedBugs = true;
+        $scope.bugs = [];
+
+        var mergeBugsLists = function(list1, list2) {
+            var bugslist = {};
+            for(var i1 = 0; i1 < list1.length; i1++) {
+                bugslist[list1[i1].id] = {idxlist1: i1};
+            }
+            for(var i2 = 0; i2 < list2.length; i2++) {
+                if(!bugslist[list2[i2].id]){
+                    // Mark bug as not found in list1
+                    bugslist[list2[i2].id] = {idxlist1: -1};
+                }
+                bugslist[list2[i2].id].idxlist2 = i2;
+            }
+            for(var iBugs in bugslist) {
+                if(bugslist[iBugs].idxlist1 < 0 && bugslist[iBugs].idxlist2 >= 0) {
+                    // New bug
+                    list1.push(list2[bugslist[iBugs].idxlist2]);
+                } else if (bugslist[iBugs].idxlist1 >= 0 && bugslist[iBugs].idxlist2 < 0) {
+                    // Deleted bug
+                    list1.splice(bugslist[iBugs].idxlist1, 1);
+                } else if(bugslist[iBugs].idxlist1 >= 0 && bugslist[iBugs].idxlist2 >= 0) {
+                    if(!list1[bugslist[iBugs].idxlist1].equals(list2[bugslist[iBugs].idxlist2])) {
+                        // Updated bug
+                        list1[bugslist[iBugs].idxlist1].updateWithBug(list2[bugslist[iBugs].idxlist2]);
+                    }
+                }
+            }
+        };
 
         $scope.getData = function() {
             ReportsStore.bugsList(function(data) {
                     console.log("Refresh data for latest bugs");
-                    $scope.bugs = data.rows;
+                    mergeBugsLists($scope.bugs, data.rows);
                     $scope.totalBugs = data.total_rows;
                     for(var row = 0; row < $scope.bugs.length; row++) {
                         $scope.bugs[row].latest = moment($scope.bugs[row].value.latest).fromNow();

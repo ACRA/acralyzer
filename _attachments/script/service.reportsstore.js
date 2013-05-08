@@ -160,36 +160,64 @@
         };
 
         // BUGS MANAGEMENT
+        var computeBugId = function(bug) {
+            if (bug.id) {
+                return bug.id;
+            } else {
+                return hex_md5(bug.key[0] + "|" + bug.key[1] + "|" + bug.key[2]);
+            }
+        };
 
         ReportsStore.bugsList = function(cb, errorHandler) {
             var viewParams = {
                 view: 'bugs',
                 descending: true,
-                include_docs: false,
                 group: true
             };
 
-            var result = ReportsStore.views.get(viewParams, cb, errorHandler);
+            var bugEqualityTest = function(bug2) {
+                if(this.value.latest !== bug2.value.latest || this.value.count !== bug2.value.count || this.value.solved !== bug2.value.solved) {
+                    return false;
+                }
+                return true;
+            };
+
+            var bugUpdate = function(bug2) {
+                if(this.value.latest !== bug2.value.latest) {
+                    this.value.latest = bug2.value.latest;
+                }
+                if(this.value.count !== bug2.value.count) {
+                    this.value.count = bug2.value.count;
+                }
+                if(this.value.solved !== bug2.value.solved) {
+                    this.value.solved = bug2.value.solved;
+                }
+            };
+
+            var additionalCallback = function(data) {
+                // The bug view does not return individual documents. Unless data has been specifically updated about
+                // one bug, there is no bug document in a database. We add here the computed id of each bug.
+                for (var i = 0; i < data.rows.length; i++) {
+                    data.rows[i].id = computeBugId(data.rows[i]);
+                    data.rows[i].equals = bugEqualityTest;
+                    data.rows[i].updateWithBug = bugUpdate;
+                }
+                cb(data);
+            };
+
+            var result = ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
             return result;
         };
 
-        ReportsStore.toggleSolved = function(bug, callback) {
-            var bugid = hex_md5(bug.key[0] + "|" + bug.key[1] + "|" + bug.key[2]);
 
-            var curBug = ReportsStore.bug.get({ bugid: bugid}, function(){
+        ReportsStore.toggleSolved = function(bug, callback) {
+            var curBug = ReportsStore.bug.get({ bugid: bug.id}, function(){
                 // Success callback
-                console.log("curBug retrieved:");
-                console.log(curBug);
                 curBug.solved = ! curBug.solved;
-                console.log("Bug with id " + bugid + " already exist, solved is now: " + curBug.solved);
-                console.log(curBug);
                 curBug.$save(callback);
             }, function() {
                 // Fail callback
-                console.log("curBug retrieved:");
-                console.log(curBug);
-                console.log("Let's store solved bug with id " + bugid);
-                curBug = new ReportsStore.bug({_id: bugid, APP_VERSION_CODE: bug.key[0], digest: bug.key[1], rootCause: bug.key[2], solved: true, type: "solved_signature"});
+                curBug = new ReportsStore.bug({_id: bug.id, APP_VERSION_CODE: bug.key[0], digest: bug.key[1], rootCause: bug.key[2], solved: true, type: "solved_signature"});
                 curBug.$save(callback);
             });
         };
