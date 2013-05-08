@@ -231,7 +231,7 @@
             result = ReportsStore.views.get({
                     view: 'reports-per-app-version-code',
                     reduce: false,
-                    endkey: '[' + version + ']',
+                    endkey: version,
                     include_docs: true
                 },
                 additionalCallback, errorHandler);
