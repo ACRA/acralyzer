@@ -107,7 +107,9 @@
         $scope.toggleSolved = function(bug) {
             console.log("let's mark this bug as solved:");
             console.log(bug);
-            ReportsStore.toggleSolved(bug);
+            ReportsStore.toggleSolved(bug, function(data){
+                console.log(data);
+            });
         };
 
         $scope.shouldBeDisplayed = function(bug) {
@@ -121,6 +123,7 @@
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
         $scope.$on(acralyzerEvents.APP_CHANGED, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
+        $scope.$on(acralyzerEvents.BUGS_UPDATED, $scope.getData);
         $scope.getData();
     }
 

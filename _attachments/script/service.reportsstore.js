@@ -173,7 +173,7 @@
             return result;
         };
 
-        ReportsStore.toggleSolved = function(bug) {
+        ReportsStore.toggleSolved = function(bug, callback) {
             var bugid = hex_md5(bug.key[0] + "|" + bug.key[1] + "|" + bug.key[2]);
 
             var curBug = ReportsStore.bug.get({ bugid: bugid}, function(){
@@ -183,14 +183,14 @@
                 curBug.solved = ! curBug.solved;
                 console.log("Bug with id " + bugid + " already exist, solved is now: " + curBug.solved);
                 console.log(curBug);
-                curBug.$save();
+                curBug.$save(callback);
             }, function() {
                 // Fail callback
                 console.log("curBug retrieved:");
                 console.log(curBug);
                 console.log("Let's store solved bug with id " + bugid);
                 curBug = new ReportsStore.bug({_id: bugid, APP_VERSION_CODE: bug.key[0], digest: bug.key[1], rootCause: bug.key[2], solved: true, type: "solved_signature"});
-                curBug.$save();
+                curBug.$save(callback);
             });
         };
 
