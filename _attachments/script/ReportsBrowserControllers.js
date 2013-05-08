@@ -142,6 +142,16 @@
             });
         };
 
+        $scope.deleteReport = function(report) {
+            if($scope.selectedReport === report) {
+                $scope.selectedReport = "";
+            }
+
+            ReportsStore.deleteReport(report, function(data) {
+                var index = $scope.reports.indexOf(report);
+                $scope.reports.splice(index, 1);
+            });
+        };
 
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
         $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);

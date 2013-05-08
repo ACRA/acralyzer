@@ -24,7 +24,13 @@
                         <ul id="reports-list">
                             <li ng-repeat="report in reports" ng-cloak>
                                 <div ng-class-odd="'odd'" ng-class-even="'even'">
-                                    <a ng-click="loadReport(report)" class="btn btn-mini"><i class="icon-search" ng-hide="report.id == selectedReport._id"></i><i class="icon-asterisk" ng-show="report.id == selectedReport._id"></i></a>
+                                    <a ng-click="loadReport(report)" class="action">
+                                        <i class="icon-search" ng-hide="report.id == selectedReport._id" title="Display details"></i>
+                                        <i class="icon-asterisk" ng-show="report.id == selectedReport._id" title="Current selection"></i>
+                                    </a>
+                                    <a ng-click="deleteReport(report)" class="action">
+                                        <i class="icon-trash" title="Delete permanently"></i>
+                                    </a>
                                     <report-summary report="report"></report-summary>
                                 </div>
                             </li>

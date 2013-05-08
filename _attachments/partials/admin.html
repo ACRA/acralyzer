@@ -1,0 +1,21 @@
+<tabs>
+    <pane heading="Reports">
+        <div>
+            <button ng-click="purgeDays(daysToKeep)" ng-disabled="purgingByDays || purgingByAppVersionCode">
+                <span ng-hide="purgingByDays">Purge</span>
+                <span ng-show="purgingByDays"><img src="img/polling.gif"/> Purging</span>
+            </button>
+            {{nbReportsByDaysToPurge}} reports older than <input ng-model="daysToKeep" class="input-mini"/> days.
+        </div>
+        <div>
+            <button ng-click="purgeVersion(selectedVersion)" ng-disabled="purgingByDays || purgingByAppVersionCode">
+                <span ng-hide="purgingByAppVersionCode">Purge</span>
+                <span ng-show="purgingByAppVersionCode"><img src="img/polling.gif"/> Purging</span>
+            </button>
+            {{nbReportsByAppVersionCodeToPurge}} reports from apps older than version <select ng-model="selectedVersion" class="input-mini" ng-options="code.value as code.label for code in appVersionCodes"></select>.
+        </div>
+    </pane>
+    <pane heading="Users">
+        Coming soon...
+    </pane>
+</tabs>

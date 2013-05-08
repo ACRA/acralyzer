@@ -66,10 +66,21 @@
             });
         };
 
+        $scope.deleteReport = function(report) {
+            if($scope.selectedReport === report) {
+                $scope.selectedReport = "";
+            }
+
+            ReportsStore.deleteReport(report, function(data) {
+                // Success callback
+            });
+        };
+
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
         $scope.$on(acralyzerEvents.APP_CHANGED, $scope.getData);
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
+        $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
         $scope.getData();
     }
 
@@ -311,6 +322,7 @@
         $scope.$on(acralyzerEvents.APP_CHANGED, $scope.getData);
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
+        $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
         $scope.getData();
     }
 
@@ -499,6 +511,7 @@
         $scope.$on(acralyzerEvents.APP_CHANGED, $scope.getData);
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
+        $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
         $scope.getData();
     }
 

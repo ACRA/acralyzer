@@ -19,7 +19,7 @@
     You should have received a copy of the GNU General Public License
     along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
     -->
-    <title>Acralyzer</title>
+    <title>Acralyzer / {{acralyzer.app}}</title>
     <meta charset="utf-8">
     <link rel="alternate" type="application/rss+xml"  href="{{rsslink}}" title="Latest Crash Reports">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +52,7 @@
                 </li>
                 <li ng-class="{active: $route.current.activetab == 'dashboard'}"><a href="#/dashboard/{{acralyzer.app}}">Dashboard</a></li>
                 <li ng-class="{active: $route.current.activetab == 'reports-browser'}"><a href="#/reports-browser/{{acralyzer.app}}">Reports browser</a></li>
+                <li ng-class="{active: $route.current.activetab == 'admin'}"><a href="#/admin/{{acralyzer.app}}">Admin</a></li>
             </ul>
 
             <div id="usermenu" class="btn-group pull-right" data-ng-controller="AccountCtrl">
@@ -109,7 +110,7 @@
     <script src="vendor/d3/d3.v3.min.js"></script>
     <!-- endbuild -->
     <!-- build:js script/libs.js -->
-    <script src="vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.1.0.min.js"></script>
+    <script src="vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.3.0.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="vendor/padolsey/prettyprint.js"></script>
     <script src="vendor/timrwood/moment.min.js"></script>
@@ -130,6 +131,7 @@
     <script src="script/NavigationController.js"></script>
     <script src="script/ReportDetailsController.js"></script>
     <script src="script/ReportsBrowserControllers.js"></script>
+    <script src="script/AdminControllers.js"></script>
 
     <script src="script/services.js"></script>
     <script src="script/service.user.js"></script>
