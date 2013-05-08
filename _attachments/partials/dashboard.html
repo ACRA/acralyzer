@@ -80,8 +80,11 @@
                                  ng-animate="{ enter: 'example-repeat-enter',
                                                leave: 'example-repeat-leave',
                                                move: 'example-repeat-move'}">
-                                <div title="Solved ?" class="div-table-cell label" ng-class="{ 'label-success': bug.value.solved, 'label-important':!bug.value.solved }"
-                                     ng-click="toggleSolved(bug)">{{bug.value.solved}}</div>
+                                <div title="Switch state" class="div-table-cell btn btn-mini" ng-class="{ 'btn-success': bug.value.solved, 'btn-danger':!bug.value.solved }"
+                                     ng-click="toggleSolved(bug)">
+                                    <span ng-hide="bug.value.solved">unsolved</span>
+                                    <span ng-show="bug.value.solved">solved</span>
+                                </div>
                                 <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
                                 <div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>
                                 <div title="Application version code" class="div-table-cell label label-warning">{{bug.key[0]}}</div>
