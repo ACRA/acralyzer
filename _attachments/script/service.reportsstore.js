@@ -170,17 +170,20 @@
          * @param year Year of the oldest report to keep.
          * @param month Month of the oldest report to keep.
          * @param day Day of the oldest report to keep.
-         * @param cb Success callback (angular $http callback).
+         * @param intermediateCallback function called when the number of reports to purge is received. The number of
+         *        reports is provided as the first function parameter.
+         * @param finalCallback Success callback (angular $http callback).
          * @param errorHandler Failure callback (angular $http callback).
          * @returns {*}
          */
-        ReportsStore.purgeReportsOlderThan = function(year, month, day, cb, errorHandler) {
+        ReportsStore.purgeReportsOlderThan = function(year, month, day, intermediateCallback, finalCallback, errorHandler) {
             var result;
 
             // This callback purges reports that will be retrieved by the request below
             var additionalCallback = function(data) {
                 var docsToPurge = [];
                 console.log(data.rows.length + " reports to purge.");
+                intermediateCallback(data.rows.length);
                 for(var i = 0; i < data.rows.length; i++) {
                     var doc = data.rows[i].doc;
                     doc._deleted = true;
@@ -188,7 +191,7 @@
                 }
                 console.log("Deleting " + docsToPurge.length + "reports.");
                 $http.post("/" + ReportsStore.dbName + "/_bulk_docs", { docs: docsToPurge })
-                    .success(cb);
+                    .success(finalCallback);
             };
 
             // Fetch old reports to purge them via the previously defined callback
@@ -206,17 +209,20 @@
         /**
          * Purge all reports from app older than given version code.
          * @param version Application version code
-         * @param cb Success callback (angular $http callback).
+         * @param intermediateCallback function called when the number of reports to purge is received. The number of
+         *        reports is provided as the first function parameter.
+         * @param finalCallback Success callback (angular $http callback).
          * @param errorHandler Failure callback (angular $http callback).
          * @returns {*}
          */
-        ReportsStore.purgeReportsFromAppVersionCodeAndBelow = function(version, cb, errorHandler) {
+        ReportsStore.purgeReportsFromAppVersionCodeAndBelow = function(version, intermediateCallback, finalCallback, errorHandler) {
             var result;
 
             // This callback purges reports that will be retrieved by the request below
             var additionalCallback = function(data) {
                 var docsToPurge = [];
                 console.log(data.rows.length + " reports to purge.");
+                intermediateCallback(data.rows.length);
                 for(var i = 0; i < data.rows.length; i++) {
                     var doc = data.rows[i].doc;
                     doc._deleted = true;
@@ -224,7 +230,7 @@
                 }
                 console.log("Deleting " + docsToPurge.length + "reports.");
                 $http.post("/" + ReportsStore.dbName + "/_bulk_docs", { docs: docsToPurge })
-                    .success(cb);
+                    .success(finalCallback);
             };
 
             // Fetch old reports to purge them via the previously defined callback

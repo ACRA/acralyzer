@@ -32,6 +32,10 @@
         $scope.daysToKeep = 90;
         $scope.selectedVersion = "";
         $scope.appVersionCodes = [];
+        $scope.purgingByDays = false;
+        $scope.purgingByAppVersionCode = false;
+        $scope.nbReportsByDaysToPurge = "";
+        $scope.nbReportsByAppVersionCodeToPurge = "";
 
         ReportsStore.appVersionCodesList(function(data){
             $scope.appVersionCodes.length = 0;
@@ -40,13 +44,20 @@
             }
         });
 
-        $scope.purgeDays = function() {
-            var deadline = moment().subtract('days', $scope.daysToKeep);
-            console.log("Purge reports older than " + $scope.daysToKeep);
+        $scope.purgeDays = function(daysToKeep) {
+            $scope.purgingByDays = true;
+            var deadline = moment().subtract('days', daysToKeep);
+            console.log("Purge reports older than " + daysToKeep);
             console.log("key will be: " + deadline.format("[[]YYYY,M,d[]]"));
             ReportsStore.purgeReportsOlderThan(deadline.year(), deadline.month(), deadline.date(),
+                function(nbReports) {
+                    // Intermediate callback
+                    $scope.nbReportsByDaysToPurge = nbReports;
+                },
                 function(data) {
                     // Success callback
+                    $scope.purgingByDays = false;
+                    $scope.nbReportsByDaysToPurge = "";
                     $notify.success({
                         desktop: true,
                         timeout: 10000,
@@ -57,6 +68,8 @@
                 },
                 function(){
                     // Failure callback
+                    $scope.purgingByDays = false;
+                    $scope.nbReportsByDaysToPurge = "";
                     $notify.success({
                         desktop: true,
                         timeout: 10000,
@@ -69,11 +82,19 @@
         };
 
         $scope.purgeVersion = function(selectedVersion) {
+            $scope.purgingByAppVersionCode = true;
             console.log("Purge reports from version " + selectedVersion + " and older.");
             console.log(selectedVersion);
             ReportsStore.purgeReportsFromAppVersionCodeAndBelow(selectedVersion,
+                function(nbReports) {
+                    // Intermediate callback
+                    $scope.nbReportsByAppVersionCodeToPurge = nbReports;
+                },
                 function(data) {
                     // Success callback
+                    ReportsStore.appVersionCodesList();
+                    $scope.purgingByAppVersionCode = false;
+                    $scope.nbReportsByAppVersionCodeToPurge = "";
                     $notify.success({
                         desktop: true,
                         timeout: 10000,
@@ -84,6 +105,8 @@
                 },
                 function(){
                     // Failure callback
+                    $scope.purgingByAppVersionCode = false;
+                    $scope.nbReportsByAppVersionCodeToPurge = "";
                     $notify.success({
                         desktop: true,
                         timeout: 10000,
