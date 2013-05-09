@@ -263,3 +263,18 @@ report-summary .label-androidversion {
     background-image: url(../img/device-black.png);
     background-position: 0px;
 }
+
+.icon-bug-unsolved {
+    background-image: url(../img/bug.png);
+    background-position: 0px;
+}
+
+.icon-bug-unsolved:hover, .icon-bug-solved:hover {
+    background-image: url(../img/bug-rollover.png);
+    background-position: 0px;
+}
+
+.icon-bug-solved {
+    background-image: url(../img/bug-solved.png);
+    background-position: 0px;
+}

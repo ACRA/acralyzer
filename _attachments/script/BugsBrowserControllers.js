@@ -19,23 +19,25 @@
 (function(acralyzerConfig,angular,acralyzer,acralyzerEvents) {
     "use strict";
 
-    function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
+    function BugsBrowserCtrl($scope, ReportsStore, $routeParams) {
         if($routeParams.app) {
-            console.log("ReportsBrowser: Direct access to app " + $routeParams.app);
+            console.log("BugsBrowser: Direct access to app " + $routeParams.app);
             $scope.acralyzer.setApp($routeParams.app);
         } else {
-            console.log("ReportsBorwser: Access to default app " + acralyzerConfig.defaultApp);
+            console.log("BugsBorwser: Access to default app " + acralyzerConfig.defaultApp);
             $scope.acralyzer.setApp(acralyzerConfig.defaultApp);
         }
 
-        console.log("Init ReportsBrowserCtrl");
-        $scope.reportsCount = 15;
+        console.log("Init BugsBrowserCtrl");
+        $scope.bugsList = [];
+        $scope.bugsCount = 15;
+        $scope.hideSolvedBugs = true;
         $scope.previousStartKeys = [];
-        $scope.selectedReport = "";
+        $scope.selectedBug = "";
         $scope.startKey = null;
         $scope.nextKey = null;
         $scope.startNumber = 1;
-        $scope.endNumber = $scope.reportsCount;
+        $scope.endNumber = $scope.bugsCount;
         $scope.fullSearch = false;
         $scope.loading = true;
         $scope.noFilter = { value: "false", label: "No filter"};
@@ -63,40 +65,53 @@
             $scope.getData();
         };
 
-        $scope.getData = function() {
-            $scope.loading = true;
-            var successHandler = function(data) {
-                // Success Handler
-                console.log("Refresh data for latest reports");
-                $scope.reports = data.rows;
-                $scope.totalReports = data.total_rows;
-                for(var row = 0; row < $scope.reports.length; row++) {
-                    if($scope.filterName === $scope.noFilter && $scope.filterValue === $scope.noFilterValue) {
-                        $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
-                    } else {
-                        $scope.reports[row].displayDate = moment($scope.reports[row].key[1]).fromNow();
+        var mergeBugsLists = function(list1, list2) {
+            var bugslist = {};
+            for(var i1 = 0; i1 < list1.length; i1++) {
+                bugslist[list1[i1].id] = {idxlist1: i1};
+            }
+            for(var i2 = 0; i2 < list2.length; i2++) {
+                if(!bugslist[list2[i2].id]){
+                    // Mark bug as not found in list1
+                    bugslist[list2[i2].id] = {idxlist1: -1};
+                }
+                bugslist[list2[i2].id].idxlist2 = i2;
+            }
+            for(var iBugs in bugslist) {
+                if(bugslist[iBugs].idxlist1 < 0 && bugslist[iBugs].idxlist2 >= 0) {
+                    // New bug
+                    list1.push(list2[bugslist[iBugs].idxlist2]);
+                } else if (bugslist[iBugs].idxlist1 >= 0 && bugslist[iBugs].idxlist2 < 0) {
+                    // Deleted bug
+                    list1.splice(bugslist[iBugs].idxlist1, 1);
+                } else if(bugslist[iBugs].idxlist1 >= 0 && bugslist[iBugs].idxlist2 >= 0) {
+                    if(!list1[bugslist[iBugs].idxlist1].equals(list2[bugslist[iBugs].idxlist2])) {
+                        // Updated bug
+                        list1[bugslist[iBugs].idxlist1].updateWithBug(list2[bugslist[iBugs].idxlist2]);
                     }
                 }
-
-                // If there are more rows, here is the key to the next page
-                $scope.nextKey =data.next_row ? data.next_row.key : null;
-                $scope.startNumber = ($scope.previousStartKeys.length * $scope.reportsCount) + 1;
-                $scope.endNumber = $scope.startNumber + $scope.reports.length - 1;
-                console.log($scope);
-                $scope.loading = false;
-            };
-
-            var errorHandler = function(response, getResponseHeaders){
-                // Error Handler
-                $scope.reports=[];
-                $scope.totalReports="";
-            };
-
-            if($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) {
-                ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
-            } else {
-                ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
             }
+        };
+
+
+        $scope.getData = function() {
+            $scope.loading = true;
+            ReportsStore.bugsList(function(data) {
+                    console.log("Refresh data for latest bugs");
+                    console.log(data);
+                    mergeBugsLists($scope.bugsList, data.rows);
+                    $scope.totalBugs = data.total_rows;
+                    for(var row = 0; row < $scope.bugsList.length; row++) {
+                        $scope.bugsList[row].latest = moment($scope.bugsList[row].value.latest).fromNow();
+                    }
+                    $scope.loading = false;
+                },
+                function(response, getResponseHeaders){
+                    $scope.bugsList=[];
+                    $scope.totalBugs="";
+                    $scope.loading = false;
+                });
+
         };
 
         $scope.changeFilterValues = function() {
@@ -126,6 +141,22 @@
             }
         };
 
+        $scope.toggleSolved = function(bug) {
+            console.log("let's mark this bug as solved:");
+            console.log(bug);
+            ReportsStore.toggleSolved(bug, function(data){
+                console.log(data);
+            });
+        };
+
+        $scope.shouldBeDisplayed = function(bug) {
+            if($scope.hideSolvedBugs && bug.value.solved) {
+                return false;
+            } else {
+                return true;
+            }
+        };
+
         $scope.filterValueSelected = function() {
             // reset pagination
             $scope.startKey = null;
@@ -134,31 +165,12 @@
             $scope.getData();
         };
 
-        $scope.loadReport = function(report) {
-            $scope.selectedReport = ReportsStore.reportDetails(report.id, function(data) {
-                data.readableUptime = moment.duration(data.uptime, 'seconds').humanize();
-                data.formatedCrashDate = moment(data.USER_CRASH_DATE).format('LLL');
-                data.formatedTimestamp = moment(data.timestamp).format('LLL');
-            });
-        };
-
-        $scope.deleteReport = function(report) {
-            if($scope.selectedReport === report) {
-                $scope.selectedReport = "";
-            }
-
-            ReportsStore.deleteReport(report, function(data) {
-                var index = $scope.reports.indexOf(report);
-                $scope.reports.splice(index, 1);
-            });
-        };
-
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
         $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.getData();
     }
 
 
-    acralyzer.controller('ReportsBrowserCtrl', ["$scope", "ReportsStore", "$routeParams", ReportsBrowserCtrl]);
+    acralyzer.controller('BugsBrowserCtrl', ["$scope", "ReportsStore", "$routeParams", BugsBrowserCtrl]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents);

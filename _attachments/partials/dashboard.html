@@ -75,8 +75,6 @@
                             </div>
                             <div class="div-table-row"
                                  ng-repeat="bug in bugs | filter:shouldBeDisplayed | orderBy:'value.latest':true | limitTo:bugsLimit"
-                                 ng-class-odd="'odd'"
-                                 ng-class-even="'even'"
                                  ng-animate="{ enter: 'example-repeat-enter',
                                                leave: 'example-repeat-leave',
                                                move: 'example-repeat-move'}">

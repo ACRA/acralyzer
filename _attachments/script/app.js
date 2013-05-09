@@ -25,6 +25,7 @@
         $routeProvider.
             when('/dashboard/:app', {templateUrl: 'partials/dashboard.html',   controller: 'DashboardCtrl', activetab: "dashboard"}).
             when('/reports-browser/:app', {templateUrl: 'partials/reports-browser.html', controller: 'ReportsBrowserCtrl', activetab: "reports-browser"}).
+            when('/bugs-browser/:app', {templateUrl: 'partials/bugs-browser.html', controller: 'BugsBrowserCtrl', activetab: "bugs-browser"}).
             when('/report-details/:app/:reportId', {templateUrl: 'partials/report-details.html', controller: 'ReportDetailsCtrl', activetab: "none"}).
             when('/admin/:app', {templateUrl: 'partials/admin.html', controller: 'AdminCtrl', activetab: "admin"}).
             otherwise({redirectTo: '/dashboard/' + acralyzerConfig.defaultApp});
@@ -159,6 +160,74 @@
                 timer = setTimeout(function() {
                     $element.focus();
                 }, 0);
+            }
+        };
+    });
+
+    /* http://www.frangular.com/2012/12/pagination-cote-client-directive-angularjs.html */
+    acralyzer.directive('paginator', function () {
+        var pageSizeLabel = "Page size";
+        return {
+            priority: 0,
+            restrict: 'A',
+            scope: {items: '&'},
+            template:
+                '<button ng-disabled="isFirstPage()" ng-click="decPage()" class="btn">&lt; newer</button>' +
+                    pageSizeLabel + ' <select ng-model="paginator.pageSize" ng-options="size for size in pageSizeList" class="input-small"></select>' +
+                    '<button ng-disabled="isLastPage()" ng-click="incPage()" class="btn">older &gt;</button>',
+            replace: false,
+            compile: function compile(tElement, tAttrs, transclude) {
+                return {
+                    pre: function preLink(scope, iElement, iAttrs, controller) {
+                        scope.pageSizeList = [5, 10, 20, 50, 100];
+                        scope.paginator = {
+                            pageSize: 5,
+                            currentPage: 0
+                        };
+
+                        scope.isFirstPage = function () {
+                            return scope.paginator.currentPage === 0;
+                        };
+                        scope.isLastPage = function () {
+                            return scope.paginator.currentPage >= scope.items().length / scope.paginator.pageSize - 1;
+                        };
+                        scope.incPage = function () {
+                            if (!scope.isLastPage()) {
+                                scope.paginator.currentPage++;
+                            }
+                        };
+                        scope.decPage = function () {
+                            if (!scope.isFirstPage()) {
+                                scope.paginator.currentPage--;
+                            }
+                        };
+                        scope.firstPage = function () {
+                            scope.paginator.currentPage = 0;
+                        };
+                        scope.numberOfPages = function () {
+                            return Math.ceil(scope.items().length / scope.paginator.pageSize);
+                        };
+                        scope.$watch('paginator.pageSize', function(newValue, oldValue) {
+                            if (newValue !== oldValue) {
+                                scope.firstPage();
+                            }
+                        });
+
+                        // ---- Functions available in parent scope -----
+
+                        scope.$parent.firstPage = function () {
+                            scope.firstPage();
+                        };
+                        // Function that returns the reduced items list, to use in ng-repeat
+                        scope.$parent.pageItems = function () {
+                            var start = scope.paginator.currentPage * scope.paginator.pageSize;
+                            var limit = scope.paginator.pageSize;
+                            console.log(scope.items());
+                            return scope.items().slice(start, start + limit);
+                        };
+                    },
+                    post: function postLink(scope, iElement, iAttrs, controller) {}
+                };
             }
         };
     });

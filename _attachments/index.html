@@ -51,7 +51,8 @@
                     </ul>
                 </li>
                 <li ng-class="{active: $route.current.activetab == 'dashboard'}"><a href="#/dashboard/{{acralyzer.app}}">Dashboard</a></li>
-                <li ng-class="{active: $route.current.activetab == 'reports-browser'}"><a href="#/reports-browser/{{acralyzer.app}}">Reports browser</a></li>
+                <li ng-class="{active: $route.current.activetab == 'reports-browser'}"><a href="#/reports-browser/{{acralyzer.app}}">Reports</a></li>
+                <li ng-class="{active: $route.current.activetab == 'bugs-browser'}"><a href="#/bugs-browser/{{acralyzer.app}}">Bugs</a></li>
                 <li ng-class="{active: $route.current.activetab == 'admin'}"><a href="#/admin/{{acralyzer.app}}">Admin</a></li>
             </ul>
 
@@ -131,6 +132,7 @@
     <script src="script/NavigationController.js"></script>
     <script src="script/ReportDetailsController.js"></script>
     <script src="script/ReportsBrowserControllers.js"></script>
+    <script src="script/BugsBrowserControllers.js"></script>
     <script src="script/AdminControllers.js"></script>
 
     <script src="script/services.js"></script>
