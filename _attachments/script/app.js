@@ -171,17 +171,14 @@
             priority: 0,
             restrict: 'A',
             scope: {items: '&'},
-            template:
-                '<button ng-disabled="isFirstPage()" ng-click="decPage()" class="btn">&lt; newer</button>' +
-                    pageSizeLabel + ' <select ng-model="paginator.pageSize" ng-options="size for size in pageSizeList" class="input-small"></select>' +
-                    '<button ng-disabled="isLastPage()" ng-click="incPage()" class="btn">older &gt;</button>',
+            templateUrl: 'partials/paginator.html',
             replace: false,
             compile: function compile(tElement, tAttrs, transclude) {
                 return {
                     pre: function preLink(scope, iElement, iAttrs, controller) {
-                        scope.pageSizeList = [5, 10, 20, 50, 100];
+                        scope.pageSizeList = [10, 20, 50, 100];
                         scope.paginator = {
-                            pageSize: 5,
+                            pageSize: 20,
                             currentPage: 0
                         };
 

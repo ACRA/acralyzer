@@ -50,20 +50,6 @@
                 </div>
             </div>
             <span paginator items="bugsList | filter:shouldBeDisplayed | orderBy:'value.latest':true" pageSize="bugsCount"></span>
-            <ul class="pager">
-                <li class="previous" ng-show="previousStartKeys.length > 0">
-                    <a ng-click="getPreviousPage()"><i class="icon-chevron-left"></i> Newer</a>
-                </li>
-                <li class="previous disabled" ng-hide="previousStartKeys.length > 0">
-                    <span><i class="icon-chevron-left"></i> Newer</span>
-                </li>
-                <li class="next" ng-show="nextKey != null">
-                    <a ng-click="getNextPage()">Older <i class="icon-chevron-right"></i></a>
-                </li>
-                <li class="next disabled" ng-hide="nextKey != null">
-                    <span>Older <i class="icon-chevron-right"></i></span>
-                </li>
-            </ul>
         </div>
     </div>
 </div>
