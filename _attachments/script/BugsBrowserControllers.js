@@ -95,7 +95,7 @@
 
 
         $scope.getData = function() {
-            $scope.loading = true;
+//            $scope.loading = true;
             ReportsStore.bugsList(function(data) {
                     console.log("Refresh data for latest bugs");
                     console.log(data);
@@ -165,8 +165,14 @@
             $scope.getData();
         };
 
+        $scope.displayBugDetails = function(bug) {
+            $scope.selectedBug = bug;
+            ReportsStore
+        };
+
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
         $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
+        $scope.$on(acralyzerEvents.BUGS_UPDATED, $scope.getData);
         $scope.getData();
     }
 

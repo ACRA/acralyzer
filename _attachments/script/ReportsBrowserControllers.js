@@ -51,16 +51,24 @@
         $scope.filterValues = [];
 
 
-        $scope.getNextPage = function() {
+        $scope.incPage = function() {
             $scope.previousStartKeys.push($scope.startKey);
             $scope.startKey = $scope.nextKey;
             $scope.getData();
         };
 
-        $scope.getPreviousPage = function() {
+        $scope.decPage = function() {
             $scope.nextKey = null;
             $scope.startKey = $scope.previousStartKeys.pop();
             $scope.getData();
+        };
+
+        $scope.isFirstPage = function() {
+            return $scope.previousStartKeys.length <= 0;
+        };
+
+        $scope.isLastPage = function() {
+            return $scope.nextKey === null;
         };
 
         $scope.getData = function() {

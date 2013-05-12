@@ -1,49 +1,15 @@
-<div ng-show="report._id">
+<div ng-show="bug.id">
     <hr/>
-    <div class="report-details-header">
-        <div class="direct-link"><a href="#/report-details/{{acralyzer.app}}/{{report._id}}"><i class="icon-share"></i>direct link</a></div>
+    <div class="bug-details-header">
+        <div class="direct-link"><a href="#/bug-details/{{acralyzer.app}}/{{bug.id}}"><i class="icon-share"></i>direct link</a></div>
         <h3>Summary</h3>
-        <table>
-            <tr>
-                <th><i class="icon-gift"></i></th>
-                <th>Package name</th>
-                <td>{{report.PACKAGE_NAME}}</td>
-                <th>Application version code</th>
-                <td>{{report.APP_VERSION_CODE}}</td>
-                <th>Application version name</th>
-                <td>{{report.APP_VERSION_NAME}}</td>
-            </tr>
-            <tr>
-                <th><i class="icon-time"></i></th>
-                <th>Uptime</th>
-                <td class="nobr">{{report.readableUptime}}</td>
-                <th>Crashed</th>
-                <td>{{report.formatedCrashDate}}</td>
-                <th>Reported</th>
-                <td>{{report.formatedTimestamp}}</td>
-            </tr>
-            <tr>
-                <th><i class="icon-fire"></i></th>
-                <th>Stack Trace</th>
-                <td colspan="3" class="stacktrace">
-                    <div ng-repeat="stackline in report.STACK_TRACE" class="pre">{{stackline}}</div>
-                </td>
-                <th>Custom Data</th>
-                <td>
-                    <div prettyprint="report.CUSTOM_DATA"/>
-                </td>
-            </tr>
-            <tr>
-                <th><i class="icon-user"></i></th>
-                <th>E-mail</th>
-                <td><a href="mailto:{{report.USER_EMAIL}}">{{report.USER_EMAIL}}</a></td>
-                <th>Comment</th>
-                <td>{{report.USER_COMMENT}}</td>
-                <th>Installation ID</th>
-                <td>{{report.INSTALLATION_ID}}</td>
-            </tr>
-        </table>
+        <ul>
+            <li>Application version code: {{bug.key[0]}}</li>
+            <li>Exception: {{bug.key[1]}}</li>
+            <li>Root Exception: {{bug.key[2]}}</li>
+        </ul>
     </div>
-    <h3>Full report</h3>
-    <div class="report-details" prettyprint="report" />
+
+    <h3>Reports list</h3>
+
 </div>

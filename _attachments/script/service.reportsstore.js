@@ -209,7 +209,6 @@
             return result;
         };
 
-
         ReportsStore.toggleSolved = function(bug, callback) {
             var curBug = ReportsStore.bug.get({ bugid: bug.id}, function(){
                 // Success callback
@@ -226,6 +225,15 @@
             var reportToDelete = ReportsStore.details.get({reportid: report.id}, function() {
                 ReportsStore.details.remove({reportid: report.id, rev: reportToDelete._rev}, cb);
             });
+        };
+
+        /**
+         * Gets a list of reports
+         * @param bug
+         * @param cb
+         */
+        ReportsStore.reportsForBug = function(bug, cb) {
+
         };
 
         // PURGES MANAGEMENT

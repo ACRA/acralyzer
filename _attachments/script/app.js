@@ -219,7 +219,6 @@
                         scope.$parent.pageItems = function () {
                             var start = scope.paginator.currentPage * scope.paginator.pageSize;
                             var limit = scope.paginator.pageSize;
-                            console.log(scope.items());
                             return scope.items().slice(start, start + limit);
                         };
                     },

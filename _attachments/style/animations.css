@@ -13,13 +13,13 @@
     opacity:0;
 }
 .example-repeat-enter-setup.example-repeat-enter-start {
-    line-height:20px;
+    line-height:100%;
     opacity:1;
 }
 
 .example-repeat-leave-setup {
     opacity:1;
-    line-height:20px;
+    line-height:100%;
 }
 .example-repeat-leave-setup.example-repeat-leave-start {
     opacity:0;

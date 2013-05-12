@@ -36,9 +36,15 @@
                      ng-animate="{ enter: 'example-repeat-enter',
                                                leave: 'example-repeat-leave',
                                                move: 'example-repeat-move'}">
-                    <div class="div-table-cell" ng-click="toggleSolved(bug)">
-                        <span title="Unsolved bug" ng-hide="bug.value.solved"><i class="icon-bug-unsolved"></i></span>
-                        <span title="Solved bug" ng-show="bug.value.solved"><i class="icon-bug-solved"></i></span>
+                    <div class="div-table-cell">
+                        <a ng-click="toggleSolved(bug)">
+                            <span title="Unsolved bug" ng-hide="bug.value.solved"><i class="icon-bug-unsolved"></i></span>
+                            <span title="Solved bug" ng-show="bug.value.solved"><i class="icon-bug-solved"></i></span>
+                        </a>
+                        <a ng-click="displayBugDetails(bug)">
+                            <i class="icon-search" ng-hide="bug.id == selectedBug.id" title="Display details"></i>
+                            <i class="icon-asterisk" ng-show="bug.id == selectedBug.id" title="Current selection"></i>
+                        </a>
                     </div>
                     <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
                     <div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>
@@ -50,6 +56,7 @@
                 </div>
             </div>
             <span paginator items="bugsList | filter:shouldBeDisplayed | orderBy:'value.latest':true" pageSize="bugsCount"></span>
+            <bug-details bug="selectedBug" acralyzer="acralyzer"></bug-details>
         </div>
     </div>
 </div>
