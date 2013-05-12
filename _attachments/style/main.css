@@ -177,11 +177,11 @@ table td {
     background-color: #fff;
 }
 
-.action:hover {
+.actions a:hover {
     text-decoration: none;
 }
 
-.action {
+.actions a {
     cursor: pointer;
 }
 

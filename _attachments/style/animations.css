@@ -1,30 +1,33 @@
 .example-repeat-enter-setup,
 .example-repeat-leave-setup,
 .example-repeat-move-setup {
-    -webkit-transition:all linear 0.5s;
-    -moz-transition:all linear 0.5s;
-    -ms-transition:all linear 0.5s;
-    -o-transition:all linear 0.5s;
-    transition:all linear 0.5s;
+    -webkit-transition:all linear 0.25s;
+    -moz-transition:all linear 0.25s;
+    -ms-transition:all linear 0.25s;
+    -o-transition:all linear 0.25s;
+    transition:all linear 0.25s;
 }
 
 .example-repeat-enter-setup {
     line-height:0;
     opacity:0;
 }
-.example-repeat-enter-setup.example-repeat-enter-start {
+.example-repeat-enter-start {
     line-height:100%;
     opacity:1;
 }
+.example-repeat-enter-setup.example-repeat-enter-start { }
 
 .example-repeat-leave-setup {
     opacity:1;
     line-height:100%;
 }
-.example-repeat-leave-setup.example-repeat-leave-start {
+.example-repeat-leave-start {
     opacity:0;
     line-height:0;
 }
+
+.example-repeat-leave-setup.example-repeat-leave-start { }
 
 .example-repeat-move-setup { }
 .example-repeat-move-setup.example-repeat-move-start { }

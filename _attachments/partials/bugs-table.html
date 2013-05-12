@@ -1,0 +1,32 @@
+<div ng-hide="loading" class="div-table table table-condensed">
+    <div class="div-table-row">
+        <div class="div-table-cell"></div>
+        <div class="div-table-cell"><i class="icon-time"></i></div>
+        <div class="div-table-cell"><i class="icon-th-list"></i></div>
+        <div class="div-table-cell"><i class="icon-gift"></i></div>
+        <div class="div-table-cell exceptions"><i class="icon-fire"></i></div>
+    </div>
+    <div class="div-table-row"
+         ng-repeat="bug in pageItems()"
+         ng-animate="{ enter: 'example-repeat-enter',
+                                   leave: 'example-repeat-leave',
+                                   move: 'example-repeat-move'}">
+        <div class="div-table-cell actions">
+            <a ng-click="displayBugDetails(bug)">
+                <i class="icon-search" ng-hide="bug.id == selectedBug.id" title="Display details"></i>
+                <i class="icon-asterisk" ng-show="bug.id == selectedBug.id" title="Current selection"></i>
+            </a>
+            <a ng-click="toggleSolved(bug)">
+                <span title="Unsolved bug" ng-hide="bug.value.solved"><i class="icon-bug-unsolved"></i></span>
+                <span title="Solved bug" ng-show="bug.value.solved"><i class="icon-bug-solved"></i></span>
+            </a>
+        </div>
+        <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
+        <div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>
+        <div title="Application version code" class="div-table-cell label label-warning">{{bug.key[0]}}</div>
+        <div class="div-table-cell exceptions">
+            <span title="Exception" class="label label-important">{{bug.key[1]}}</span><br/>
+            <span title="Root exception" class="label label-inverse" ng-show="bug.key[2]">Caused by: {{bug.key[2]}}</span>
+        </div>
+    </div>
+</div>

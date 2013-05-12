@@ -84,7 +84,7 @@
         $scope.getData();
     }
 
-    function BugsCtrl($scope, ReportsStore) {
+    function BugsCtrl($scope, ReportsStore, $filter) {
         $scope.selectedBug = "";
         $scope.bugsLimit = 10;
         $scope.hideSolvedBugs = true;
@@ -147,6 +147,20 @@
             } else {
                 return true;
             }
+        };
+
+        $scope.pageItems = function() {
+            var filtFilter = $filter("filter"); // First remove unnecessary items
+            var filtOrderBy = $filter("orderBy"); // Order by latest occurence
+            var filtLimitTo = $filter("limitTo"); // Limit to X items
+
+            return filtLimitTo(
+                filtOrderBy(
+                    filtFilter(
+                        $scope.bugs, $scope.shouldBeDisplayed
+                    ), 'value.latest', true
+                ), $scope.bugsLimit
+            );
         };
 
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
@@ -561,6 +575,6 @@
     acralyzer.controller('PieChartsCtrl', ["$scope", "ReportsStore", "$user", PieChartsCtrl]);
     acralyzer.controller('DashboardCtrl', ["$scope", "$routeParams", DashboardCtrl]);
     acralyzer.controller('CrashReportsCtrl', ["$scope", "ReportsStore", CrashReportsCtrl]);
-    acralyzer.controller('BugsCtrl', ["$scope", "ReportsStore", BugsCtrl]);
+    acralyzer.controller('BugsCtrl', ["$scope", "ReportsStore", "$filter", BugsCtrl]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);
