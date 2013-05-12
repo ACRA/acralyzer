@@ -1,0 +1,29 @@
+<div class="div-table" ng-hide="loading">
+    <div class="div-table-row">
+        <div class="div-table-cell"/>
+        <div class="div-table-cell"><i class="icon-time"></i></div>
+        <div class="div-table-cell"><i class="icon-gift"></i></div>
+        <div class="div-table-cell"><i class="icon-bugdroid"></i></div>
+        <div class="div-table-cell"><i class="icon-phone"></i></div>
+        <div class="div-table-cell exceptions"><i class="icon-fire"></i></div>
+    </div>
+    <div class="div-table-row" ng-repeat="report in reports | filter:search" ng-class-odd="'odd'" ng-class-even="'even'" ng-cloak>
+        <div class="div-table-cell actions">
+            <a ng-click="loadReport(report)" class="action">
+                <i class="icon-search" ng-hide="report.id == selectedReport._id" title="Display details"></i>
+                <i class="icon-asterisk" ng-show="report.id == selectedReport._id" title="Current selection"></i>
+            </a>
+            <a ng-click="deleteReport(report)" class="action">
+                <i class="icon-trash" title="Delete permanently"></i>
+            </a>
+        </div>
+        <span title="Crash date" class="div-table-cell label label-info">{{report.displayDate}}</span>
+        <span title="Application version name" class="div-table-cell label label-warning">{{report.value.application_version_name}}</span>
+        <span title="Android verion" class="div-table-cell label label-success">{{report.value.android_version}}</span>
+        <span title="Device" class="div-table-cell label">{{report.value.device}}</span>
+        <div class="div-table-cell exceptions">
+            <span title="Exception" class="label label-important">{{report.value.signature.digest}}</span>
+            <span title="Root exception" class="label label-inverse" ng-show="report.value.signature.rootCause">Caused by: {{report.value.signature.rootCause}}</span>
+        </div>
+    </div>
+</div>
