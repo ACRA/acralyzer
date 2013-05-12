@@ -167,7 +167,6 @@
 
         $scope.displayBugDetails = function(bug) {
             $scope.selectedBug = bug;
-            ReportsStore
         };
 
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
