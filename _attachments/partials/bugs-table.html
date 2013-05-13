@@ -22,7 +22,7 @@
             </a>
         </div>
         <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
-        <div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>
+        <div title="Number of reports" class="div-table-cell label"><a href="#/reports-browser/{{acralyzer.app}}/bug/{{bug.id}}">{{bug.value.count}}</a></div>
         <div title="Application version code" class="div-table-cell label label-warning">{{bug.key[0]}}</div>
         <div class="div-table-cell exceptions">
             <span title="Exception" class="label label-important">{{bug.key[1]}}</span><br/>

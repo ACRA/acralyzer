@@ -50,6 +50,9 @@
 
         $scope.filterValues = [];
 
+        // Filtering by bugId
+        $scope.bugId = $routeParams.bugId;
+        $scope.bug = null;
 
         $scope.incPage = function() {
             $scope.previousStartKeys.push($scope.startKey);
@@ -100,10 +103,14 @@
                 $scope.totalReports="";
             };
 
-            if($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) {
+            if(($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) && !$scope.bug) {
                 ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
-            } else {
+            } else if($scope.filterName !== $scope.noFilter && $scope.filterValue !== $scope.noFilterValue){
                 ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
+            } else if($scope.bug) {
+                console.log("Get reports for bug ");
+                console.log($scope.bug);
+                ReportsStore.filteredReportsList("bug", $scope.bug.key, $scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
             }
         };
 
@@ -161,9 +168,18 @@
             });
         };
 
+        if($scope.bugId) {
+            ReportsStore.getBugForId($scope.bugId, function(bug){
+                // success callback
+                $scope.bug = bug;
+                $scope.getData();
+            });
+        } else {
+            $scope.getData();
+        }
+
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
         $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
-        $scope.getData();
     }
 
 

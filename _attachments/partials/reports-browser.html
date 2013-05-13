@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <div id="content">
-        <div id="filters" class="row-fluid">
+        <bug-details bug="bug" acralyzer="acralyzer" ng-show="bug"></bug-details>
+        <div id="filters" class="row-fluid" ng-hide="bugId">
             <form ng-submit="getData()" class="form-inline">
                 <div class="input-append">
                     <input ng-model="reportsCount" type="number" alt="Number of reports per page" class="input-mini"/>

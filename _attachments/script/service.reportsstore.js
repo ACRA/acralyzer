@@ -120,10 +120,20 @@
                 descending: true,
                 limit: reportsCount + 1,
                 include_docs: includeDocs,
-                endkey: JSON.stringify([filterValue]),
-                startkey: JSON.stringify([filterValue,{}]),
                 reduce: false
             };
+
+            if(filterName === "bug") {
+                // Bugs have composite keys, already an array.
+                viewParams.endkey = JSON.stringify(filterValue);
+                var startKeyValue = filterValue.slice(0);
+                startKeyValue.push({});
+                viewParams.startkey = JSON.stringify(startKeyValue);
+            } else {
+                viewParams.endkey = JSON.stringify([filterValue]);
+                viewParams.startkey = JSON.stringify([filterValue,{}]);
+            }
+
             if(pageStartKey !== null) {
                 viewParams.startkey = JSON.stringify(pageStartKey);
             }
@@ -134,8 +144,8 @@
                 }
                 cb(data);
             };
-            var result = ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
-            return result;
+
+            return ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
         };
 
         // 1 full report
@@ -205,8 +215,7 @@
                 cb(data);
             };
 
-            var result = ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
-            return result;
+            return ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
         };
 
         ReportsStore.toggleSolved = function(bug, callback) {
@@ -228,12 +237,33 @@
         };
 
         /**
-         * Gets a list of reports
+         * Gets a single bug from its Id.
+         * @param bugId
+         * @param cb
+         */
+        ReportsStore.getBugForId = function(bugId, cb) {
+            var bug = {};
+            ReportsStore.bugsList(function(data) {
+                console.log("looking for bug with id " + bugId);
+                for (var i = 0; i < data.rows.length; i++) {
+                    if (data.rows[i].id === bugId) {
+                        bug = data.rows[i];
+                        console.log("Bug found:");
+                        console.log(bug);
+                        break;
+                    }
+                }
+                cb(bug);
+            });
+            return bug;
+        };
+
+        /**
+         * Gets a list of reports related to a single bug.
          * @param bug
          * @param cb
          */
         ReportsStore.reportsForBug = function(bug, cb) {
-
         };
 
         // PURGES MANAGEMENT

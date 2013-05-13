@@ -40,8 +40,8 @@
         <div class="navbar-inner">
             <a class="brand" href="#">Acralyzer</a>
             <ul class="nav">
-                <li><img title="Background polling is OFF." class="polling-indicator" src="img/not-polling.gif" ng-hide="acralyzer.isPolling" ng-click="acralyzer.startPolling()"><img title="Background polling is ON." class="polling-indicator" ng-click="acralyzer.stopPolling()" src="img/polling.gif" ng-show="acralyzer.isPolling"></li>
-                <li class="dropdown">
+                <li ng-cloak><img title="Background polling is OFF." class="polling-indicator" src="img/not-polling.gif" ng-hide="acralyzer.isPolling" ng-click="acralyzer.startPolling()"><img title="Background polling is ON." class="polling-indicator" ng-click="acralyzer.stopPolling()" src="img/polling.gif" ng-show="acralyzer.isPolling"></li>
+                <li class="dropdown" ng-cloak>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         {{acralyzer.app}}
                         <b class="caret"></b>
@@ -57,7 +57,7 @@
             </ul>
 
             <div id="usermenu" class="btn-group pull-right" data-ng-controller="AccountCtrl">
-              <button style="min-width: 150px" class="btn dropdown-toggle" data-toggle="dropdown">
+              <button style="min-width: 150px" class="btn dropdown-toggle" data-toggle="dropdown" ng-cloak>
                   <i class="icon-user"></i> {{username || "Anonymous"}}
                   <span class="caret"></span>
               </button>
@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div class='notifications top-right' ng-controller="AlertCtrl">
+    <div class='notifications top-right' ng-controller="AlertCtrl" ng-cloak>
         <alert ng-repeat="alert in alerts" type="alert.type" close="close($index)">{{alert.msg}}</alert>
     </div>
 
