@@ -17,16 +17,6 @@
     <div class="row-fluid">
         <div id="content" class="span12">
             <tabs>
-                <pane heading="Reports">
-                    <div ng-controller="CrashReportsCtrl">
-                        <div class="rss"><a href="/acra-{{acralyzer.app}}/_design/acra-storage/_list/rss/recent-items?descending=true"><img src="img/rss.png"></a></div>
-                        <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
-
-                        <ng-include src="'partials/reports-table.html'"></ng-include>
-
-                        <report-details report="selectedReport" acralyzer="acralyzer"></report-details>
-                    </div>
-                </pane>
                 <pane heading="Bugs">
                     <div ng-controller="BugsCtrl">
                         <span ng-bind-template="{{bugsLimit}} latest bugs (out of {{bugs.length}}):">Loading...</span>
@@ -37,6 +27,16 @@
 
                         <ng-include src="'partials/bugs-table.html'"></ng-include>
 
+                    </div>
+                </pane>
+                <pane heading="Reports">
+                    <div ng-controller="CrashReportsCtrl">
+                        <div class="rss"><a href="/acra-{{acralyzer.app}}/_design/acra-storage/_list/rss/recent-items?descending=true"><img src="img/rss.png"></a></div>
+                        <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
+
+                        <ng-include src="'partials/reports-table.html'"></ng-include>
+
+                        <report-details report="selectedReport" acralyzer="acralyzer"></report-details>
                     </div>
                 </pane>
             </tabs>

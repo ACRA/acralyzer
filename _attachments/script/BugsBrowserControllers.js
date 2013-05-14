@@ -33,7 +33,6 @@
         $scope.bugsCount = 15;
         $scope.hideSolvedBugs = true;
         $scope.previousStartKeys = [];
-        $scope.selectedBug = "";
         $scope.startKey = null;
         $scope.nextKey = null;
         $scope.startNumber = 1;
@@ -163,10 +162,6 @@
             $scope.nextKey = null;
             $scope.previousStartKeys.length = 0;
             $scope.getData();
-        };
-
-        $scope.displayBugDetails = function(bug) {
-            $scope.selectedBug = bug;
         };
 
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);

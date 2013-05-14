@@ -12,9 +12,8 @@
                                    leave: 'example-repeat-leave',
                                    move: 'example-repeat-move'}">
         <div class="div-table-cell actions">
-            <a ng-click="displayBugDetails(bug)">
-                <i class="icon-search" ng-hide="bug.id == selectedBug.id" title="Display details"></i>
-                <i class="icon-asterisk" ng-show="bug.id == selectedBug.id" title="Current selection"></i>
+            <a href="#/reports-browser/{{acralyzer.app}}/bug/{{bug.id}}">
+                <i class="icon-search" title="Display reports"></i>
             </a>
             <a ng-click="toggleSolved(bug)">
                 <span title="Unsolved bug" ng-hide="bug.value.solved"><i class="icon-bug-unsolved"></i></span>
@@ -22,7 +21,7 @@
             </a>
         </div>
         <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
-        <div title="Number of reports" class="div-table-cell label"><a href="#/reports-browser/{{acralyzer.app}}/bug/{{bug.id}}">{{bug.value.count}}</a></div>
+        <div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>
         <div title="Application version code" class="div-table-cell label label-warning">{{bug.key[0]}}</div>
         <div class="div-table-cell exceptions">
             <span title="Exception" class="label label-important">{{bug.key[1]}}</span><br/>
