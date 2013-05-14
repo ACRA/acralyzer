@@ -108,6 +108,9 @@
                 if(data.rows && (data.rows.length > reportsCount)) {
                     data.next_row = data.rows.splice(reportsCount,1)[0];
                 }
+                for(var row = 0; row < data.rows.length; row++) {
+                    data.rows[row].displayDate = moment(data.rows[row].key).fromNow();
+                }
                 cb(data);
             };
             return ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
@@ -142,6 +145,15 @@
                 if(data.rows && (data.rows.length > reportsCount)) {
                     data.next_row = data.rows.splice(reportsCount,1)[0];
                 }
+
+                for(var row = 0; row < data.rows.length; row++) {
+                    if(filterName === "bug") {
+                        data.rows[row].displayDate = moment(data.rows[row].key[3]).fromNow();
+                    } else {
+                        data.rows[row].displayDate = moment(data.rows[row].key[1]).fromNow();
+                    }
+                }
+
                 cb(data);
             };
 
@@ -206,7 +218,7 @@
 
             var additionalCallback = function(data) {
                 // The bug view does not return individual documents. Unless data has been specifically updated about
-                // one bug, there is no bug document in a database. We add here the computed id of each bug.
+                // one bug, there is no bug document in a database. We add here the computed id of each 'virtual' bug.
                 for (var i = 0; i < data.rows.length; i++) {
                     data.rows[i].id = computeBugId(data.rows[i]);
                     data.rows[i].equals = bugEqualityTest;
