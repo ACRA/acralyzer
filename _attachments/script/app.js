@@ -177,7 +177,7 @@
             compile: function compile(tElement, tAttrs, transclude) {
                 return {
                     pre: function preLink(scope, iElement, iAttrs, controller) {
-                        scope.pageSizeList = [15, 20, 50, 100];
+                        scope.pageSizeList = [15, 30, 50, 100];
                         scope.paginator = {
                             pageSize: 15,
                             currentPage: 0
@@ -191,11 +191,13 @@
                         };
                         scope.incPage = function () {
                             if (!scope.isLastPage()) {
+                                scope.$parent.setNextPageAnimation();
                                 scope.paginator.currentPage++;
                             }
                         };
                         scope.decPage = function () {
                             if (!scope.isFirstPage()) {
+                                scope.$parent.setPreviousPageAnimation();
                                 scope.paginator.currentPage--;
                             }
                         };

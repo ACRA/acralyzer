@@ -39,31 +39,53 @@
         $scope.endNumber = $scope.bugsCount;
         $scope.fullSearch = false;
         $scope.loading = true;
-        $scope.noFilter = { value: "false", label: "No filter"};
+        $scope.noFilter = { value: "false", label: "Select filter"};
         $scope.noFilterValue = { value: "false", label: "All values"};
         $scope.availableFilters = [
-            $scope.noFilter,
-            {value: "appver", label: "Application version"},
-            {value: "androidver", label: "Android version"}
+            {value: "appvercode", label: "Application version code"}
         ];
         $scope.filterName = $scope.noFilter;
         $scope.filterValue = $scope.noFilterValue;
 
         $scope.filterValues = [];
 
+        // List animations
+        $scope.animationFade = {
+            enter: 'fade-enter',
+            leave: 'fade-leave'
+        };
+        $scope.animationNextPage = {
+            enter: 'nextpage-enter',
+            leave: 'nextpage-leave'
+        };
+        $scope.animationPreviousPage = {
+            enter: 'previouspage-enter',
+            leave: 'previouspage-leave'
+        };
+        $scope.listAnimation = $scope.animationFade;
 
-        $scope.getNextPage = function() {
-            $scope.previousStartKeys.push($scope.startKey);
-            $scope.startKey = $scope.nextKey;
-            $scope.getData();
+        $scope.setNextPageAnimation = function() {
+            $scope.listAnimation = $scope.animationNextPage;
+            console.log("setNextPageAnimation");
         };
 
-        $scope.getPreviousPage = function() {
-            $scope.nextKey = null;
-            $scope.startKey = $scope.previousStartKeys.pop();
-            $scope.getData();
+        $scope.setPreviousPageAnimation = function() {
+            $scope.listAnimation = $scope.animationPreviousPage;
+            console.log("setPreviousPageAnimation");
         };
 
+        $scope.getListAnimation = function() {
+            return $scope.listAnimation;
+        };
+
+        /**
+         * Takes two lists of bugs and merges the second one into the first one.
+         * New bugs are added, bugs absent from list2 are removed from list1, and updated bugs are examined to update
+         * the values from list1 with those from list2.
+         * This is necessary to allow to animate only changes.
+         * @param list1 Original list.
+         * @param list2 New list.
+         */
         var mergeBugsLists = function(list1, list2) {
             var bugslist = {};
             for(var i1 = 0; i1 < list1.length; i1++) {
@@ -96,6 +118,7 @@
         $scope.getData = function() {
 //            $scope.loading = true;
             ReportsStore.bugsList(function(data) {
+                    $scope.listAnimation = $scope.animationFade;
                     console.log("Refresh data for latest bugs");
                     console.log(data);
                     mergeBugsLists($scope.bugsList, data.rows);
@@ -109,42 +132,17 @@
                     $scope.bugsList=[];
                     $scope.totalBugs="";
                     $scope.loading = false;
-                });
-
-        };
-
-        $scope.changeFilterValues = function() {
-
-            if($scope.filterName === $scope.noFilter) {
-                $scope.filterValue = $scope.noFilterValue;
-                $scope.filterValueSelected();
-            } else {
-                var getFilteredValues;
-                if($scope.filterName.value === "androidver") {
-                    getFilteredValues = ReportsStore.androidVersionsList;
-                } else if ($scope.filterName.value === "appver") {
-                    getFilteredValues = ReportsStore.appVersionsList;
                 }
-
-                if(getFilteredValues) {
-                    getFilteredValues(function(data){
-                        console.log("Update filter values");
-                        $scope.filterValues.length = 0;
-                        $scope.filterValues.push($scope.noFilterValue);
-                        for(var row = 0; row < data.rows.length; row++) {
-                            $scope.filterValues.push({value:data.rows[row].key[0], label:data.rows[row].key[0]});
-                        }
-                        $scope.filterValues.sort();
-                    });
-                }
-            }
+            );
         };
 
         $scope.toggleSolved = function(bug) {
             console.log("let's mark this bug as solved:");
             console.log(bug);
+            bug.solvedPending = true;
             ReportsStore.toggleSolved(bug, function(data){
                 console.log(data);
+                bug.solvedPending = false;
             });
         };
 

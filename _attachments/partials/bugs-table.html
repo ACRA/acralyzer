@@ -7,17 +7,15 @@
         <div class="div-table-cell exceptions"><i class="icon-fire"></i></div>
     </div>
     <div class="div-table-row"
-         ng-repeat="bug in pageItems()"
-         ng-animate="{ enter: 'example-repeat-enter',
-                                   leave: 'example-repeat-leave',
-                                   move: 'example-repeat-move'}">
+         ng-repeat="bug in pageItems()">
         <div class="div-table-cell actions">
             <a href="#/reports-browser/{{acralyzer.app}}/bug/{{bug.id}}">
                 <i class="icon-search" title="Display reports"></i>
             </a>
             <a ng-click="toggleSolved(bug)">
-                <span title="Unsolved bug" ng-hide="bug.value.solved"><i class="icon-bug-unsolved"></i></span>
-                <span title="Solved bug" ng-show="bug.value.solved"><i class="icon-bug-solved"></i></span>
+                <span title="Unsolved bug" ng-hide="bug.value.solved || bug.solvedPending"><i class="icon-bug-unsolved"></i></span>
+                <span title="Solved bug" ng-show="bug.value.solved && !bug.solvedPending"><i class="icon-bug-solved"></i></span>
+                <span title="Switching state" ng-show="bug.solvedPending"><img src="img/polling.gif"/></span>
             </a>
         </div>
         <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>

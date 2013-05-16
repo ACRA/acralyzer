@@ -29,16 +29,21 @@
         }
 
         console.log("Init ReportsBrowserCtrl");
-        $scope.reportsCount = 15;
+        $scope.paginator = {
+            pageSize: 15,
+            currentPage: 0
+        };
+        $scope.pageSizeList = [15, 30, 50, 100];
+
         $scope.previousStartKeys = [];
         $scope.selectedReport = "";
         $scope.startKey = null;
         $scope.nextKey = null;
         $scope.startNumber = 1;
-        $scope.endNumber = $scope.reportsCount;
+        $scope.endNumber = $scope.paginator.pageSize;
         $scope.fullSearch = false;
         $scope.loading = true;
-        $scope.noFilter = { value: "false", label: "No filter"};
+        $scope.noFilter = { value: "false", label: "Select filter"};
         $scope.noFilterValue = { value: "false", label: "All values"};
         $scope.availableFilters = [
             $scope.noFilter,
@@ -74,6 +79,18 @@
             return $scope.nextKey === null;
         };
 
+        $scope.firstPage = function() {
+            $scope.startKey = null;
+            $scope.nextKey = null;
+            $scope.getData();
+        };
+
+        $scope.$watch('paginator.pageSize', function(newValue, oldValue){
+            if (newValue !== oldValue) {
+                $scope.firstPage();
+            }
+        });
+
         $scope.getData = function() {
             $scope.loading = true;
             var successHandler = function(data) {
@@ -84,7 +101,7 @@
 
                 // If there are more rows, here is the key to the next page
                 $scope.nextKey =data.next_row ? data.next_row.key : null;
-                $scope.startNumber = ($scope.previousStartKeys.length * $scope.reportsCount) + 1;
+                $scope.startNumber = ($scope.previousStartKeys.length * $scope.paginator.pageSize) + 1;
                 $scope.endNumber = $scope.startNumber + $scope.reports.length - 1;
                 console.log($scope);
                 $scope.loading = false;
@@ -97,13 +114,13 @@
             };
 
             if(($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) && !$scope.bug) {
-                ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
+                ReportsStore.reportsList($scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             } else if($scope.filterName !== $scope.noFilter && $scope.filterValue !== $scope.noFilterValue){
-                ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
+                ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             } else if($scope.bug) {
                 console.log("Get reports for bug ");
                 console.log($scope.bug);
-                ReportsStore.filteredReportsList("bug", $scope.bug.key, $scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
+                ReportsStore.filteredReportsList("bug", $scope.bug.key, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             }
         };
 
