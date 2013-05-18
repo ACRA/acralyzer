@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular,acralyzerEvents,acralyzer,hex_md5) {
+(function(acralyzerConfig,angular,acralyzerEvents,acralyzer,hex_md5,Showdown) {
     "use strict";
 
     /**
@@ -474,4 +474,4 @@
         return ReportsStore;
     }]);
 
-})(window.acralyzerConfig,window.angular,window.acralyzerEvents,window.acralyzer,window.hex_md5);
+})(window.acralyzerConfig,window.angular,window.acralyzerEvents,window.acralyzer,window.hex_md5,window.Showdown);
