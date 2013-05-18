@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular,acralyzer,acralyzerEvents) {
+(function(acralyzerConfig,angular,acralyzer,acralyzerEvents,Showdown) {
     "use strict";
 
     function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
@@ -188,6 +188,23 @@
             $scope.getData();
         }
 
+        $scope.editMode = false;
+        $scope.bugDescription = "";
+        $scope.bugDescriptionHtml = "";
+        $scope.toggleEditMode = function() {
+            $scope.editMode = !$scope.editMode;
+        };
+
+        var converter = new Showdown.converter({extensions:['github','table']});
+
+        $scope.$watch('bug.value.description', function(newValue, oldValue) {
+            console.log("Bug.description changed.");
+            if(newValue !== oldValue) {
+                $scope.bug.descriptionHtml = converter.makeHtml(newValue);
+            }
+        });
+
+
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
         $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
     }
@@ -195,4 +212,4 @@
 
     acralyzer.controller('ReportsBrowserCtrl', ["$scope", "ReportsStore", "$routeParams", ReportsBrowserCtrl]);
 
-})(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents);
+})(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.Showdown);

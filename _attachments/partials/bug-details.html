@@ -2,11 +2,27 @@
     <div class="bug-details-header">
         <div class="direct-link"><a href="#/reports-browser/{{acralyzer.app}}/bug/{{bug.id}}"><i class="icon-share"></i>direct link</a></div>
         <h3>Bug Summary</h3>
-        <ul>
-            <li>Application version code: {{bug.key[0]}}</li>
-            <li>Exception: {{bug.key[1]}}</li>
-            <li>Root Exception: {{bug.key[2]}}</li>
-        </ul>
+        <table>
+            <tr>
+                <th>Application version code:</th>
+                <td>{{bug.key[0]}}</td>
+            </tr>
+            <tr>
+                <th>Exception:</th>
+                <td>{{bug.key[1]}}</td>
+            </tr><tr>
+                <th>Root Exception:</th>
+                <td>{{bug.key[2]}}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>
+                    <i class="icon-edit" ng-click="toggleEditMode()"></i>
+                    <textarea ng-model="bug.value.description"></textarea>
+                    <div class="description" ng-bind-html-unsafe="bug.descriptionHtml"></div>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <h3>Reports list</h3>

@@ -223,6 +223,8 @@
                     data.rows[i].id = computeBugId(data.rows[i]);
                     data.rows[i].equals = bugEqualityTest;
                     data.rows[i].updateWithBug = bugUpdate;
+                    data.rows[i].value.description = "";
+                    data.rows[i].descriptionHtml = "";
                 }
                 cb(data);
             };
