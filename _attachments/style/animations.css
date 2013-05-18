@@ -86,4 +86,35 @@
     -webkit-transform: translateX(300px);
 }
 
-.nextpage-leave-setup.nextpage-leave-start { }
+.previouspage-leave-setup.previouspage-leave-start { }
+
+/* grow */
+.grow-setup,
+.shrink-setup {
+    -webkit-transition:all linear 0.2s;
+    -moz-transition:all linear 0.2s;
+    -ms-transition:all linear 0.2s;
+    -o-transition:all linear 0.2s;
+    transition:all linear 0.2s;
+}
+
+.grow-setup {
+    opacity:0;
+    -webkit-transform: scaleY(0);
+}
+.grow-start {
+    opacity:1;
+    -webkit-transform: scaleY(1);
+}
+.grow-setup.grow-start { }
+
+.shrink-setup {
+    opacity:1;
+    -webkit-transform: scaleY(1);
+}
+.shrink-start {
+    opacity:0;
+    -webkit-transform: scaleY(0);
+}
+
+.shrink-setup.shrink-start { }

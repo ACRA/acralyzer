@@ -118,8 +118,6 @@
             } else if($scope.filterName !== $scope.noFilter && $scope.filterValue !== $scope.noFilterValue){
                 ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             } else if($scope.bug) {
-                console.log("Get reports for bug ");
-                console.log($scope.bug);
                 ReportsStore.filteredReportsList("bug", $scope.bug.key, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             }
         };
@@ -182,18 +180,29 @@
             ReportsStore.getBugForId($scope.bugId, function(bug){
                 // success callback
                 $scope.bug = bug;
+                $scope.bug.editMode = false;
+                $scope.bug.toggleEditMode = function() {
+                    if($scope.bug.editMode && $scope.bug.initialDescription !== $scope.bug.value.description) {
+                        // User has modified the description and wants to save it
+                        $scope.bug.updating = true;
+                        ReportsStore.saveBug(bug, function() {
+                            $scope.bug.updating = false;
+                            $scope.bug.initialDescription = $scope.bug.value.description;
+                        });
+                    }
+                    $scope.bug.editMode = !$scope.bug.editMode;
+                };
+
+                $scope.bug.initialDescription = $scope.bug.value.description;
+                $scope.bug.revertDescription = function() {
+                    $scope.bug.value.description = $scope.bug.initialDescription;
+                };
+
                 $scope.getData();
             });
         } else {
             $scope.getData();
         }
-
-        $scope.editMode = false;
-        $scope.bugDescription = "";
-        $scope.bugDescriptionHtml = "";
-        $scope.toggleEditMode = function() {
-            $scope.editMode = !$scope.editMode;
-        };
 
         var converter = new Showdown.converter({extensions:['github','table']});
 

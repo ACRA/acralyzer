@@ -35,6 +35,9 @@
             currentWorkerId : 0
         };
 
+        // Markdown converter
+        var converter = new Showdown.converter({extensions:['github','table']});
+
         /**
         * Switch to another app, i.e. reports storage database.
         * @param {String} newAppName The app name. The database name is determined by adding prefix set in
@@ -198,7 +201,10 @@
             };
 
             var bugEqualityTest = function(bug2) {
-                if(this.value.latest !== bug2.value.latest || this.value.count !== bug2.value.count || this.value.solved !== bug2.value.solved) {
+                if(this.value.latest !== bug2.value.latest ||
+                    this.value.count !== bug2.value.count ||
+                    this.value.solved !== bug2.value.solved ||
+                    this.value.description !== bug2.value.description) {
                     return false;
                 }
                 return true;
@@ -214,6 +220,9 @@
                 if(this.value.solved !== bug2.value.solved) {
                     this.value.solved = bug2.value.solved;
                 }
+                if(this.value.description !== bug2.value.description) {
+                    this.value.description = bug2.value.description;
+                }
             };
 
             var additionalCallback = function(data) {
@@ -223,8 +232,7 @@
                     data.rows[i].id = computeBugId(data.rows[i]);
                     data.rows[i].equals = bugEqualityTest;
                     data.rows[i].updateWithBug = bugUpdate;
-                    data.rows[i].value.description = "";
-                    data.rows[i].descriptionHtml = "";
+                    data.rows[i].descriptionHtml = converter.makeHtml(data.rows[i].value.description);
                 }
                 cb(data);
             };
@@ -233,13 +241,41 @@
         };
 
         ReportsStore.toggleSolved = function(bug, callback) {
-            var curBug = ReportsStore.bug.get({ bugid: bug.id}, function(){
+            var curBug = ReportsStore.bug.get({ bugid: bug.id}, function() {
                 // Success callback
                 curBug.solved = ! curBug.solved;
                 curBug.$save(callback);
             }, function() {
                 // Fail callback
-                curBug = new ReportsStore.bug({_id: bug.id, APP_VERSION_CODE: bug.key[0], digest: bug.key[1], rootCause: bug.key[2], solved: true, type: "solved_signature"});
+                curBug = new ReportsStore.bug(
+                    {
+                        _id: bug.id,
+                        APP_VERSION_CODE: bug.key[0],
+                        digest: bug.key[1],
+                        rootCause: bug.key[2],
+                        solved: true,
+                        type: "solved_signature"
+                    });
+                curBug.$save(callback);
+            });
+        };
+
+        ReportsStore.saveBug = function(bug, callback) {
+            var curBug = ReportsStore.bug.get({ bugid: bug.id}, function() {
+                curBug.description = bug.value.description;
+                curBug.$save(callback);
+            }, function() {
+                // Fail callback
+                curBug = new ReportsStore.bug(
+                    {
+                        _id: bug.id,
+                        APP_VERSION_CODE: bug.key[0],
+                        digest: bug.key[1],
+                        rootCause: bug.key[2],
+                        solved: bug.value.solved,
+                        type: "solved_signature",
+                        description: bug.value.description
+                    });
                 curBug.$save(callback);
             });
         };

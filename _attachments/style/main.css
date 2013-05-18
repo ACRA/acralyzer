@@ -205,6 +205,7 @@ report-summary .label-androidversion {
 
 .div-table-cell.actions {
     white-space: nowrap;
+    text-align: right;
 }
 
 .icon-bugdroid {
@@ -230,4 +231,39 @@ report-summary .label-androidversion {
 .icon-bug-solved {
     background-image: url(../img/bug-solved.png);
     background-position: 0px;
+}
+
+bug-details textarea {
+    width: 90%;
+    height: 5em;
+    background-color: #f7f7f7;
+    margin-bottom: 0;
+}
+
+bug-details small {
+    font-size: 80%;
+    color: #aaaaaa;
+    font-style: italic;
+}
+
+bug-details a, bug-details a:hover {
+    color: #888888;
+}
+
+.bugs .tooltip-inner {
+    text-align: left;
+    color: #222222;
+    background-color: #f7f7f7;
+    border-color: #888888;
+    border-style: solid;
+    border-width: 1px;
+    max-width: none;
+}
+
+.bugs .tooltip.right .tooltip-arrow {
+    border-right-color: #888888;
+}
+
+.bugs .tooltip.in {
+    opacity: 0.95;
 }

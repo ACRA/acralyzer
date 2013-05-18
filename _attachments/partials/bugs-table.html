@@ -1,4 +1,4 @@
-<div ng-hide="loading" class="div-table table table-condensed">
+<div ng-hide="loading" class="div-table table table-condensed bugs">
     <div class="div-table-row">
         <div class="div-table-cell"></div>
         <div class="div-table-cell"><i class="icon-time"></i></div>
@@ -9,8 +9,10 @@
     <div class="div-table-row"
          ng-repeat="bug in pageItems()">
         <div class="div-table-cell actions">
-            <a href="#/reports-browser/{{acralyzer.app}}/bug/{{bug.id}}">
-                <i class="icon-search" title="Display reports"></i>
+            <a href="#/reports-browser/{{acralyzer.app}}/bug/{{bug.id}}"
+               tooltip-html-unsafe="{{bug.descriptionHtml}}" tooltip-placement="right">
+                <i class="icon-search" ng-hide="bug.value.description"></i>
+                <i class="icon-zoom-in" ng-show="bug.value.description"></i>
             </a>
             <a ng-click="toggleSolved(bug)">
                 <span title="Unsolved bug" ng-hide="bug.value.solved || bug.solvedPending"><i class="icon-bug-unsolved"></i></span>

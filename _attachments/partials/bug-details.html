@@ -10,16 +10,37 @@
             <tr>
                 <th>Exception:</th>
                 <td>{{bug.key[1]}}</td>
-            </tr><tr>
+            </tr>
+            <tr>
                 <th>Root Exception:</th>
                 <td>{{bug.key[2]}}</td>
             </tr>
             <tr>
+                <th>Solved:</th>
+                <td>{{bug.value.solved}}</td>
+            </tr>
+            <tr>
                 <th>Description</th>
                 <td>
-                    <i class="icon-edit" ng-click="toggleEditMode()"></i>
-                    <textarea ng-model="bug.value.description"></textarea>
                     <div class="description" ng-bind-html-unsafe="bug.descriptionHtml"></div>
+                    <div ng-click="bug.toggleEditMode()">
+                        <i class="icon-edit"></i>
+                        <small ng-show="bug.editMode">Save changes</small>
+                        <small ng-hide="bug.editMode || bug.updating">Edit description</small>
+                    </div>
+                    <div ng-show="bug.updating">
+                        <img src="img/polling.gif"/>
+                        <small class="action">Updating...</small>
+                    </div>
+                    <div ng-animate="{show:'grow', hide:'shrink'}" ng-show="bug.editMode">
+                        <div ng-click="bug.revertDescription()">
+                            <i class="icon-remove"></i>
+                            <small ng-show="bug.editMode">Revert changes</small>
+                        </div>
+                        <textarea ng-model="bug.value.description"></textarea>
+                        <br/>
+                        <small>You can use <a href="http://daringfireball.net/projects/markdown/" target="_blank">Markdown</a> syntax.</small>
+                    </div>
                 </td>
             </tr>
         </table>
