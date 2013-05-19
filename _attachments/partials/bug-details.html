@@ -23,10 +23,10 @@
                 <th>Description</th>
                 <td>
                     <div class="description" ng-bind-html-unsafe="bug.descriptionHtml"></div>
-                    <div ng-click="bug.toggleEditMode()">
+                    <div ng-click="bug.toggleEditMode()" ng-hide="bug.updating">
                         <i class="icon-edit"></i>
                         <small ng-show="bug.editMode">Save changes</small>
-                        <small ng-hide="bug.editMode || bug.updating">Edit description</small>
+                        <small ng-hide="bug.editMode">Edit description</small>
                     </div>
                     <div ng-show="bug.updating">
                         <img src="img/polling.gif"/>
