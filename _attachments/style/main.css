@@ -36,6 +36,8 @@ body {
 .navbar .brand {
     padding-bottom: 0;
     padding-left: 50px;
+    padding-top: 8px;
+    height: 32px;
     background: url(../img/logo.png) 10px 3px no-repeat;
 }
 

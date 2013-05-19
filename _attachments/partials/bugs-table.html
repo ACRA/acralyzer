@@ -14,7 +14,7 @@
                 <i class="icon-search" ng-hide="bug.value.description"></i>
                 <i class="icon-zoom-in" ng-show="bug.value.description"></i>
             </a>
-            <a ng-click="toggleSolved(bug)">
+            <a ng-click="bug.toggleSolved()">
                 <span title="Unsolved bug" ng-hide="bug.value.solved || bug.solvedPending"><i class="icon-bug-unsolved"></i></span>
                 <span title="Solved bug" ng-show="bug.value.solved && !bug.solvedPending"><i class="icon-bug-solved"></i></span>
                 <span title="Switching state" ng-show="bug.solvedPending"><img src="img/polling.gif"/></span>

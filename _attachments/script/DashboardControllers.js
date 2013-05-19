@@ -133,16 +133,6 @@
                 });
         };
 
-        $scope.toggleSolved = function(bug) {
-            console.log("let's mark this bug as solved:");
-            bug.solvedPending = true;
-            console.log(bug);
-            ReportsStore.toggleSolved(bug, function(data){
-                console.log(data);
-                bug.solvedPending = false;
-            });
-        };
-
         $scope.shouldBeDisplayed = function(bug) {
             if($scope.hideSolvedBugs && bug.value.solved) {
                 return false;

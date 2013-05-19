@@ -225,6 +225,14 @@
                 }
             };
 
+            var toggleSolved = function() {
+                var bug = this;
+                this.solvedPending = true;
+                ReportsStore.toggleSolvedBug(bug, function(data){
+                    bug.solvedPending = false;
+                });
+            };
+
             var additionalCallback = function(data) {
                 // The bug view does not return individual documents. Unless data has been specifically updated about
                 // one bug, there is no bug document in a database. We add here the computed id of each 'virtual' bug.
@@ -232,6 +240,7 @@
                     data.rows[i].id = computeBugId(data.rows[i]);
                     data.rows[i].equals = bugEqualityTest;
                     data.rows[i].updateWithBug = bugUpdate;
+                    data.rows[i].toggleSolved = toggleSolved;
                     data.rows[i].descriptionHtml = converter.makeHtml(data.rows[i].value.description);
                 }
                 cb(data);
@@ -240,7 +249,7 @@
             return ReportsStore.views.get(viewParams, additionalCallback, errorHandler);
         };
 
-        ReportsStore.toggleSolved = function(bug, callback) {
+        ReportsStore.toggleSolvedBug = function(bug, callback) {
             var curBug = ReportsStore.bug.get({ bugid: bug.id}, function() {
                 // Success callback
                 curBug.solved = ! curBug.solved;
