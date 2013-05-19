@@ -17,7 +17,7 @@
             <a ng-click="bug.toggleSolved()">
                 <span title="Unsolved bug" ng-hide="bug.value.solved || bug.solvedPending"><i class="icon-bug-unsolved"></i></span>
                 <span title="Solved bug" ng-show="bug.value.solved && !bug.solvedPending"><i class="icon-bug-solved"></i></span>
-                <span title="Switching state" ng-show="bug.solvedPending"><img src="img/polling.gif"/></span>
+                <span title="Updating state" ng-show="bug.solvedPending"><img src="img/polling.gif"/></span>
             </a>
         </div>
         <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>

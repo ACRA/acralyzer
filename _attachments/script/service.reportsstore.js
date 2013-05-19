@@ -253,7 +253,13 @@
             var curBug = ReportsStore.bug.get({ bugid: bug.id}, function() {
                 // Success callback
                 curBug.solved = ! curBug.solved;
-                curBug.$save(callback);
+                var state = curBug.solved;
+                curBug.$save(function(data) {
+                    bug.value.solved = state;
+                    console.log("bug is now:");
+                    console.log(bug);
+                    callback(data);
+                });
             }, function() {
                 // Fail callback
                 curBug = new ReportsStore.bug(
@@ -265,7 +271,10 @@
                         solved: true,
                         type: "solved_signature"
                     });
-                curBug.$save(callback);
+                curBug.$save(function(data) {
+                    bug.value.solved = curBug.solved;
+                    callback(data);
+                });
             });
         };
 
