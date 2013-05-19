@@ -28,6 +28,17 @@ body {
     }
 }
 
+.navbar-fixed-top .navbar-inner {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.navbar .brand {
+    padding-bottom: 0;
+    padding-left: 50px;
+    background: url(../img/logo.png) 10px 3px no-repeat;
+}
+
 #profile {
   border:4px solid #edd;
   background:#fee;
@@ -266,4 +277,8 @@ bug-details a, bug-details a:hover {
 
 .bugs .tooltip.in {
     opacity: 0.95;
+}
+
+.paginator {
+    margin-bottom: 1em;
 }
