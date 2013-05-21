@@ -224,6 +224,18 @@
                             var limit = scope.paginator.pageSize;
                             return scope.items().slice(start, start + limit);
                         };
+
+                        scope.$parent.firstItemIndex = function() {
+                            return scope.paginator.currentPage * scope.paginator.pageSize + 1;
+                        };
+
+                        scope.$parent.lastItemIndex = function() {
+                            var nbItemsInPage = scope.paginator.pageSize;
+                            if(scope.isLastPage()) {
+                                nbItemsInPage = scope.items().length % scope.paginator.pagesize;
+                            }
+                            return scope.paginator.currentPage * scope.paginator.pageSize + nbItemsInPage;
+                        };
                     },
                     post: function postLink(scope, iElement, iAttrs, controller) {}
                 };

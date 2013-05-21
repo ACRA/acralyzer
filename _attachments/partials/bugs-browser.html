@@ -7,7 +7,7 @@
             </form>
         </div>
         <div class="row-fluid tab-content">
-            <span ng-bind-template="Bugs {{startNumber}} to {{endNumber}} (out of {{bugsList.length}}):">Loading...</span>
+            <span ng-bind-template="Bugs {{firstItemIndex()}} to {{lastItemIndex()}} (out of {{bugsList.length}}):">Loading...</span>
             <button class="btn btn-small" ng-click="hideSolvedBugs = !hideSolvedBugs">
                 <span ng-hide="hideSolvedBugs">Hide solved bugs</span>
                 <span ng-show="hideSolvedBugs">Show solved bugs</span>

@@ -88,7 +88,7 @@
 
 .previouspage-leave-setup.previouspage-leave-start { }
 
-/* grow */
+/* grow/shrink */
 .grow-setup,
 .shrink-setup {
     -webkit-transition:all linear 0.2s;
@@ -118,3 +118,34 @@
 }
 
 .shrink-setup.shrink-start { }
+
+/* From top */
+.fromtop-enter-setup,
+.fromtop-leave-setup {
+    -webkit-transition:all linear 0.5s;
+    -moz-transition:all linear 0.5s;
+    -ms-transition:all linear 0.5s;
+    -o-transition:all linear 0.5s;
+    transition:all linear 0.5s;
+}
+
+.fromtop-enter-setup {
+    opacity:0;
+    -webkit-transform: translateY(-300px);
+}
+.fromtop-enter-start {
+    opacity:1;
+    -webkit-transform: translateY(0);
+}
+.fromtop-enter-setup.fromtop-enter-start { }
+
+.fromtop-leave-setup {
+    opacity:1;
+    -webkit-transform: translateY(0);
+}
+.fromtop-leave-start {
+    opacity:0;
+    -webkit-transform: translateY(300px);
+}
+
+.fromtop-leave-setup.fromtop-leave-start { }
