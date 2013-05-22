@@ -326,13 +326,6 @@
             return bug;
         };
 
-        /**
-         * Gets a list of reports related to a single bug.
-         * @param bug
-         * @param cb
-         */
-        ReportsStore.reportsForBug = function(bug, cb) {
-        };
 
         // PURGES MANAGEMENT
 
@@ -487,6 +480,32 @@
         ReportsStore.stopPolling = function() {
             console.log("STOP POLLING !");
             ReportsStore.continuePolling = false;
+        };
+
+
+        ReportsStore.getUsersForBug = function(bug, cb) {
+            var viewParams = {
+                view: 'users-per-bug',
+                reduce: true,
+                group_level: 4
+            };
+
+            viewParams.startkey = JSON.stringify([bug.key[0], bug.key[1], bug.key[2]]);
+            viewParams.endkey = JSON.stringify([bug.key[0], bug.key[1], bug.key[2], {}]);
+            var result = [];
+            ReportsStore.views.get(viewParams,function(data) {
+                for(var row = 0; row < data.rows.length; row++) {
+                    var user = {
+                        installationId: data.rows[row].key[3],
+                        reportsCount: data.rows[row].value
+                    };
+                    result.push(user);
+                }
+                if(cb) {
+                    cb(result);
+                }
+            });
+            return result;
         };
 
         return ReportsStore;

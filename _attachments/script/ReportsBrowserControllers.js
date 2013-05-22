@@ -96,6 +96,7 @@
             var successHandler = function(data) {
                 // Success Handler
                 console.log("Refresh data for latest reports");
+                console.log(data.rows);
                 $scope.reports = data.rows;
                 $scope.totalReports = data.total_rows;
 
@@ -206,6 +207,7 @@
 
         var converter = new Showdown.converter({extensions:['github','table']});
 
+        // When description is updated, re-generate its rendered html version
         $scope.$watch('bug.value.description', function(newValue, oldValue) {
             console.log("Bug.description changed.");
             if(newValue !== oldValue) {
@@ -213,6 +215,10 @@
             }
         });
 
+
+        $scope.filterWithUser = function(user) {
+            console.log("We need to filter with installation_id:" + user.installationId);
+        };
 
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
         $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);

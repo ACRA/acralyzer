@@ -19,7 +19,7 @@
             <tabs>
                 <pane heading="Bugs">
                     <div ng-controller="BugsCtrl">
-                        <span ng-bind-template="{{bugsLimit}} latest bugs (out of {{bugs.length}}):">Loading...</span>
+                        <span>{{bugsLimit}} latest bugs (out of <a href="#/bugs-browser/{{acralyzer.app}}">{{bugs.length}}</a>):</span>
                         <button class="btn btn-small" ng-click="hideSolvedBugs = !hideSolvedBugs">
                             <span ng-hide="hideSolvedBugs">Hide solved bugs</span>
                             <span ng-show="hideSolvedBugs">Show solved bugs</span>
@@ -32,7 +32,7 @@
                 <pane heading="Reports">
                     <div ng-controller="CrashReportsCtrl">
                         <div class="rss"><a href="/acra-{{acralyzer.app}}/_design/acra-storage/_list/rss/recent-items?descending=true"><img src="img/rss.png"></a></div>
-                        <span ng-bind-template="{{reports.length}} latest reports (out of {{totalReports}}):">Loading...</span>
+                        <span>{{reports.length}} latest reports (out of <a href="#/reports-browser/{{acralyzer.app}}">{{totalReports}}</a>):</span>
 
                         <ng-include src="'partials/reports-table.html'"></ng-include>
 

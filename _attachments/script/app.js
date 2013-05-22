@@ -94,7 +94,29 @@
                 bug: '=',
                 acralyzer: '='
             },
-            templateUrl: 'partials/bug-details.html'
+            templateUrl: 'partials/bug-details.html',
+            controller: ['$scope', '$element', '$attrs', '$transclude', 'ReportsStore', function($scope, $element, $attrs, $transclude, ReportsStore) {
+                console.log("In the controller for bugDetails with scope:");
+                $scope.nbUsersToDisplay = 10;
+                $scope.selectedUser = {};
+                $scope.incNbUsersToDisplay = function(nb) {
+                    $scope.nbUsersToDisplay += nb;
+                };
+                $scope.selectUser = function(user) {
+                    if($scope.selectedUser.installationId !== user.installationId) {
+                        $scope.selectedUser = user;
+                        $scope.$parent.filterWithUser(user);
+                    } else {
+                        $scope.selectedUser = {};
+                        $scope.$parent.filterWithUser(null);
+                    }
+                };
+                $scope.$watch('bug', function(newValue, oldValue) {
+                    if(newValue) {
+                        $scope.users = ReportsStore.getUsersForBug(newValue);
+                    }
+                });
+            }]
         };
     });
 

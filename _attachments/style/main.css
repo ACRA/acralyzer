@@ -284,3 +284,11 @@ bug-details a, bug-details a:hover {
 .paginator {
     margin-bottom: 1em;
 }
+
+.affected-user {
+    margin: 3px;
+}
+
+.reports-table .avatar {
+    height: 16px;
+}

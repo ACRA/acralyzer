@@ -1,6 +1,7 @@
-<div class="div-table" ng-hide="loading">
+<div class="div-table reports-table" ng-hide="loading">
     <div class="div-table-row">
         <div class="div-table-cell"></div>
+        <div class="div-table-cell"><i class="icon-user"></i></div>
         <div class="div-table-cell"><i class="icon-time"></i></div>
         <div class="div-table-cell"><i class="icon-gift"></i></div>
         <div class="div-table-cell"><i class="icon-bugdroid"></i></div>
@@ -17,6 +18,7 @@
                 <i class="icon-trash" title="Delete permanently"></i>
             </a>
         </div>
+        <span title="User" class="div-table-cell label label-inverse"><img class="avatar" src="http://retroavatar.appspot.com/api?name={{report.value.installation_id}}&fact=2&alpha=true" /></span>
         <span title="Crash date" class="div-table-cell label label-info">{{report.displayDate}}</span>
         <span title="Application version name" class="div-table-cell label label-warning">{{report.value.application_version_name}}</span>
         <span title="Android verion" class="div-table-cell label label-success">{{report.value.android_version}}</span>
