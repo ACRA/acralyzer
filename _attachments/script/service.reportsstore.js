@@ -185,9 +185,10 @@
                 console.log(data.rows.length + " reports to purge.");
                 intermediateCallback(data.rows.length);
                 for(var i = 0; i < data.rows.length; i++) {
-                    var doc = data.rows[i].doc;
+                    var doc = { _id: data.rows[i].id, _rev: data.rows[i].value };
                     doc._deleted = true;
                     docsToPurge.push(doc);
+                    console.log(doc);
                 }
                 console.log("Deleting " + docsToPurge.length + "reports.");
                 $http.post("/" + ReportsStore.dbName + "/_bulk_docs", { docs: docsToPurge })
@@ -196,10 +197,8 @@
 
             // Fetch old reports to purge them via the previously defined callback
             result = ReportsStore.views.get({
-                    view: 'reports-per-day',
-                    reduce: false,
+                    view: 'reports-revision-per-day',
                     startkey: '[' + year + ',' + month + ',' + day + ']',
-                    include_docs: true,
                     descending: true
                 },
                 additionalCallback, errorHandler);
@@ -224,9 +223,10 @@
                 console.log(data.rows.length + " reports to purge.");
                 intermediateCallback(data.rows.length);
                 for(var i = 0; i < data.rows.length; i++) {
-                    var doc = data.rows[i].doc;
+                    var doc = { _id: data.rows[i].id, _rev: data.rows[i].value };
                     doc._deleted = true;
                     docsToPurge.push(doc);
+                    console.log(doc);
                 }
                 console.log("Deleting " + docsToPurge.length + "reports.");
                 $http.post("/" + ReportsStore.dbName + "/_bulk_docs", { docs: docsToPurge })
@@ -235,10 +235,8 @@
 
             // Fetch old reports to purge them via the previously defined callback
             result = ReportsStore.views.get({
-                    view: 'reports-per-app-version-code',
-                    reduce: false,
-                    endkey: version,
-                    include_docs: true
+                    view: 'reports-revision-per-app-version-code',
+                    endkey: version
                 },
                 additionalCallback, errorHandler);
             return result;
