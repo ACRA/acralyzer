@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig, angular, $, acralyzerEvents) {
+(function(acralyzerConfig, angular, $, acralyzerEvents, prettyPrint) {
     "use strict";
 
     var acralyzer = window.acralyzer = angular.module('Acralyzer', ['ui.bootstrap', 'ngResource']);
@@ -264,4 +264,4 @@
             }
         };
     });
-})(window.acralyzerConfig, window.angular, window.jQuery, window.acralyzerEvents);
+})(window.acralyzerConfig, window.angular, window.jQuery, window.acralyzerEvents, window.prettyPrint);
