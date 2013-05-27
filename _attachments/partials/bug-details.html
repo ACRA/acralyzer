@@ -51,7 +51,7 @@
 
     <h3>{{nbUsersToDisplay}}<i class="icon-plus-sign" ng-click="incNbUsersToDisplay(10)" ng-show="nbUsersToDisplay < users.length"></i> most affected users (total: {{users.length}})</h3>
     <div ng-repeat="user in users | orderBy:'reportsCount':true | limitTo: nbUsersToDisplay" class="affected-user label" ng-class="{ 'label-important': user.installationId == selectedUser.installationId, 'label-inverse': user.installationId !== selectedUser.installationId}" ng-click="selectUser(user)">
-        <img class="avatar" monsterid="{{user.installationId}}" title="{{user.installationId}}" data-clipboard-text="{{user.installationId}}"/>
+        <img class="avatar" monsterid="{{user.installationId}}" title="{{user.installationId}}" />
         x {{user.reportsCount}}
     </div>
     <h3>Reports list</h3>

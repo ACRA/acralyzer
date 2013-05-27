@@ -119,7 +119,13 @@
             } else if($scope.filterName !== $scope.noFilter && $scope.filterValue !== $scope.noFilterValue){
                 ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             } else if($scope.bug) {
-                ReportsStore.filteredReportsList("bug", $scope.bug.key, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
+                if($scope.selectedUser) {
+                    var filterKey = $scope.bug.key.slice(0);
+                    filterKey.push($scope.selectedUser.installationId);
+                    ReportsStore.filteredReportsList("bug-by-installation-id", filterKey, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
+                } else {
+                    ReportsStore.filteredReportsList("bug", $scope.bug.key, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
+                }
             }
         };
 
@@ -217,7 +223,8 @@
 
 
         $scope.filterWithUser = function(user) {
-            console.log("We need to filter with installation_id:" + user.installationId);
+            $scope.selectedUser = user;
+            $scope.getData();
         };
 
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);

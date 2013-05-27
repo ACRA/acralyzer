@@ -129,7 +129,7 @@
                 reduce: false
             };
 
-            if(filterName === "bug") {
+            if(filterName.indexOf("bug" === 0)) {
                 // Bugs have composite keys, already an array.
                 viewParams.endkey = JSON.stringify(filterValue);
                 var startKeyValue = filterValue.slice(0);
@@ -152,6 +152,8 @@
                 for(var row = 0; row < data.rows.length; row++) {
                     if(filterName === "bug") {
                         data.rows[row].displayDate = moment(data.rows[row].key[3]).fromNow();
+                    } else if(filterName === "bug-by-installation-id") {
+                        data.rows[row].displayDate = moment(data.rows[row].key[4]).fromNow();
                     } else {
                         data.rows[row].displayDate = moment(data.rows[row].key[1]).fromNow();
                     }
