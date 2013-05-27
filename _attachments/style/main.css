@@ -289,6 +289,13 @@ bug-details a, bug-details a:hover {
     margin: 3px;
 }
 
-.reports-table .avatar {
-    height: 16px;
+.avatar {
+    height: 32px;
+    width: 32px;
 }
+
+.reports-table .avatar {
+    height: 24px;
+    width: 24px;
+}
+

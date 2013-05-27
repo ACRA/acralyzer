@@ -17,17 +17,23 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function(acralyzer, ZeroClipboard) {
+(function(acralyzer, MonsterId) {
     "use strict";
 
-    acralyzer.directive("clipboardText", function() {
+    acralyzer.directive("monsterid", function() {
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
-                var clip = new ZeroClipboard(element, {
-                    moviePath: "vendor/zeroclipboard/ZeroClipboard.swf"
-                } );
+                scope.element = element;
+                var drawMonster = function() {
+                    MonsterId.getAvatar(attrs['monsterid'], element[0]);
+                };
+
+                scope.$watch('element[0].offsetWidth' + 'element[0].offsetHeight', function(newValue, oldValue){
+                    drawMonster();
+                });
+                drawMonster();
             }
         };
     });
-})(window.acralyzer, window.ZeroClipboard);
+})(window.acralyzer, window.MonsterId);

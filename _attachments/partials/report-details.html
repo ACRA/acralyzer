@@ -40,7 +40,12 @@
                 <th>Comment</th>
                 <td>{{report.USER_COMMENT}}</td>
                 <th>Installation ID</th>
-                <td><img src="http://retroavatar.appspot.com/api?name={{report.INSTALLATION_ID}}&fact=2&alpha=true" title="{{report.INSTALLATION_ID}}" data-clipboard-text="{{report.INSTALLATION_ID}}"/></td>
+                <td>
+                    <div class="label label-inverse">
+                        <img class="avatar" monsterid="{{report.INSTALLATION_ID}}" title="{{report.INSTALLATION_ID}}" data-clipboard-text="{{report.INSTALLATION_ID}}"/>
+                        {{report.INSTALLATION_ID}}
+                    </div>
+                </td>
             </tr>
         </table>
     </div>
