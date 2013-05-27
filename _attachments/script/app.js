@@ -26,6 +26,7 @@
             when('/dashboard/:app', {templateUrl: 'partials/dashboard.html',   controller: 'DashboardCtrl', activetab: "dashboard"}).
             when('/reports-browser/:app', {templateUrl: 'partials/reports-browser.html', controller: 'ReportsBrowserCtrl', activetab: "reports-browser"}).
             when('/reports-browser/:app/bug/:bugId', {templateUrl: 'partials/reports-browser.html', controller: 'ReportsBrowserCtrl', activetab: "reports-browser"}).
+            when('/reports-browser/:app/user/:installationId', {templateUrl: 'partials/reports-browser.html', controller: 'ReportsBrowserCtrl', activetab: "reports-browser"}).
             when('/bugs-browser/:app', {templateUrl: 'partials/bugs-browser.html', controller: 'BugsBrowserCtrl', activetab: "bugs-browser"}).
             when('/report-details/:app/:reportId', {templateUrl: 'partials/report-details.html', controller: 'ReportDetailsCtrl', activetab: "none"}).
             when('/admin/:app', {templateUrl: 'partials/admin.html', controller: 'AdminCtrl', activetab: "admin"}).

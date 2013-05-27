@@ -129,7 +129,7 @@
                 reduce: false
             };
 
-            if(filterName.indexOf("bug" === 0)) {
+            if(filterName.indexOf("bug") === 0) {
                 // Bugs have composite keys, already an array.
                 viewParams.endkey = JSON.stringify(filterValue);
                 var startKeyValue = filterValue.slice(0);

@@ -59,6 +59,11 @@
         $scope.bugId = $routeParams.bugId;
         $scope.bug = null;
 
+        // Filtering by installation_id
+        if($routeParams.installationId) {
+            $scope.selectedUser = { installationId: $routeParams.installationId };
+        }
+
         $scope.incPage = function() {
             $scope.previousStartKeys.push($scope.startKey);
             $scope.startKey = $scope.nextKey;
@@ -114,18 +119,23 @@
                 $scope.totalReports="";
             };
 
-            if(($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) && !$scope.bug) {
+            if(($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) && !$scope.bug && !$scope.selectedUser) {
                 ReportsStore.reportsList($scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             } else if($scope.filterName !== $scope.noFilter && $scope.filterValue !== $scope.noFilterValue){
                 ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             } else if($scope.bug) {
                 if($scope.selectedUser) {
+                    // Filter by bug AND user
                     var filterKey = $scope.bug.key.slice(0);
                     filterKey.push($scope.selectedUser.installationId);
                     ReportsStore.filteredReportsList("bug-by-installation-id", filterKey, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
                 } else {
+                    // Filter by bug only
                     ReportsStore.filteredReportsList("bug", $scope.bug.key, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
                 }
+            } else if($scope.selectedUser) {
+                // Filter by user only
+                ReportsStore.filteredReportsList("installation-id", $scope.selectedUser.installationId, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             }
         };
 
@@ -223,6 +233,7 @@
 
 
         $scope.filterWithUser = function(user) {
+            console.log("Selected user:", user);
             $scope.selectedUser = user;
             $scope.getData();
         };
