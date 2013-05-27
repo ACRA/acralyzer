@@ -17,7 +17,7 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function(acralyzerEvents, $, undefined ) {
+(function(acralyzerEvents) {
     "use strict";
     acralyzerEvents.NEW_DATA = "new_data";
     acralyzerEvents.REPORTS_DELETED = "reports_deleted";
@@ -29,4 +29,4 @@
     acralyzerEvents.APP_CHANGED = "app changed";
     acralyzerEvents.USER_PASSWORD_CHANGE = "password_change";
 
-}( window.acralyzerEvents = window.acralyzerEvents || {}, window.jQuery, undefined ));
+}( window.acralyzerEvents = window.acralyzerEvents || {}));
