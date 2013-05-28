@@ -25,14 +25,19 @@
             restrict: 'A',
             link: function(scope, element, attrs) {
                 scope.element = element;
-                var drawMonster = function() {
-                    MonsterId.getAvatar(attrs['monsterid'], element[0]);
+                var drawMonster = function(monsterId) {
+                    MonsterId.getAvatar(monsterId, element[0]);
                 };
 
-                scope.$watch('element[0].offsetWidth' + 'element[0].offsetHeight', function(newValue, oldValue){
-                    drawMonster();
+                scope.$watch('element[0].offsetWidth + element[0].offsetHeight', function(newValue, oldValue){
+                    drawMonster(attrs.monsterid);
                 });
-                drawMonster();
+                scope.$watch(function() {
+                    return attrs.monsterid;
+                }, function(newValue, oldValue){
+                    drawMonster(attrs.monsterid);
+                });
+                drawMonster(attrs.monsterid);
             }
         };
     });
