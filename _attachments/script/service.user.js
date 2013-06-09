@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,acralyzer,acralyzerEvents,$,location) {
+(function(acralyzerConfig,acralyzer,acralyzerEvents,$,location,hex_sha1) {
     "use strict";
     /**
     * Couchdb user service
@@ -287,6 +287,9 @@
             });
         };
 
+        /**
+         * Try to login using current cookies.
+         */
         $user.init = function() {
             /* Initialize all the variables */
             _reset($user);
@@ -301,7 +304,51 @@
             });
         };
 
+        /**
+         * Create a new Reporter user (with roles "reader" and "reporter"), with support for all CouchDB versions.
+         * @param login
+         * @param password
+         * @param successCallback
+         * @param errorCallback
+         */
+        $user.addReporterUser = function(login, password, successCallback, errorCallback) {
+            console.log("Create user " , login, password);
+
+            var userData = {
+                name: login,
+                roles: [ 'reporter', 'reader' ],
+                type: 'user'
+            };
+
+            if(acralyzer.createUsersWithHash) {
+                userData.salt = Math.random().toString(36).substring(2);
+                userData.password_sha = hex_sha1(password + userData.salt);
+            } else {
+                userData.password = password;
+            }
+
+            $http(
+                {
+                    method: 'PUT',
+                    url: '/_users/org.couchdb.user:' + login,
+                    data: userData
+                }
+            ).success(
+                function(data, status, headers, config) {
+                    if(successCallback){
+                        successCallback();
+                    }
+                }
+            ).error(
+                function(data, status, headers, config) {
+                    if(errorCallback) {
+                        errorCallback();
+                    }
+                }
+            );
+        };
+
         return $user;
     }]);
 
-})(window.acralyzerConfig, window.acralyzer, window.acralyzerEvents, window.jQuery, window.location);
+})(window.acralyzerConfig, window.acralyzer, window.acralyzerEvents, window.jQuery, window.location, window.hex_sha1);

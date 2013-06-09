@@ -17,10 +17,10 @@
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function(acralyzerConfig,angular,acralyzer,acralyzerEvents,$) {
+(function(acralyzerConfig,angular,acralyzer,acralyzerEvents,location,moment) {
     "use strict";
 
-    function AdminCtrl($scope, ReportsStore, $routeParams, $notify, $user) {
+    function AdminCtrl($scope, ReportsStore, $routeParams, $notify, $user, $http) {
         if($routeParams.app) {
             console.log("ReportsBrowser: Direct access to app " + $routeParams.app);
             $scope.acralyzer.setApp($routeParams.app);
@@ -30,7 +30,6 @@
         }
 
         // REPORTS PURGES
-
         $scope.daysToKeep = 90;
         $scope.selectedVersion = "";
         $scope.appVersionCodes = [];
@@ -133,7 +132,15 @@
             });
         };
 
+        // USERS MANAGEMENT
+        $scope.formUri = 'http://' + location.host + '/' + acralyzerConfig.appDBPrefix + $scope.acralyzer.app + '/_design/acra-storage/_update/report';
+        $scope.createReporterUser = function(login, password) {
+            console.log("Transfer user creation to $user ", login, password);
+            $user.addReporterUser(login, password, function(){
+                $scope.newReporterCreated = true;
+            });
+        };
     }
-    acralyzer.controller('AdminCtrl', ["$scope", "ReportsStore", "$routeParams", "$notify", "$user", AdminCtrl]);
+    acralyzer.controller('AdminCtrl', ["$scope", "ReportsStore", "$routeParams", "$notify", "$user", "$http", AdminCtrl]);
 
-})(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);
+})(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.location,window.moment);

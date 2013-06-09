@@ -24,7 +24,7 @@
      * Application root controller, handles global behavior such as login logout and reports store change.
      *
      */
-    function AcralyzerCtrl($user, $scope, ReportsStore, $rootScope, $notify, $routeParams) {
+    function AcralyzerCtrl($user, $scope, ReportsStore, $rootScope, $notify, $routeParams, $http) {
 
         /**
          * Application scope, visible to children scopes with $scope.acralyzer.
@@ -130,6 +130,24 @@
             });
         };
 
+        // Check if hosting is Cloudant or older CouchDB version
+        $http({method : 'GET', url: '/'}).success(function(data){
+            if(data.cloudant_build) {
+                $scope.acralyzer.cloudant = true;
+                acralyzer.cloudant = true;
+            }
+            if(data.version) {
+                var splittedVersion = data.version.split('.');
+                var major = splittedVersion[0];
+                var minor = splittedVersion[1];
+                if(major <= 1 || ( major === 1 && minor < 2)) {
+                    $scope.acralyzer.createUsersWithHash = true;
+                    acralyzer.createUsersWithHash = true;
+                }
+            }
+            console.log($scope.acralyzer);
+        });
+
         $scope.$on(acralyzerEvents.NEW_DATA, notifyNewData);
         $scope.$on(acralyzerEvents.POLLING_FAILED, $scope.acralyzer.stopPolling);
         $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.acralyzer.stopPolling);
@@ -142,5 +160,5 @@
         $user.init();
 
     }
-    acralyzer.controller('AcralyzerCtrl', ["$user", "$scope", "ReportsStore", "$rootScope", "$notify", "$routeParams", AcralyzerCtrl]);
+    acralyzer.controller('AcralyzerCtrl', ["$user", "$scope", "ReportsStore", "$rootScope", "$notify", "$routeParams", "$http", AcralyzerCtrl]);
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);
