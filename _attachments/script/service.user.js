@@ -107,6 +107,10 @@
                         console.log("Broadcasting LOGGED_IN");
                         $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, $user);
                     }
+                }, function() {
+                    // No preferences for current user, log in anyway.
+                    console.log("Broadcasting LOGGED_IN");
+                    $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, $user);
                 });
             } else {
                 $rootScope.$broadcast(acralyzerEvents.LOGGED_OUT, $user);

@@ -36,16 +36,16 @@
         $scope.acralyzer.app = null;
         $scope.acralyzer.isPolling = acralyzerConfig.backgroundPollingOnStartup;
 
+        ReportsStore.listApps(function(data) {
+            console.log("Storage list retrieved.");
+            $scope.acralyzer.apps.length = 0;
+            $scope.acralyzer.apps = data;
+            console.log($scope.acralyzer.apps);
+        }, function() {
+
+        });
 
         var onUserLogin = function() {
-            ReportsStore.listApps(function(data) {
-                console.log("Storage list retrieved.");
-                $scope.acralyzer.apps.length = 0;
-                $scope.acralyzer.apps = data;
-                console.log($scope.acralyzer.apps);
-            }, function() {
-
-            });
 
             if(!($routeParams.app)){
                 $scope.acralyzer.setApp(acralyzerConfig.defaultApp);
@@ -63,7 +63,11 @@
          */
         $scope.acralyzer.setApp = function(appName) {
             console.log("Setting app to ", appName);
-            if(appName && appName !== $scope.acralyzer.app) {
+            if(!appName) {
+                appName = $scope.acralyzer.apps[0];
+                console.log("Override setting undefined app to ", appName);
+            }
+            if(appName !== $scope.acralyzer.app) {
                 $scope.acralyzer.app = appName;
                 ReportsStore.setApp($scope.acralyzer.app,
                     function() {
