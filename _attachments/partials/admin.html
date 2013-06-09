@@ -15,6 +15,9 @@
             {{nbReportsByAppVersionCodeToPurge}} reports from apps older than version <select ng-model="selectedVersion" class="input-mini" ng-options="code.value as code.label for code in appVersionCodes"></select>.
         </div>
     </pane>
+    <pane heading="Preferences">
+        <p>Your default reports database is <select ng-model="acralyzerConfig.defaultApp" ng-options="app for app in apps" ng-change="storeDefaultApp()"></select></p>
+    </pane>
     <pane heading="Users">
         Coming soon...
     </pane>

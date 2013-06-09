@@ -62,14 +62,10 @@
         * @param {function} [errorHandler] Callback to be triggered if an error occurs.
         */
         ReportsStore.listApps = function(cb, errorHandler) {
-            console.log("get _all_dbs");
             var filterDbsCallback = function(data) {
-                console.log("_all_dbs retrieved");
-                console.log(data);
                 var finalData = [];
                 for (var i in data) {
                     if(data[i].indexOf(acralyzerConfig.appDBPrefix) === 0) {
-                        console.log("Found one acra storage: " + data[i]);
                         finalData.push(data[i].substring(acralyzerConfig.appDBPrefix.length));
                     }
                 }

@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,acralyzer,acralyzerEvents,$) {
+(function(acralyzerConfig,acralyzer,acralyzerEvents,$,location) {
     "use strict";
     /**
     * Couchdb user service
@@ -28,6 +28,11 @@
     acralyzer.service('$user', ['$rootScope', '$q', '$resource', '$http', function($rootScope, $q, $resource, $http) {
         var SessionResource = $resource('/_session');
         var UserResource;
+        var acralyzerDbName = location.pathname.split("/")[1];
+        var PreferencesResource = $resource("/" + acralyzerDbName + "/org.couchdb.user\\::name",
+            {'name':'@name'},
+            {'save': { method: 'PUT' }}
+        );
 
         var _hasAdminPath;
         var _session;
@@ -92,7 +97,17 @@
             $user.isAdmin = ($user.roles['_admin'] === 1);
             $user.username = userCtx.name;
             if ($user.username) {
-                $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, $user);
+                /* Load preferences for this user on this acralyzer db instance */
+                PreferencesResource.get({
+                    name: $user.username
+                }, function(prefs){
+                    if(prefs.defaultApp) {
+                        console.log("Setting default app for current user to: ", prefs.defaultApp);
+                        acralyzerConfig.defaultApp = prefs.defaultApp;
+                        console.log("Broadcasting LOGGED_IN");
+                        $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, $user);
+                    }
+                });
             } else {
                 $rootScope.$broadcast(acralyzerEvents.LOGGED_OUT, $user);
             }
@@ -247,19 +262,42 @@
             return false;
         };
 
-        /* Initialize all the variables */
-        _reset($user);
+        $user.updatePreferences = function(prefs, callback, errorcallback) {
+            console.log("Store preferences ", prefs, " for user ", $user, " in database " + acralyzerDbName);
+            var curPrefs = PreferencesResource.get({ name: $user.username}, function() {
+                for(var pref in prefs) {
+                    curPrefs[pref] = prefs[pref];
+                }
+                curPrefs.$save(callback, errorcallback);
+            }, function() {
+                // Fail callback
+                curPrefs = new PreferencesResource(
+                    {
+                        name: $user.username
+                    }
+                );
+                for(var pref in prefs) {
+                    curPrefs[pref] = prefs[pref];
+                }
+                curPrefs.$save(callback, errorcallback);
+            });
+        };
 
-        /* First time we grab our session from couchdb */
-        _session = SessionResource.get({}, function(a) {
-            /* success */
-            _processSession(a);
-        }, function() {
-            alert('Unable to connect to couchdb');
-            /* failure */
-        });
+        $user.init = function() {
+            /* Initialize all the variables */
+            _reset($user);
+
+            /* First time we grab our session from couchdb */
+            _session = SessionResource.get({}, function(a) {
+                /* success */
+                _processSession(a);
+            }, function() {
+                alert('Unable to connect to couchdb');
+                /* failure */
+            });
+        };
 
         return $user;
     }]);
 
-})(window.acralyzerConfig, window.acralyzer, window.acralyzerEvents, window.jQuery);
+})(window.acralyzerConfig, window.acralyzer, window.acralyzerEvents, window.jQuery, window.location);

@@ -20,7 +20,7 @@
 (function(acralyzerConfig,angular,acralyzer,acralyzerEvents,$) {
     "use strict";
 
-    function AdminCtrl($scope, ReportsStore, $routeParams, $notify) {
+    function AdminCtrl($scope, ReportsStore, $routeParams, $notify, $user) {
         if($routeParams.app) {
             console.log("ReportsBrowser: Direct access to app " + $routeParams.app);
             $scope.acralyzer.setApp($routeParams.app);
@@ -28,6 +28,8 @@
             console.log("ReportsBorwser: Access to default app " + acralyzerConfig.defaultApp);
             $scope.acralyzer.setApp(acralyzerConfig.defaultApp);
         }
+
+        // REPORTS PURGES
 
         $scope.daysToKeep = 90;
         $scope.selectedVersion = "";
@@ -117,7 +119,21 @@
                 }
             );
         };
+
+        // USER PREFERENCES
+        $scope.acralyzerConfig = acralyzerConfig;
+        $scope.apps = [];
+        ReportsStore.listApps(function(appsList) {
+            $scope.apps = appsList;
+        });
+
+        $scope.storeDefaultApp = function() {
+            $user.updatePreferences({
+                defaultApp: acralyzerConfig.defaultApp
+            });
+        };
+
     }
-    acralyzer.controller('AdminCtrl', ["$scope", "ReportsStore", "$routeParams", "$notify", AdminCtrl]);
+    acralyzer.controller('AdminCtrl', ["$scope", "ReportsStore", "$routeParams", "$notify", "$user", AdminCtrl]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);
