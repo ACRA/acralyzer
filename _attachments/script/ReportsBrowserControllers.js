@@ -100,8 +100,6 @@
             $scope.loading = true;
             var successHandler = function(data) {
                 // Success Handler
-                console.log("Refresh data for latest reports");
-                console.log(data.rows);
                 $scope.reports = data.rows;
                 $scope.totalReports = data.total_rows;
 
@@ -109,7 +107,7 @@
                 $scope.nextKey =data.next_row ? data.next_row.key : null;
                 $scope.startNumber = ($scope.previousStartKeys.length * $scope.paginator.pageSize) + 1;
                 $scope.endNumber = $scope.startNumber + $scope.reports.length - 1;
-                console.log($scope);
+
                 $scope.loading = false;
             };
 
@@ -225,7 +223,6 @@
 
         // When description is updated, re-generate its rendered html version
         $scope.$watch('bug.value.description', function(newValue, oldValue) {
-            console.log("Bug.description changed.");
             if(newValue !== oldValue) {
                 $scope.bug.descriptionHtml = converter.makeHtml(newValue);
             }
@@ -235,6 +232,7 @@
         $scope.filterWithUser = function(user) {
             console.log("Selected user:", user);
             $scope.selectedUser = user;
+            $scope.firstPage();
             $scope.getData();
         };
 
