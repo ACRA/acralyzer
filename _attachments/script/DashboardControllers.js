@@ -81,6 +81,9 @@
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
+        if($scope.acralyzer.app) {
+            $scope.getData();
+        }
     }
 
     function BugsCtrl($scope, ReportsStore, $filter) {
@@ -158,6 +161,9 @@
         $scope.$on(acralyzerEvents.APP_CHANGED, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.BUGS_UPDATED, $scope.getData);
+        if($scope.acralyzer.app) {
+            $scope.getData();
+        }
     }
 
 
@@ -359,6 +365,9 @@
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
+        if($scope.acralyzer.app) {
+            $scope.getData();
+        }
     }
 
     /* Pie charts */
@@ -547,6 +556,9 @@
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
+        if($scope.acralyzer.app) {
+            $scope.getData();
+        }
     }
 
     function DashboardCtrl($scope, $routeParams) {
