@@ -1,21 +1,74 @@
-<tabs>
-    <pane heading="Reports">
-        <div>
-            <button ng-click="purgeDays(daysToKeep)" ng-disabled="purgingByDays || purgingByAppVersionCode">
-                <span ng-hide="purgingByDays">Purge</span>
-                <span ng-show="purgingByDays"><img src="img/polling.gif"/> Purging</span>
-            </button>
-            {{nbReportsByDaysToPurge}} reports older than <input ng-model="daysToKeep" class="input-mini"/> days.
-        </div>
-        <div>
-            <button ng-click="purgeVersion(selectedVersion)" ng-disabled="purgingByDays || purgingByAppVersionCode">
-                <span ng-hide="purgingByAppVersionCode">Purge</span>
-                <span ng-show="purgingByAppVersionCode"><img src="img/polling.gif"/> Purging</span>
-            </button>
-            {{nbReportsByAppVersionCodeToPurge}} reports from apps older than version <select ng-model="selectedVersion" class="input-mini" ng-options="code.value as code.label for code in appVersionCodes"></select>.
-        </div>
-    </pane>
-    <pane heading="Users">
-        Coming soon...
-    </pane>
-</tabs>
+<div class="container-fluid">
+    <h2>
+        Administration
+    </h2>
+    <div id="content">
+        <tabs>
+            <pane heading="Reports">
+                <div>
+                    <button class="btn" ng-click="purgeDays(daysToKeep)" ng-disabled="purgingByDays || purgingByAppVersionCode">
+                        <span ng-hide="purgingByDays">Purge</span>
+                        <span ng-show="purgingByDays"><img src="img/polling.gif"/> Purging</span>
+                    </button>
+                    {{nbReportsByDaysToPurge}} reports older than <input ng-model="daysToKeep" class="input-mini"/> days.
+                </div>
+                <div>
+                    <button class="btn" ng-click="purgeVersion(selectedVersion)" ng-disabled="purgingByDays || purgingByAppVersionCode">
+                        <span ng-hide="purgingByAppVersionCode">Purge</span>
+                        <span ng-show="purgingByAppVersionCode"><img src="img/polling.gif"/> Purging</span>
+                    </button>
+                    {{nbReportsByAppVersionCodeToPurge}} reports from apps older than version <select ng-model="selectedVersion" class="input-mini" ng-options="code.value as code.label for code in appVersionCodes"></select>.
+                </div>
+            </pane>
+            <pane heading="Preferences">
+                <p>Your default reports database is <select ng-model="acralyzerConfig.defaultApp" ng-options="app for app in apps" ng-change="storeDefaultApp()"></select></p>
+            </pane>
+            <pane heading="Users">
+                <div ng-show='acralyzer.cloudant'>
+                    <p>
+                        This Acralyzer instance is hosted on Cloudant. To create a new reporter user for {{acralyzer.app}}:
+                    </p>
+                    <ul>
+                        <li>
+                            go to <a href="https://cloudant.com/dashboard/">your Cloudant dashboard</a>
+                        </li><li>
+                        select the 'acra-{{acralyzer.app}}' database
+                    </li><li>
+                        click on the 'Permissions' button
+                    </li><li>
+                        click on the 'Generate API Key' button
+                    </li><li>
+                        uncheck the 'Read' checkbox for the generated API Key
+                    </li><li>
+                        check the 'Write' checkbox for the generated API Key
+                    </li><li>
+                        copy the username and password and paste them in your ACRA configuration (formUriBasicAuthLogin and
+                        formUriBasicAuthPassword)
+                    </li>
+                    </ul>
+                </div>
+                <div ng-hide='acralyzer.cloudant || newReporterCreated'>
+                    <form novalidate name='formNewReporter'>
+                        <legend>Create a new Reporter user</legend>
+                        <label>User name</label>
+                        <input type="text" ng-model="userToCreate" placeholder="new user name" required/>
+                        <span class="help-block">Type the name for your new reporter user.</span>
+                        <label>Password</label>
+                        <input type="text" ng-model="passwordForUserToCreate" placeholder="password" required/>
+                        <span class="help-block">Type the password for your new reporter user.</span>
+                        <button ng-click="createReporterUser(userToCreate,passwordForUserToCreate)" class="btn" ng-disabled="formNewReporter.$invalid">Create user</button>
+                    </form>
+                </div>
+                <div ng-show='newReporterCreated'>
+                    You can now use this new user as a reporter in your ACRA configuration:
+                    <pre>
+    formUri = "{{formUri}}",
+    formUriBasicAuthLogin = "{{userToCreate}}",
+    formUriBasicAuthPassword = "{{passwordForUserToCreate}}"
+                    </pre>
+                    <button ng-click="newReporterCreated = false">Create another user</button>
+                </div>
+            </pane>
+        </tabs>
+    </div>
+</div>

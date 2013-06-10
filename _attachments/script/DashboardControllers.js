@@ -81,7 +81,6 @@
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
-        $scope.getData();
     }
 
     function BugsCtrl($scope, ReportsStore, $filter) {
@@ -159,7 +158,6 @@
         $scope.$on(acralyzerEvents.APP_CHANGED, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.BUGS_UPDATED, $scope.getData);
-        $scope.getData();
     }
 
 
@@ -361,7 +359,6 @@
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
-        $scope.getData();
     }
 
     /* Pie charts */
@@ -550,16 +547,12 @@
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
-        $scope.getData();
     }
 
     function DashboardCtrl($scope, $routeParams) {
         if($routeParams.app) {
             console.log("Dashboard: Direct access to app " + $routeParams.app);
             $scope.acralyzer.setApp($routeParams.app);
-        } else {
-            console.log("Dashboard: Access to default app " + acralyzerConfig.defaultApp);
-            $scope.acralyzer.setApp(acralyzerConfig.defaultApp);
         }
     }
 

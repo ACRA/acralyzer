@@ -4,9 +4,9 @@
         <bug-details bug="bug" acralyzer="acralyzer" ng-show="bug"></bug-details>
         <div id="filters" class="row-fluid">
             <form ng-submit="getData()" class="form-inline">
-                <select ng-model="filterName" ng-change="changeFilterValues()" ng-options="f.label for f in availableFilters" ng-hide="bug">
+                <select ng-model="filterName" ng-change="changeFilterValues()" ng-options="f.label for f in availableFilters" ng-hide="bug || selectedUser">
                 </select>
-                <select ng-model="filterValue" ng-disabled="filterName == noFilter"  ng-change="filterValueSelected()" ng-options="v.label for v in filterValues" ng-hide="bug">
+                <select ng-model="filterValue" ng-disabled="filterName == noFilter"  ng-change="filterValueSelected()" ng-options="v.label for v in filterValues" ng-hide="bug || selectedUser">
                 </select>
                 <input type="text" class="search-query" placeholder="Search in this page" ng-model="search">
                 <label class="checkbox">
@@ -15,6 +15,13 @@
             </form>
         </div>
         <div id="reports-list" class="row-fluid tab-content">
+            <span ng-show="selectedUser && !bug">
+                For user
+                <span class="label label-inverse">
+                    <img class="avatar" monsterid="{{selectedUser.installationId}}" />
+                    {{selectedUser.installationId}}
+                </span>
+            </span>
             <span ng-bind-template="reports {{startNumber}} to {{startNumber + reports.length - 1}} (out of {{totalReports}}):" ng-hide="bug">Loading...</span>
             <span ng-bind-template="reports {{startNumber}} to {{startNumber + reports.length - 1}} (out of {{bug.value.count}}/{{totalReports}}):" ng-show="bug">Loading...</span>
             <div class="loader" ng-show="loading"><img  src="img/loader.gif"/></div>

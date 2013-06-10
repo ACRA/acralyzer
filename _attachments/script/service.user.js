@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,acralyzer,acralyzerEvents,$) {
+(function(acralyzerConfig,acralyzer,acralyzerEvents,$,location,hex_sha1) {
     "use strict";
     /**
     * Couchdb user service
@@ -28,6 +28,11 @@
     acralyzer.service('$user', ['$rootScope', '$q', '$resource', '$http', function($rootScope, $q, $resource, $http) {
         var SessionResource = $resource('/_session');
         var UserResource;
+        var acralyzerDbName = location.pathname.split("/")[1];
+        var PreferencesResource = $resource("/" + acralyzerDbName + "/org.couchdb.user\\::name",
+            {'name':'@name'},
+            {'save': { method: 'PUT' }}
+        );
 
         var _hasAdminPath;
         var _session;
@@ -92,7 +97,21 @@
             $user.isAdmin = ($user.roles['_admin'] === 1);
             $user.username = userCtx.name;
             if ($user.username) {
-                $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, $user);
+                /* Load preferences for this user on this acralyzer db instance */
+                PreferencesResource.get({
+                    name: $user.username
+                }, function(prefs){
+                    if(prefs.defaultApp) {
+                        console.log("Setting default app for current user to: ", prefs.defaultApp);
+                        acralyzerConfig.defaultApp = prefs.defaultApp;
+                        console.log("Broadcasting LOGGED_IN");
+                        $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, $user);
+                    }
+                }, function() {
+                    // No preferences for current user, log in anyway.
+                    console.log("Broadcasting LOGGED_IN");
+                    $rootScope.$broadcast(acralyzerEvents.LOGGED_IN, $user);
+                });
             } else {
                 $rootScope.$broadcast(acralyzerEvents.LOGGED_OUT, $user);
             }
@@ -247,19 +266,89 @@
             return false;
         };
 
-        /* Initialize all the variables */
-        _reset($user);
+        $user.updatePreferences = function(prefs, callback, errorcallback) {
+            console.log("Store preferences ", prefs, " for user ", $user, " in database " + acralyzerDbName);
+            var curPrefs = PreferencesResource.get({ name: $user.username}, function() {
+                for(var pref in prefs) {
+                    curPrefs[pref] = prefs[pref];
+                }
+                curPrefs.$save(callback, errorcallback);
+            }, function() {
+                // Fail callback
+                curPrefs = new PreferencesResource(
+                    {
+                        name: $user.username
+                    }
+                );
+                for(var pref in prefs) {
+                    curPrefs[pref] = prefs[pref];
+                }
+                curPrefs.$save(callback, errorcallback);
+            });
+        };
 
-        /* First time we grab our session from couchdb */
-        _session = SessionResource.get({}, function(a) {
-            /* success */
-            _processSession(a);
-        }, function() {
-            alert('Unable to connect to couchdb');
-            /* failure */
-        });
+        /**
+         * Try to login using current cookies.
+         */
+        $user.init = function() {
+            /* Initialize all the variables */
+            _reset($user);
+
+            /* First time we grab our session from couchdb */
+            _session = SessionResource.get({}, function(a) {
+                /* success */
+                _processSession(a);
+            }, function() {
+                alert('Unable to connect to couchdb');
+                /* failure */
+            });
+        };
+
+        /**
+         * Create a new Reporter user (with roles "reader" and "reporter"), with support for all CouchDB versions.
+         * @param login
+         * @param password
+         * @param successCallback
+         * @param errorCallback
+         */
+        $user.addReporterUser = function(login, password, successCallback, errorCallback) {
+            console.log("Create user " , login, password);
+
+            var userData = {
+                name: login,
+                roles: [ 'reporter', 'reader' ],
+                type: 'user'
+            };
+
+            if(acralyzer.createUsersWithHash) {
+                userData.salt = Math.random().toString(36).substring(2);
+                userData.password_sha = hex_sha1(password + userData.salt);
+            } else {
+                userData.password = password;
+            }
+
+            $http(
+                {
+                    method: 'PUT',
+                    url: '/_users/org.couchdb.user:' + login,
+                    data: userData
+                }
+            ).success(
+                function(data, status, headers, config) {
+                    if(successCallback){
+                        successCallback();
+                    }
+                }
+            ).error(
+                function(data, status, headers, config) {
+                    if(errorCallback) {
+                        errorCallback();
+                    }
+                }
+            );
+        };
 
         return $user;
     }]);
 
-})(window.acralyzerConfig, window.acralyzer, window.acralyzerEvents, window.jQuery);
+})(window.acralyzerConfig, window.acralyzer, window.acralyzerEvents, window.jQuery, window.location, window.hex_sha1);
