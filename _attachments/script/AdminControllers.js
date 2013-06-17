@@ -63,7 +63,7 @@
                         desktop: true,
                         timeout: 10000,
                         title: "Acralyzer - " + $scope.acralyzer.app,
-                        body: "Purge of " + data.length + " reports succeeded, keeping the last " + $scope.daysToKeep + " days.",
+                        body: "Purge of " + data.length + " reports succeeded, keeping the last " + daysToKeep + " days.",
                         icon: "img/loader.gif"
                     });
                 },
