@@ -197,7 +197,7 @@
 
             // Fetch old reports to purge them via the previously defined callback
             result = ReportsStore.views.get({
-                    view: 'reports-revision-per-day',
+                    view: 'reports-revision',
                     startkey: '[' + year + ',' + month + ',' + day + ']',
                     descending: true
                 },
