@@ -255,7 +255,7 @@
                         scope.$parent.lastItemIndex = function() {
                             var nbItemsInPage = scope.paginator.pageSize;
                             if(scope.isLastPage()) {
-                                nbItemsInPage = scope.items().length % scope.paginator.pagesize;
+                                nbItemsInPage = scope.items().length % scope.paginator.pageSize;
                             }
                             return scope.paginator.currentPage * scope.paginator.pageSize + nbItemsInPage;
                         };
