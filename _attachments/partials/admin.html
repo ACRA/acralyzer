@@ -62,6 +62,8 @@
                 <div ng-show='newReporterCreated'>
                     You can now use this new user as a reporter in your ACRA configuration:
                     <pre>
+    httpMethod = Method.PUT,
+    reportType = Type.JSON,
     formUri = "{{formUri}}",
     formUriBasicAuthLogin = "{{userToCreate}}",
     formUriBasicAuthPassword = "{{passwordForUserToCreate}}"
