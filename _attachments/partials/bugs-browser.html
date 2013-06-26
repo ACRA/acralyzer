@@ -16,7 +16,7 @@
 
             <ng-include src="'partials/bugs-table.html'"></ng-include>
 
-            <span paginator items="bugsList | filter:shouldBeDisplayed | filter:search | orderBy:'value.latest':true" pageSize="bugsCount"></span>
+            <span paginator items="bugsList | filter:shouldBeDisplayed | filter:search | orderBy:orderField:orderDescending" pageSize="bugsCount"></span>
             <bug-details bug="selectedBug" acralyzer="acralyzer"></bug-details>
         </div>
     </div>

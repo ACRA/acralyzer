@@ -48,6 +48,8 @@
         $scope.filterValue = $scope.noFilterValue;
 
         $scope.filterValues = [];
+        $scope.orderField = 'value.count';
+        $scope.orderDescending = true;
 
         // List animations
         $scope.animationFade = {

@@ -212,6 +212,10 @@ report-summary .label-androidversion {
     vertical-align: middle;
 }
 
+.div-table-row.header .div-table-cell {
+    white-space: nowrap;
+}
+
 .div-table-cell.exceptions {
     text-align: left;
 }

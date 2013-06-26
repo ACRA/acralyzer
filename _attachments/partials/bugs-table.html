@@ -1,9 +1,27 @@
 <div ng-hide="loading" class="div-table table table-condensed bugs">
-    <div class="div-table-row">
+    <div class="div-table-row header">
         <div class="div-table-cell"></div>
-        <div class="div-table-cell"><i class="icon-time"></i></div>
-        <div class="div-table-cell"><i class="icon-th-list"></i></div>
-        <div class="div-table-cell"><i class="icon-gift"></i></div>
+        <div class="div-table-cell">
+            <i class="icon-th-list" ng-click="$parent.orderField = 'value.count'"></i>
+            <span ng-click="$parent.orderDescending = !$parent.orderDescending">
+                <i class="icon-chevron-down" ng-show="$parent.orderField === 'value.count' && $parent.orderDescending"></i>
+                <i class="icon-chevron-up" ng-show="$parent.orderField === 'value.count' && !$parent.orderDescending"></i>
+            </span>
+        </div>
+        <div class="div-table-cell">
+            <i class="icon-time" ng-click="$parent.orderField = 'value.latest'"></i>
+            <span ng-click="$parent.orderDescending = !$parent.orderDescending">
+                <i class="icon-chevron-down" ng-show="$parent.orderField === 'value.latest' && $parent.orderDescending"ng-click=""></i>
+                <i class="icon-chevron-up" ng-show="$parent.orderField === 'value.latest' && !$parent.orderDescending"></i>
+            </span>
+        </div>
+        <div class="div-table-cell">
+            <i class="icon-gift" ng-click="$parent.orderField = 'key[0]'"></i>
+            <span ng-click="$parent.orderDescending = !$parent.orderDescending">
+                <i class="icon-chevron-down" ng-show="$parent.orderField === 'key[0]' && $parent.orderDescending"ng-click=""></i>
+                <i class="icon-chevron-up" ng-show="$parent.orderField === 'key[0]' && !$parent.orderDescending"></i>
+            </span>
+        </div>
         <div class="div-table-cell exceptions"><i class="icon-fire"></i></div>
     </div>
     <div class="div-table-row"
@@ -20,8 +38,8 @@
                 <span title="Updating state" ng-show="bug.solvedPending"><img src="img/polling.gif"/></span>
             </a>
         </div>
-        <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
         <div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>
+        <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
         <div title="Application version code" class="div-table-cell label label-warning">{{bug.key[0]}}</div>
         <div class="div-table-cell exceptions">
             <span title="Exception" class="label label-important">{{bug.key[1]}}</span><br/>
