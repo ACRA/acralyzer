@@ -28,12 +28,17 @@ body {
     }
 }
 
-h1 {
-  margin-top:0;
+.navbar-fixed-top .navbar-inner {
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
-#account {
-  float:right;
+.navbar .brand {
+    padding-bottom: 0;
+    padding-left: 50px;
+    padding-top: 8px;
+    height: 32px;
+    background: url(../img/logo.png) 10px 3px no-repeat;
 }
 
 #profile {
@@ -43,45 +48,6 @@ h1 {
   margin-bottom:8px;
 }
 
-#sidebar {
-  border:4px solid #dfd;
-  padding:8px;
-  float:right;
-  width:30%;
-}
-
-#items li {
-  border:4px solid #f5f5ff;
-  background:#fff;
-  padding:8px;
-  margin:4px 0;
-}
-
-div.avatar {
-  padding:2px;
-  padding-bottom:0;
-  margin-right:4px;
-  float:left;
-  font-size:0.78em;
-  width : 60px;
-  height : 60px;
-  text-align: center;
-}
-
-div.avatar .name {
-  padding-top:2px;
-}
-
-div.avatar img {
-  margin:0 auto;
-  padding:0;
-  width : 40px;
-  height : 40px;
-}
-
-ul {
-  list-style: none;
-}
 
 #graph-container, #pie-charts {
   height: 400px;
@@ -177,11 +143,11 @@ table td {
     background-color: #fff;
 }
 
-.action:hover {
+.actions a:hover {
     text-decoration: none;
 }
 
-.action {
+.actions a {
     cursor: pointer;
 }
 
@@ -221,3 +187,119 @@ table td {
 
 .notifications{position:fixed;}
 .notifications.top-right{right:10px;top:45px;}
+
+report-summary .label-androidversion {
+    padding-left: 18px;
+    background: #468847 url(../img/bugdroid-white.png) no-repeat 1px 1px;
+}
+
+
+.div-table{
+    display:table;
+    border-spacing: 0.3em;
+}
+.div-table-row{
+    display:table-row;
+}
+.div-table-row:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.div-table-cell {
+    display: table-cell;
+    padding: 0.1em 0.3em;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.div-table-row.header .div-table-cell {
+    white-space: nowrap;
+}
+
+.div-table-cell.exceptions {
+    text-align: left;
+}
+
+.div-table-cell.actions {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.icon-bugdroid {
+    background-image: url(../img/bugdroid-black14.png);
+    background-position: 0px;
+}
+
+.icon-phone {
+    background-image: url(../img/device-black.png);
+    background-position: 0px;
+}
+
+.icon-bug-unsolved {
+    background-image: url(../img/bug.png);
+    background-position: 0px;
+}
+
+.icon-bug-unsolved:hover, .icon-bug-solved:hover {
+    background-image: url(../img/bug-rollover.png);
+    background-position: 0px;
+}
+
+.icon-bug-solved {
+    background-image: url(../img/bug-solved.png);
+    background-position: 0px;
+}
+
+bug-details textarea {
+    width: 90%;
+    height: 5em;
+    background-color: #f7f7f7;
+    margin-bottom: 0;
+}
+
+bug-details small {
+    font-size: 80%;
+    color: #aaaaaa;
+    font-style: italic;
+}
+
+bug-details a, bug-details a:hover {
+    color: #888888;
+}
+
+.bugs .tooltip-inner {
+    text-align: left;
+    color: #222222;
+    background-color: #f7f7f7;
+    border-color: #888888;
+    border-style: solid;
+    border-width: 1px;
+    max-width: none;
+}
+
+.bugs .tooltip.right .tooltip-arrow {
+    border-right-color: #888888;
+}
+
+.bugs .tooltip.in {
+    opacity: 0.95;
+}
+
+.paginator {
+    margin-bottom: 1em;
+}
+
+.affected-user {
+    margin: 3px;
+}
+
+.avatar {
+    height: 32px;
+    width: 32px;
+}
+
+.reports-table .avatar {
+    height: 24px;
+    width: 24px;
+}
+

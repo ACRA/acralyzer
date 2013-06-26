@@ -1,51 +1,33 @@
-<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
-    <div id="filters" class="row-fluid">
-        <form ng-submit="getData()" class="form-inline">
-            <div class="input-append">
-                <input ng-model="reportsCount" type="number" alt="Number of reports per page" class="input-mini"/>
-                <button class="btn" type="submit">OK</button>
-            </div>
-            <select ng-model="filterName" ng-change="changeFilterValues()" ng-options="f.label for f in availableFilters">
-            </select>
-            <select ng-model="filterValue" ng-disabled="filterName == noFilter"  ng-change="filterValueSelected()" ng-options="v.label for v in filterValues">
-            </select>
-            <input type="text" class="search-query" placeholder="Search in this page" ng-model="search">
-            <label class="checkbox">
-                <input type="checkbox" ng-model="fullSearch" ng-change="getData()"> All report attributes
-            </label>
-        </form>
+<div class="container-fluid">
+    <h2>Browse reports</h2>
+    <div id="content">
+        <bug-details bug="bug" acralyzer="acralyzer" ng-show="bug"></bug-details>
+        <div id="filters" class="row-fluid">
+            <form ng-submit="getData()" class="form-inline">
+                <select ng-model="filterName" ng-change="changeFilterValues()" ng-options="f.label for f in availableFilters" ng-hide="bug || selectedUser">
+                </select>
+                <select ng-model="filterValue" ng-disabled="filterName == noFilter"  ng-change="filterValueSelected()" ng-options="v.label for v in filterValues" ng-hide="bug || selectedUser">
+                </select>
+                <input type="text" class="search-query" placeholder="Search in this page" ng-model="search">
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="fullSearch" ng-change="getData()"> All report attributes
+                </label>
+            </form>
+        </div>
+        <div id="reports-list" class="row-fluid tab-content">
+            <span ng-show="selectedUser && !bug">
+                For user
+                <span class="label label-inverse">
+                    <img class="avatar" monsterid="{{selectedUser.installationId}}" />
+                    {{selectedUser.installationId}}
+                </span>
+            </span>
+            <span ng-bind-template="reports {{startNumber}} to {{startNumber + reports.length - 1}} (out of {{totalReports}}):" ng-hide="bug">Loading...</span>
+            <span ng-bind-template="reports {{startNumber}} to {{startNumber + reports.length - 1}} (out of {{bug.value.count}}/{{totalReports}}):" ng-show="bug">Loading...</span>
+            <div class="loader" ng-show="loading"><img  src="img/loader.gif"/></div>
+            <ng-include src="'partials/reports-table.html'"></ng-include>
+            <ng-include src="'partials/paginator.html'"></ng-include>
+        </div>
+        <report-details report="selectedReport" acralyzer="acralyzer"></report-details>
     </div>
-    <div id="reports-list" class="row-fluid">
-        <span ng-bind-template="reports {{startNumber}} to {{endNumber}} (out of {{totalReports}}):">Loading...</span>
-        <div class="loader" ng-show="loading"><img  src="img/loader.gif"/></div>
-        <ul ng-hide="loading">
-            <li ng-repeat="report in reports | filter:search" ng-cloak>
-                <div ng-class-odd="'odd'" ng-class-even="'even'">
-                    <a ng-click="loadReport(report)" class="action">
-                        <i class="icon-search" ng-hide="report.id == selectedReport._id" title="Display details"></i>
-                        <i class="icon-asterisk" ng-show="report.id == selectedReport._id" title="Current selection"></i>
-                    </a>
-                    <a ng-click="deleteReport(report)" class="action">
-                        <i class="icon-trash" title="Delete permanently"></i>
-                    </a>
-                    <report-summary report="report"></report-summary>
-                </div>
-            </li>
-        </ul>
-        <ul class="pager">
-            <li class="previous" ng-show="previousStartKeys.length > 0">
-                <a ng-click="getPreviousPage()"><i class="icon-chevron-left"></i> Newer</a>
-            </li>
-            <li class="previous disabled" ng-hide="previousStartKeys.length > 0">
-                <span><i class="icon-chevron-left"></i> Newer</span>
-            </li>
-            <li class="next" ng-show="nextKey != null">
-                <a ng-click="getNextPage()">Older <i class="icon-chevron-right"></i></a>
-            </li>
-            <li class="next disabled" ng-hide="nextKey != null">
-                <span>Older <i class="icon-chevron-right"></i></span>
-            </li>
-        </ul>
-    </div>
-    <report-details report="selectedReport" acralyzer="acralyzer"></report-details>
 </div>

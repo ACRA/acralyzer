@@ -23,24 +23,31 @@
                 <td>{{report.formatedTimestamp}}</td>
             </tr>
             <tr>
-                <th><i class="icon-fire"></i></th>
-                <th>Stack Trace</th>
-                <td colspan="3" class="stacktrace">
-                    <div ng-repeat="stackline in report.STACK_TRACE" class="pre">{{stackline}}</div>
-                </td>
-                <th>Custom Data</th>
-                <td>
-                    <div prettyprint="report.CUSTOM_DATA"/>
-                </td>
-            </tr>
-            <tr>
                 <th><i class="icon-user"></i></th>
+                <th>Installation ID</th>
+                <td>
+                    <a class="label label-inverse" href="#/reports-browser/{{acralyzer.app}}/user/{{report.INSTALLATION_ID}}">
+                        <img class="avatar" monsterid="{{report.INSTALLATION_ID}}" title="{{report.INSTALLATION_ID}}" />
+                        {{report.INSTALLATION_ID}}
+                    </a>
+                </td>
                 <th>E-mail</th>
                 <td><a href="mailto:{{report.USER_EMAIL}}">{{report.USER_EMAIL}}</a></td>
                 <th>Comment</th>
                 <td>{{report.USER_COMMENT}}</td>
-                <th>Installation ID</th>
-                <td>{{report.INSTALLATION_ID}}</td>
+            </tr>
+            <tr>
+                <th rowspan="2"><i class="icon-fire"></i></th>
+                <th>Stack Trace</th>
+                <td colspan="5" class="stacktrace">
+                    <div ng-repeat="stackline in report.STACK_TRACE" class="pre">{{stackline}}</div>
+                </td>
+            </tr>
+            <tr>
+                <th>Custom Data</th>
+                <td colspan="5">
+                    <div prettyprint="report.CUSTOM_DATA"/>
+                </td>
             </tr>
         </table>
     </div>

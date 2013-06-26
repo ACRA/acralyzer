@@ -9,5 +9,12 @@
   "^imgsrc$",
   "^usertemplates$",
   "LICENSE",
-  "README.md"
+  "README.md",
+  ".idea",
+  "travis.yml",
+  ".jshintrc",
+  ".bowerrc",
+  ".jshintignore",
+  ".editorconfig",
+  ".couchappignore"
 ]

@@ -16,7 +16,7 @@
  You should have received a copy of the GNU General Public License
  along with Acralyzer.  If not, see <http://www.gnu.org/licenses/>.
  */
-(function(acralyzerConfig,angular,acralyzer,acralyzerEvents) {
+(function(acralyzerConfig,angular,acralyzer,acralyzerEvents,Showdown) {
     "use strict";
 
     function ReportsBrowserCtrl($scope, ReportsStore, $routeParams) {
@@ -29,16 +29,21 @@
         }
 
         console.log("Init ReportsBrowserCtrl");
-        $scope.reportsCount = 15;
+        $scope.paginator = {
+            pageSize: 15,
+            currentPage: 0
+        };
+        $scope.pageSizeList = [15, 30, 50, 100];
+
         $scope.previousStartKeys = [];
         $scope.selectedReport = "";
         $scope.startKey = null;
         $scope.nextKey = null;
         $scope.startNumber = 1;
-        $scope.endNumber = $scope.reportsCount;
+        $scope.endNumber = $scope.paginator.pageSize;
         $scope.fullSearch = false;
         $scope.loading = true;
-        $scope.noFilter = { value: "false", label: "No filter"};
+        $scope.noFilter = { value: "false", label: "Select filter"};
         $scope.noFilterValue = { value: "false", label: "All values"};
         $scope.availableFilters = [
             $scope.noFilter,
@@ -50,39 +55,59 @@
 
         $scope.filterValues = [];
 
+        // Filtering by bugId
+        $scope.bugId = $routeParams.bugId;
+        $scope.bug = null;
 
-        $scope.getNextPage = function() {
+        // Filtering by installation_id
+        if($routeParams.installationId) {
+            $scope.selectedUser = { installationId: $routeParams.installationId };
+        }
+
+        $scope.incPage = function() {
             $scope.previousStartKeys.push($scope.startKey);
             $scope.startKey = $scope.nextKey;
             $scope.getData();
         };
 
-        $scope.getPreviousPage = function() {
+        $scope.decPage = function() {
             $scope.nextKey = null;
             $scope.startKey = $scope.previousStartKeys.pop();
             $scope.getData();
         };
 
+        $scope.isFirstPage = function() {
+            return $scope.previousStartKeys.length <= 0;
+        };
+
+        $scope.isLastPage = function() {
+            return $scope.nextKey === null;
+        };
+
+        $scope.firstPage = function() {
+            $scope.startKey = null;
+            $scope.nextKey = null;
+            $scope.getData();
+        };
+
+        $scope.$watch('paginator.pageSize', function(newValue, oldValue){
+            if (newValue !== oldValue) {
+                $scope.firstPage();
+            }
+        });
+
         $scope.getData = function() {
             $scope.loading = true;
             var successHandler = function(data) {
                 // Success Handler
-                console.log("Refresh data for latest reports");
                 $scope.reports = data.rows;
                 $scope.totalReports = data.total_rows;
-                for(var row = 0; row < $scope.reports.length; row++) {
-                    if($scope.filterName === $scope.noFilter && $scope.filterValue === $scope.noFilterValue) {
-                        $scope.reports[row].displayDate = moment($scope.reports[row].key).fromNow();
-                    } else {
-                        $scope.reports[row].displayDate = moment($scope.reports[row].key[1]).fromNow();
-                    }
-                }
 
                 // If there are more rows, here is the key to the next page
                 $scope.nextKey =data.next_row ? data.next_row.key : null;
-                $scope.startNumber = ($scope.previousStartKeys.length * $scope.reportsCount) + 1;
+                $scope.startNumber = ($scope.previousStartKeys.length * $scope.paginator.pageSize) + 1;
                 $scope.endNumber = $scope.startNumber + $scope.reports.length - 1;
-                console.log($scope);
+
                 $scope.loading = false;
             };
 
@@ -92,10 +117,23 @@
                 $scope.totalReports="";
             };
 
-            if($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) {
-                ReportsStore.reportsList($scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
-            } else {
-                ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.reportsCount, $scope.fullSearch, successHandler, errorHandler);
+            if(($scope.filterName === $scope.noFilter || $scope.filterValue === $scope.noFilterValue) && !$scope.bug && !$scope.selectedUser) {
+                ReportsStore.reportsList($scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
+            } else if($scope.filterName !== $scope.noFilter && $scope.filterValue !== $scope.noFilterValue){
+                ReportsStore.filteredReportsList($scope.filterName.value, $scope.filterValue.value,$scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
+            } else if($scope.bug) {
+                if($scope.selectedUser) {
+                    // Filter by bug AND user
+                    var filterKey = $scope.bug.key.slice(0);
+                    filterKey.push($scope.selectedUser.installationId);
+                    ReportsStore.filteredReportsList("bug-by-installation-id", filterKey, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
+                } else {
+                    // Filter by bug only
+                    ReportsStore.filteredReportsList("bug", $scope.bug.key, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
+                }
+            } else if($scope.selectedUser) {
+                // Filter by user only
+                ReportsStore.filteredReportsList("installation-id", $scope.selectedUser.installationId, $scope.startKey, $scope.paginator.pageSize, $scope.fullSearch, successHandler, errorHandler);
             }
         };
 
@@ -153,12 +191,56 @@
             });
         };
 
+        if($scope.bugId) {
+            ReportsStore.getBugForId($scope.bugId, function(bug){
+                // success callback
+                $scope.bug = bug;
+                $scope.bug.editMode = false;
+                $scope.bug.toggleEditMode = function() {
+                    if($scope.bug.editMode && $scope.bug.initialDescription !== $scope.bug.value.description) {
+                        // User has modified the description and wants to save it
+                        $scope.bug.updating = true;
+                        ReportsStore.saveBug(bug, function() {
+                            $scope.bug.updating = false;
+                            $scope.bug.initialDescription = $scope.bug.value.description;
+                        });
+                    }
+                    $scope.bug.editMode = !$scope.bug.editMode;
+                };
+
+                $scope.bug.initialDescription = $scope.bug.value.description;
+                $scope.bug.revertDescription = function() {
+                    $scope.bug.value.description = $scope.bug.initialDescription;
+                };
+
+                $scope.getData();
+            });
+        } else {
+            $scope.getData();
+        }
+
+        var converter = new Showdown.converter({extensions:['github','table']});
+
+        // When description is updated, re-generate its rendered html version
+        $scope.$watch('bug.value.description', function(newValue, oldValue) {
+            if(newValue !== oldValue) {
+                $scope.bug.descriptionHtml = converter.makeHtml(newValue);
+            }
+        });
+
+
+        $scope.filterWithUser = function(user) {
+            console.log("Selected user:", user);
+            $scope.selectedUser = user;
+            $scope.firstPage();
+            $scope.getData();
+        };
+
         $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
         $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
-        $scope.getData();
     }
 
 
     acralyzer.controller('ReportsBrowserCtrl', ["$scope", "ReportsStore", "$routeParams", ReportsBrowserCtrl]);
 
-})(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents);
+})(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.Showdown);

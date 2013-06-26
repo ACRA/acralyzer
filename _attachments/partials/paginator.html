@@ -1,0 +1,5 @@
+<div class="form-inline paginator">
+    <button ng-disabled="isFirstPage()" ng-click="decPage()" class="btn"><i class="icon-chevron-left"></i> newer</button>
+    <span ng-show="paginator">items per page: <select ng-model="paginator.pageSize" ng-options="size for size in pageSizeList" class="input-small"></select></span>
+    <button ng-disabled="isLastPage()" ng-click="incPage()" class="btn">older <i class="icon-chevron-right"></i></button>
+</div>

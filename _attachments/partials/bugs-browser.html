@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <h2>Browse bugs</h2>
+    <div id="content">
+        <div id="filters" class="row-fluid">
+            <form ng-submit="getData()" class="form-inline">
+                <input type="text" class="search-query" placeholder="Search in bugs" ng-model="search">
+            </form>
+        </div>
+        <div class="row-fluid tab-content">
+            <span ng-bind-template="Bugs {{firstItemIndex()}} to {{lastItemIndex()}} (out of {{bugsList.length}}):">Loading...</span>
+            <button class="btn btn-small" ng-click="hideSolvedBugs = !hideSolvedBugs">
+                <span ng-hide="hideSolvedBugs">Hide solved bugs</span>
+                <span ng-show="hideSolvedBugs">Show solved bugs</span>
+            </button>
+            <div class="loader" ng-show="loading"><img  src="img/loader.gif"/></div>
+
+            <ng-include src="'partials/bugs-table.html'"></ng-include>
+
+            <span paginator items="bugsList | filter:shouldBeDisplayed | filter:search | orderBy:orderField:orderDescending" pageSize="bugsCount"></span>
+            <bug-details bug="selectedBug" acralyzer="acralyzer"></bug-details>
+        </div>
+    </div>
+</div>

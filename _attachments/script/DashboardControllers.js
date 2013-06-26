@@ -81,7 +81,89 @@
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
-        $scope.getData();
+        if($scope.acralyzer.app) {
+            $scope.getData();
+        }
+    }
+
+    function BugsCtrl($scope, ReportsStore, $filter) {
+        $scope.selectedBug = "";
+        $scope.bugsLimit = 10;
+        $scope.hideSolvedBugs = true;
+        $scope.bugs = [];
+
+        var mergeBugsLists = function(list1, list2) {
+            var bugslist = {};
+            for(var i1 = 0; i1 < list1.length; i1++) {
+                bugslist[list1[i1].id] = {idxlist1: i1};
+            }
+            for(var i2 = 0; i2 < list2.length; i2++) {
+                if(!bugslist[list2[i2].id]){
+                    // Mark bug as not found in list1
+                    bugslist[list2[i2].id] = {idxlist1: -1};
+                }
+                bugslist[list2[i2].id].idxlist2 = i2;
+            }
+            for(var iBugs in bugslist) {
+                if(bugslist[iBugs].idxlist1 < 0 && bugslist[iBugs].idxlist2 >= 0) {
+                    // New bug
+                    list1.push(list2[bugslist[iBugs].idxlist2]);
+                } else if (bugslist[iBugs].idxlist1 >= 0 && bugslist[iBugs].idxlist2 < 0) {
+                    // Deleted bug
+                    list1.splice(bugslist[iBugs].idxlist1, 1);
+                } else if(bugslist[iBugs].idxlist1 >= 0 && bugslist[iBugs].idxlist2 >= 0) {
+                    if(!list1[bugslist[iBugs].idxlist1].equals(list2[bugslist[iBugs].idxlist2])) {
+                        // Updated bug
+                        list1[bugslist[iBugs].idxlist1].updateWithBug(list2[bugslist[iBugs].idxlist2]);
+                    }
+                }
+            }
+        };
+
+        $scope.getData = function() {
+            ReportsStore.bugsList(function(data) {
+                    console.log("Refresh data for latest bugs");
+                    mergeBugsLists($scope.bugs, data.rows);
+                    $scope.totalBugs = data.total_rows;
+                    for(var row = 0; row < $scope.bugs.length; row++) {
+                        $scope.bugs[row].latest = moment($scope.bugs[row].value.latest).fromNow();
+                    }
+                },
+                function(response, getResponseHeaders){
+                    $scope.bugs=[];
+                    $scope.totalBugs="";
+                });
+        };
+
+        $scope.shouldBeDisplayed = function(bug) {
+            if($scope.hideSolvedBugs && bug.value.solved) {
+                return false;
+            } else {
+                return true;
+            }
+        };
+
+        $scope.pageItems = function() {
+            var filtFilter = $filter("filter"); // First remove unnecessary items
+            var filtOrderBy = $filter("orderBy"); // Order by latest occurence
+            var filtLimitTo = $filter("limitTo"); // Limit to X items
+
+            return filtLimitTo(
+                filtOrderBy(
+                    filtFilter(
+                        $scope.bugs, $scope.shouldBeDisplayed
+                    ), 'value.latest', true
+                ), $scope.bugsLimit
+            );
+        };
+
+        $scope.$on(acralyzerEvents.LOGGED_IN, $scope.getData);
+        $scope.$on(acralyzerEvents.APP_CHANGED, $scope.getData);
+        $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
+        $scope.$on(acralyzerEvents.BUGS_UPDATED, $scope.getData);
+        if($scope.acralyzer.app) {
+            $scope.getData();
+        }
     }
 
 
@@ -283,7 +365,9 @@
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
-        $scope.getData();
+        if($scope.acralyzer.app) {
+            $scope.getData();
+        }
     }
 
     /* Pie charts */
@@ -472,16 +556,15 @@
 //        $scope.$on(acralyzerEvents.LOGGED_OUT, $scope.getData);
         $scope.$on(acralyzerEvents.NEW_DATA, $scope.getData);
         $scope.$on(acralyzerEvents.REPORTS_DELETED, $scope.getData);
-        $scope.getData();
+        if($scope.acralyzer.app) {
+            $scope.getData();
+        }
     }
 
     function DashboardCtrl($scope, $routeParams) {
         if($routeParams.app) {
             console.log("Dashboard: Direct access to app " + $routeParams.app);
             $scope.acralyzer.setApp($routeParams.app);
-        } else {
-            console.log("Dashboard: Access to default app " + acralyzerConfig.defaultApp);
-            $scope.acralyzer.setApp(acralyzerConfig.defaultApp);
         }
     }
 
@@ -489,5 +572,6 @@
     acralyzer.controller('PieChartsCtrl', ["$scope", "ReportsStore", "$user", PieChartsCtrl]);
     acralyzer.controller('DashboardCtrl', ["$scope", "$routeParams", DashboardCtrl]);
     acralyzer.controller('CrashReportsCtrl', ["$scope", "ReportsStore", CrashReportsCtrl]);
+    acralyzer.controller('BugsCtrl', ["$scope", "ReportsStore", "$filter", BugsCtrl]);
 
 })(window.acralyzerConfig,window.angular,window.acralyzer,window.acralyzerEvents,window.jQuery);

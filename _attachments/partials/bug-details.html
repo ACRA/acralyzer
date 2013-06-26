@@ -1,0 +1,59 @@
+<div ng-show="bug.id">
+    <div class="bug-details-header">
+        <div class="direct-link"><a href="#/reports-browser/{{acralyzer.app}}/bug/{{bug.id}}"><i class="icon-share"></i>direct link</a></div>
+        <h3>Bug Summary</h3>
+        <table>
+            <tr>
+                <th>Application version code:</th>
+                <td>{{bug.key[0]}}</td>
+            </tr>
+            <tr>
+                <th>Exception:</th>
+                <td>{{bug.key[1]}}</td>
+            </tr>
+            <tr>
+                <th>Root Exception:</th>
+                <td>{{bug.key[2]}}</td>
+            </tr>
+            <tr>
+                <th>Solved:</th>
+                <td>
+                    <a title="Change status" ng-click="bug.toggleSolved()" ng-hide="bug.solvedPending">{{bug.value.solved}}</a>
+                    <span title="Updating state" ng-show="bug.solvedPending"><img src="img/polling.gif"/></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>
+                    <div class="description" ng-bind-html-unsafe="bug.descriptionHtml"></div>
+                    <div ng-click="bug.toggleEditMode()" ng-hide="bug.updating">
+                        <i class="icon-edit"></i>
+                        <small ng-show="bug.editMode">Save changes</small>
+                        <small ng-hide="bug.editMode">Edit description</small>
+                    </div>
+                    <div ng-show="bug.updating">
+                        <img src="img/polling.gif"/>
+                        <small class="action">Updating...</small>
+                    </div>
+                    <div ng-animate="{show:'grow', hide:'shrink'}" ng-show="bug.editMode">
+                        <div ng-click="bug.revertDescription()">
+                            <i class="icon-remove"></i>
+                            <small ng-show="bug.editMode">Revert changes</small>
+                        </div>
+                        <textarea ng-model="bug.value.description"></textarea>
+                        <br/>
+                        <small>You can use <a href="http://daringfireball.net/projects/markdown/" target="_blank">Markdown</a> syntax.</small>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <h3>{{nbUsersToDisplay}}<i class="icon-plus-sign" ng-click="incNbUsersToDisplay(10)" ng-show="nbUsersToDisplay < users.length"></i> most affected users (total: {{users.length}})</h3>
+    <div ng-repeat="user in users | orderBy:'reportsCount':true | limitTo: nbUsersToDisplay" class="affected-user label" ng-class="{ 'label-important': user.installationId == selectedUser.installationId, 'label-inverse': user.installationId !== selectedUser.installationId}" ng-click="selectUser(user)">
+        <img class="avatar" monsterid="{{user.installationId}}" title="{{user.installationId}}" />
+        x {{user.reportsCount}}
+    </div>
+    <h3>Reports list</h3>
+
+</div>

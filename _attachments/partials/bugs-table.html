@@ -1,0 +1,49 @@
+<div ng-hide="loading" class="div-table table table-condensed bugs">
+    <div class="div-table-row header">
+        <div class="div-table-cell"></div>
+        <div class="div-table-cell">
+            <i class="icon-th-list" ng-click="$parent.orderField = 'value.count'"></i>
+            <span ng-click="$parent.orderDescending = !$parent.orderDescending">
+                <i class="icon-chevron-down" ng-show="$parent.orderField === 'value.count' && $parent.orderDescending"></i>
+                <i class="icon-chevron-up" ng-show="$parent.orderField === 'value.count' && !$parent.orderDescending"></i>
+            </span>
+        </div>
+        <div class="div-table-cell">
+            <i class="icon-time" ng-click="$parent.orderField = 'value.latest'"></i>
+            <span ng-click="$parent.orderDescending = !$parent.orderDescending">
+                <i class="icon-chevron-down" ng-show="$parent.orderField === 'value.latest' && $parent.orderDescending"ng-click=""></i>
+                <i class="icon-chevron-up" ng-show="$parent.orderField === 'value.latest' && !$parent.orderDescending"></i>
+            </span>
+        </div>
+        <div class="div-table-cell">
+            <i class="icon-gift" ng-click="$parent.orderField = 'key[0]'"></i>
+            <span ng-click="$parent.orderDescending = !$parent.orderDescending">
+                <i class="icon-chevron-down" ng-show="$parent.orderField === 'key[0]' && $parent.orderDescending"ng-click=""></i>
+                <i class="icon-chevron-up" ng-show="$parent.orderField === 'key[0]' && !$parent.orderDescending"></i>
+            </span>
+        </div>
+        <div class="div-table-cell exceptions"><i class="icon-fire"></i></div>
+    </div>
+    <div class="div-table-row"
+         ng-repeat="bug in pageItems()">
+        <div class="div-table-cell actions">
+            <a href="#/reports-browser/{{acralyzer.app}}/bug/{{bug.id}}"
+               tooltip-html-unsafe="{{bug.descriptionHtml}}" tooltip-placement="right">
+                <i class="icon-search" ng-hide="bug.value.description"></i>
+                <i class="icon-zoom-in" ng-show="bug.value.description"></i>
+            </a>
+            <a ng-click="bug.toggleSolved()">
+                <span title="Unsolved bug" ng-hide="bug.value.solved || bug.solvedPending"><i class="icon-bug-unsolved"></i></span>
+                <span title="Solved bug" ng-show="bug.value.solved && !bug.solvedPending"><i class="icon-bug-solved"></i></span>
+                <span title="Updating state" ng-show="bug.solvedPending"><img src="img/polling.gif"/></span>
+            </a>
+        </div>
+        <div title="Number of reports" class="div-table-cell label">{{bug.value.count}}</div>
+        <div title="Latest report" class="div-table-cell label label-info">{{bug.latest}}</div>
+        <div title="Application version code" class="div-table-cell label label-warning">{{bug.key[0]}}</div>
+        <div class="div-table-cell exceptions">
+            <span title="Exception" class="label label-important">{{bug.key[1]}}</span><br/>
+            <span title="Root exception" class="label label-inverse" ng-show="bug.key[2]">Caused by: {{bug.key[2]}}</span>
+        </div>
+    </div>
+</div>
